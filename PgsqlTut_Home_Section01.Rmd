@@ -1,0 +1,34 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 1"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+# Getting Started with PostgreSQL
+
+## What is PostgreSQL?
+
+[http://www.postgresqltutorial.com/what-is-postgresql/](http://www.postgresqltutorial.com/what-is-postgresql/)
+
+## Install PostgreSQL
+
+[http://www.postgresqltutorial.com/install-postgresql/](http://www.postgresqltutorial.com/install-postgresql/)
+
+## Connect To a PostgreSQL Database
+
+[http://www.postgresqltutorial.com/connect-to-postgresql-database/](http://www.postgresqltutorial.com/connect-to-postgresql-database/)
+
+## PostgreSQL Sample Database
+
+[http://www.postgresqltutorial.com/postgresql-sample-database/](http://www.postgresqltutorial.com/postgresql-sample-database/)
+
+## Load PostgreSQL Sample Database
+
+[http://www.postgresqltutorial.com/load-postgresql-sample-database/](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
+
+
+
+
+
