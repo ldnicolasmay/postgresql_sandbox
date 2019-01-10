@@ -33,6 +33,248 @@ WHERE
 | `AND`         | Boolean AND           |
 | `OR`          | Boolean OR            |
 
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+Connect to _**dvdrental**_ database.
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+Some `WHERE` clause examples:
+
+```{sql connection=con_dvd}
+SELECT
+  last_name,
+  first_name
+FROM
+  customer
+WHERE
+  first_name = 'Jamie';
+```
+
+`AND` operator:
+
+```{sql connection=con_dvd}
+SELECT
+  last_name,
+  first_name
+FROM
+  customer
+WHERE
+  first_name = 'Jamie'
+  AND
+  last_name = 'Rice';
+```
+
+`OR` operator:
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  amount,
+  payment_date
+FROM
+  payment
+WHERE
+  amount <= 1
+  OR
+  amount >= 8;
+```
+
+
+## LIMIT and OFFSET
+
+`LIMIT` template:
+```
+SELECT
+  col_1,
+  col_2
+FROM
+  table_name
+LIMIT n;
+```
+
+`OFFSET` template:
+```
+SELECT
+  col_1,
+  col_2
+FROM
+  table_name
+LIMIT n OFFSET m; -- skip m rows of result before returning n records
+```
+
+`LIMIT` example:
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  release_year
+FROM
+  film
+ORDER BY
+  film_id
+LIMIT 5;
+```
+
+`LIMIT ... OFFSET` example:
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  release_year
+FROM
+  film
+ORDER BY
+  film_id
+LIMIT 5 OFFSET 3;
+```
+
+`LIMIT` is helpful for getting the highest and lowest values in a column.
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  rental_rate
+FROM
+  film
+ORDER BY
+  rental_rate ASC
+LIMIT 10;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  rental_rate
+FROM
+  film
+ORDER BY
+  rental_rate DESC
+LIMIT 10;
+```
+
+
+## FETCH
+
+`LIMIT` is not part of the SQL standard, but `FETCH` is (as of SQL:2008).
+
+Here are some templates:
+
+```
+SELECT
+  col_1
+  col_2
+FROM
+  table_name
+ORDER BY
+  col_1
+OFFSET m ROWS
+FETCH FIRST n ROWS ONLY;
+```
+
+```
+SELECT
+  col_1
+  col_2
+FROM
+  table_name
+ORDER BY
+  col_1
+OFFSET m ROW
+FETCH NEXT n ROW ONLY;
+```
+
+`FETCH` examples:
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title
+FROM
+  film
+ORDER BY
+  title
+                      -- If OFFSET not defined, default is "OFFSET 0 ROWS"
+FETCH FIRST ROW ONLY; -- if n not defined, default is n=1... see ex. below
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title
+FROM
+  film
+ORDER BY
+  title
+OFFSET 0 ROWS
+FETCH FIRST 1 ROW ONLY;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title
+FROM
+  film
+ORDER BY
+  title
+-- OFFSET 0 ROWS
+FETCH FIRST 5 ROWS ONLY;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title
+FROM
+  film
+ORDER BY
+  title
+OFFSET 5 ROWS
+FETCH FIRST 5 ROWS ONLY;
+```
 
 
 
+
+
+```{r}
+dbDisconnect(con_dvd)
+```
+
+
+
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
