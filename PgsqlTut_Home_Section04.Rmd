@@ -1,0 +1,191 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 4"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+# Joining Multiple Tables
+
+## Joins
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+Connect to _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Set up sample tables.
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS basket_a (
+  id     INT           PRIMARY KEY,
+  fruit  VARCHAR(100)  NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS basket_b (
+  id     INT           PRIMARY KEY,
+  fruit  VARCHAR(100)  NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO basket_a (id, fruit)
+VALUES
+ (1, 'Apple'),
+ (2, 'Orange'),
+ (3, 'Banana'),
+ (4, 'Cucumber');
+```
+
+```{sql connection=con_ex}
+INSERT INTO basket_b (id, fruit)
+VALUES
+  (1, 'Orange'),
+  (2, 'Apple'),
+  (3, 'Watermelon'),
+  (4, 'Pear');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM basket_a;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM basket_b;
+```
+
+### PostgreSQL inner join
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+INNER JOIN
+  basket_b AS b 
+  ON a.fruit = b.fruit;
+```
+
+### PostgreSQL left outer join
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+LEFT OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit;
+```
+
+### PostgreSQL left outer join (where right table key is null)
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+LEFT OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit
+WHERE b.fruit IS NULL;
+```
+
+### PostgreSQL right outer join
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+RIGHT OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit;
+```
+
+### PostgreSQL right outer join (where left table key is null)
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+RIGHT OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit
+WHERE a.fruit IS NULL;
+```
+
+### PostgreSQL full outer join
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+FULL OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit;
+```
+
+### PostgreSQL full outer join (where left and right table keys are null)
+
+```{sql connection=con_ex}
+SELECT
+  a.id,
+  a.fruit,
+  b.id,
+  b.fruit
+FROM
+  basket_a AS a
+FULL OUTER JOIN
+  basket_b AS b
+  ON a.fruit = b.fruit
+WHERE a.id IS NULL OR b.id IS NULL;
+```
+
+
+## INNER JOIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
