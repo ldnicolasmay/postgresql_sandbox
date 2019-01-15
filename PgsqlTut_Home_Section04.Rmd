@@ -173,12 +173,93 @@ FULL OUTER JOIN
 WHERE a.id IS NULL OR b.id IS NULL;
 ```
 
+Disconnect from _**example**_ database.
+```{r}
+dbDisconnect(con_ex)
+```
+
 
 ## INNER JOIN
 
+Using the _**dvdrental**_ database...
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
 
+... we'll join the "customer" and "payment" tables.
 
+```{sql connection=con_dvd}
+SELECT
+  c.customer_id,
+  c.first_name,
+  c.last_name,
+  c.email,
+  p.amount,
+  p.payment_date
+FROM
+  customer AS c
+INNER JOIN
+  payment AS p
+  ON c.customer_id = p.customer_id;
+```
 
+Add `ORDER BY` clause to sort by `customer_id` and `payment_date`.
+```{sql connection=con_dvd}
+SELECT
+  c.customer_id,
+  c.first_name,
+  c.last_name,
+  c.email,
+  p.amount,
+  p.payment_date
+FROM
+  customer AS c
+INNER JOIN
+  payment AS p
+  ON c.customer_id = p.customer_id
+ORDER BY
+  c.customer_id, p.payment_date;
+```
+
+Add `WHERE` clause to filter.
+```{sql connection=con_dvd}
+SELECT
+  c.customer_id,
+  c.first_name,
+  c.last_name,
+  c.email,
+  p.amount,
+  p.payment_date
+FROM
+  customer AS c
+INNER JOIN
+  payment AS p
+  ON c.customer_id = p.customer_id
+WHERE
+  c.customer_id = 2;
+```
+
+### INNER JOIN to join 3 tables
+
+```{sql connection=con_dvd}
+SELECT
+  c.customer_id,
+  c.first_name AS c_first_name,
+  c.last_name AS c_last_name,
+  c.email,
+  s.first_name AS s_first_name,
+  s.last_name AS s_last_name,
+  p.amount,
+  p.payment_date
+FROM
+  customer AS c
+INNER JOIN
+  payment AS p
+  ON c.customer_id = p.customer_id
+INNER JOIN
+  staff AS s
+  ON p.staff_id = s.staff_id;
+```
 
 
 
