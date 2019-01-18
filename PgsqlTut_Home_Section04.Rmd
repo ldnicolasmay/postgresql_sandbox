@@ -403,7 +403,118 @@ dbDisconnect(con_dvd)
 ```
 
 
+## FULL OUTER JOIN
 
+Connect to _**example**) database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Create tables for this example.
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS departments;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS departments(
+  department_id    serial        PRIMARY KEY,
+  department_name  VARCHAR(255)  NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS employees;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS employees(
+  employee_id    serial        PRIMARY KEY,
+  employee_name  VARCHAR(255),
+  department_id  INTEGER,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+```
+
+Insert data into the tables.
+```{sql connection=con_ex}
+INSERT INTO departments 
+  (department_name)
+VALUES
+  ('Sales'),
+  ('Marketing'),
+  ('HR'),
+  ('IT'),
+  ('Production');
+```
+
+```{sql connection=con_ex}
+INSERT INTO employees
+  (employee_name, department_id)
+VALUES
+  ('Bette Nicholson', 1),
+  ('Christian Gable', 1),
+  ('Joe Swank', 2),
+  ('Fred Costner', 3),
+  ('Sandra Kilmer', 4),
+  ('Julia McQueen', NULL);
+```
+
+Query everything from both tables.
+```{sql connection=con_ex}
+SELECT * FROM departments;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM employees;
+```
+
+Use `FULL OUTER JOIN` to join all data from both tables.
+```{sql connection=con_ex}
+SELECT
+  e.employee_id,
+  e.employee_name,
+  d.department_name
+FROM
+  employees AS e
+FULL OUTER JOIN
+  departments AS d
+  ON e.department_id = d.department_id;
+```
+
+To find a department without any employees, use `WHERE`.
+```{sql connection=con_ex}
+SELECT
+  e.employee_id,
+  e.employee_name,
+  d.department_name
+FROM
+  employees AS e
+FULL OUTER JOIN
+  departments AS d
+  ON e.department_id = d.department_id
+WHERE
+  e.employee_id IS NULL;
+```
+
+Take a similar approach to find any employees not belonging to a department.
+```{sql connection=con_ex}
+SELECT
+  e.employee_id,
+  e.employee_name,
+  d.department_id
+FROM
+  employees AS e
+FULL OUTER JOIN
+  departments AS d
+  ON e.department_id = d.department_id
+WHERE
+  d.department_id IS NULL;
+```
+
+Close the _**example**_ database connection.
+```{r}
+dbDisconnect(con_ex)
+```
 
 
 
