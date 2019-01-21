@@ -517,6 +517,148 @@ dbDisconnect(con_ex)
 ```
 
 
+## CROSS JOIN by Example
+
+A `CROSS JOIN` clause allows you to produce the Cartesian Product of rows in two or more tables. Unlike the other joins, the `CROSS JOIN` doesn't have any matching condition in the join clause.
+
+Suppose we have to perform the `CROSS JOIN` of two tables T1 and T2. For every row from T1 and T2 (i.e., a cartesian product), the result set will contain a table that consists of all columns in the T1 table followed by all columns in the T2 table. If T1 has $M$ rows, T2 has $N$ rows, the result set will have $N \times M$ rows.
+
+Here's the syntax of a `CROSS JOIN`:
+```
+SELECT 
+  *
+FROM
+  T1
+CROSS JOIN
+  T2;
+```
+
+Here's an alternative shorthand to the above:
+```
+SELECT 
+  *
+FROM 
+  T1, T2;
+```
+
+The following is functionally equivalent to a `CROSS JOIN`:
+```
+SELECT
+  *
+FROM
+  T1
+INNER JOIN
+  T2
+  ON TRUE;
+```
+
+Let's create some example tables in the _**example**_ database.
+
+First, connect to the _**example**_ database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Create the example tables.
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS T1;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS T1(
+  label  CHAR(1)  PRIMARY KEY
+);
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS T2;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS T2(
+  score  INT  PRIMARY KEY
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO T1
+  (label)
+VALUES
+  ('A'),
+  ('B');
+```
+
+```{sql connection=con_ex}
+INSERT INTO T2
+  (score)
+VALUES
+  (1),
+  (2),
+  (3);
+```
+
+Now for the `CROSS JOIN`:
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  T1
+CROSS JOIN
+  T2;
+```
+
+Let's try this out with tables that have 2 columns.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS T3;
+DROP TABLE IF EXISTS T4;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS T3 (
+  my_letter  CHAR(1)  PRIMARY KEY,
+  my_number  INT      NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS T4 (
+  my_char  CHAR(1)  PRIMARY KEY,
+  my_int   INT      NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO T3
+  (my_letter, my_number)
+VALUES
+  ('A', 1),
+  ('B', 2),
+  ('C', 3);
+  
+INSERT INTO T4
+  (my_char, my_int)
+VALUES
+  ('C', 4),
+  ('D', 5),
+  ('E', 6);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM T3;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM T4;
+```
+
+Do the `CROSS JOIN`.
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  T3
+CROSS JOIN
+  T4;
+```
 
 
 
