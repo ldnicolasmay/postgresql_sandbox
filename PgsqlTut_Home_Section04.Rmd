@@ -26,13 +26,16 @@ con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
 Set up sample tables.
 
 ```{sql connection=con_ex}
+DROP TABLE IF EXISTS basket_a;
+DROP TABLE IF EXISTS basket_b;
+```
+
+```{sql connection=con_ex}
 CREATE TABLE IF NOT EXISTS basket_a (
   id     INT           PRIMARY KEY,
   fruit  VARCHAR(100)  NOT NULL
 );
-```
 
-```{sql connection=con_ex}
 CREATE TABLE IF NOT EXISTS basket_b (
   id     INT           PRIMARY KEY,
   fruit  VARCHAR(100)  NOT NULL
@@ -412,6 +415,7 @@ con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
 
 Create tables for this example.
 ```{sql connection=con_ex}
+DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS departments;
 ```
 
@@ -420,10 +424,6 @@ CREATE TABLE IF NOT EXISTS departments(
   department_id    serial        PRIMARY KEY,
   department_name  VARCHAR(255)  NOT NULL
 );
-```
-
-```{sql connection=con_ex}
-DROP TABLE IF EXISTS employees;
 ```
 
 ```{sql connection=con_ex}
@@ -660,26 +660,168 @@ CROSS JOIN
   T4;
 ```
 
+Disconnect from the _**example**_ database.
+```{r}
+dbDisconnect(con_ex)
+```
+
+
+## NATURAL JOIN by Example
+
+A natural join creates an implicit join based on the same column names in the joined tables. A natural join can be an `INNER`, `LEFT`, or `RIGHT`.
+
+Here's the syntax.
+
+```
+SELECT
+  *
+FROM
+  T1
+NATURAL INNER JOIN
+  T2;
+```
+
+```
+SELECT
+  *
+FROM
+  T1
+NATURAL LEFT JOIN
+  T2;
+```
+
+```
+SELECT
+  *
+FROM
+  T1
+NATURAL RIGHT JOIN
+  T2;
+```
+
+Let's create some example tables in the _**example**_ database.
+
+First, connect to the _**example**_ database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{r}
+dbListTables(con_ex)
+```
+
+
+Create the example tables `categories` and `products` and put some data in them.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS categories (
+  category_id    serial        PRIMARY KEY,
+  category_name  VARCHAR(255)  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  product_id    serial        PRIMARY KEY,
+  product_name  VARCHAR(255)  NOT NULL,
+  category_id   INT           NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES categories (category_id)
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO categories 
+  (category_name)
+VALUES
+  ('Smart Phone'),
+  ('Laptop'),
+  ('Tablet');
+  
+INSERT INTO products
+  (product_name, category_id)
+VALUES
+  ('iPhone',          1),
+  ('Samsung Galaxy',  1),
+  ('HP Elite',        2),
+  ('Lenovo Thinkpad', 2),
+  ('iPad',            3),
+  ('Kindle Fire',     3);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM categories;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM products;
+```
+
+Here's the result of a `NATURAL INNER JOIN`.
+
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  products
+NATURAL INNER JOIN
+  categories;
+```
+
+The above is the same as this explicit `INNER JOIN`.
+
+```{sql connection=con_ex}
+SELECT
+  products.category_id,
+  products.product_id,
+  products.product_name,
+  categories.category_name
+FROM
+  products
+INNER JOIN
+  categories
+  ON products.category_id = categories.category_id;
+```
+
+The advantage is that the `NATURAL JOIN` doesn't require that we explicitly specify the `ON ... = ...` clause. As long as the fields that represent the same data have matching names, the `NATURAL JOIN` implicitly joins them.
+
+However, the convenience of this implicit joining can cause unexpected results if we're not careful.
+
+Disconnect form the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
