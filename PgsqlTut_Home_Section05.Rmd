@@ -1,0 +1,125 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 5"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+
+# Grouping data
+
+## GROUP BY
+
+Connect to _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+`GROUP BY` using aggregate function template.
+```
+SELECT
+  column_1, aggregate_function(column_2)
+FROM
+  table_name
+GROUP_BY
+  column_1;
+```
+
+The `GROUP BY` clause must appear right after the `FROM` or `WHERE` clause. The `GROUP BY` is one column or a comma-separated list of columns. You can also put an expression in the `GROUP BY` clause.
+
+### `GROUP BY` without aggregate function
+
+Here, `GROUP BY` acts like the `DISTINCT` clause... removing duplicates from the result set.
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id
+FROM
+  payment
+GROUP BY
+  customer_id;
+```
+
+### `GROUP BY` with `SUM` aggregate function
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  SUM(amount)
+FROM
+  payment
+GROUP BY
+  customer_id;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  SUM(amount)
+FROM
+  payment
+GROUP BY
+  customer_id
+ORDER BY
+  SUM(amount) DESC;
+```
+
+### `GROUP BY` with `COUNT` aggregate function 
+
+```{sql connection=con_dvd}
+SELECT
+  staff_id,
+  COUNT(payment_id)
+FROM
+  payment
+GROUP BY
+  staff_id;
+```
+
+Disconnect from _**example**_ database.
+```{r}
+dbDisconnect(con_dvd)
+```
+
+
+## HAVING
+
+
+
+
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
