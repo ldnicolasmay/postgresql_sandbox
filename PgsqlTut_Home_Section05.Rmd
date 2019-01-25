@@ -93,7 +93,113 @@ dbDisconnect(con_dvd)
 
 ## HAVING
 
+`HAVING` is used in conjunction with `GROUP BY` to filter group rows that do not satisfy some condition.
 
+Here's the syntax.
+```
+SELECT
+  column_1,
+  aggregate_function(column_2)
+FROM
+  table_name
+GROUP BY
+  column_1
+HAVING
+  aggregate_function(column_2) > 2.00; -- or whatever condition
+```
+
+`HAVING` is like `WHERE`, but `WHERE` is used for conditions _**BEFORE**_ the grouping, and `HAVING` is used for conditions _**AFTER**_ the grouping.
+
+Here are some examples.
+
+Connect to _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+### `HAVING` clause with `SUM` function example
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  SUM(amount)
+FROM
+  payment
+GROUP BY
+  customer_id
+ORDER BY
+  SUM(amount) DESC;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  SUM(amount)
+FROM
+  payment
+GROUP BY
+  customer_id
+HAVING
+  SUM(amount) > 200.00
+ORDER BY
+  SUM(amount) DESC;
+```
+
+### `HAVING` clause with `COUNT` and `AS` example
+
+```{sql connection=con_dvd}
+SELECT
+  store_id,
+  COUNT(customer_id) AS customer_count
+FROM
+  customer
+GROUP BY
+  store_id
+ORDER BY
+ customer_count DESC;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  store_id,
+  COUNT(customer_id) AS customer_count
+FROM
+  customer
+GROUP BY
+  store_id
+HAVING
+  COUNT(customer_id) > 300 -- aggregate function in HAVING clause
+ORDER BY
+  customer_count DESC;     -- alias in ORDER BY clause
+```
+
+### `HAVING` without `GROUP BY` clause
+
+In PostgreSQL, you can use the `HAVING` clause without the `GROUP BY` clause. In this case, the `HAVING` clause will turn the query into a single group. In addition, the `SELECT` list and `HAVING` clause can only refer to columns from within aggregate functions. This kind of query returns a single row if the condition in the `HAVING` clause is true or zero row if it is false.
+
+```{sql connection=con_dvd}
+SELECT
+  COUNT(customer_id)
+FROM
+  customer
+HAVING
+  COUNT(customer_id) > 300;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  COUNT(customer_id)
+FROM
+  customer
+HAVING
+  COUNT(customer_id) > 600;
+```
+
+Disconnect from _**example**_ database.
+```{r}
+dbDisconnect(con_dvd)
+```
 
 
 ```
