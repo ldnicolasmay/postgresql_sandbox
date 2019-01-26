@@ -85,7 +85,7 @@ GROUP BY
   staff_id;
 ```
 
-Disconnect from _**example**_ database.
+Disconnect from _**dvdrental**_ database.
 ```{r}
 dbDisconnect(con_dvd)
 ```
@@ -196,7 +196,7 @@ HAVING
   COUNT(customer_id) > 600;
 ```
 
-Disconnect from _**example**_ database.
+Disconnect from _**dvdrental**_ database.
 ```{r}
 dbDisconnect(con_dvd)
 ```

@@ -1,0 +1,200 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 6"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+
+# Performing set operations
+
+## UNION 
+
+The `UNION` operator combines result sets of two or more `SELECT` statements into a single result set.
+
+Here's the syntax.
+
+```
+SELECT
+  column_1,
+  column_2
+FROM
+  table_1
+UNION
+SELECT
+  column_1,
+  column_2
+FROM
+  table_2;
+```
+
+These rules apply to `UNION` queries:
+
+1. Both queries must return the same number of columns.
+2. The corresponding columns in the queries must have compatible data types.
+
+The `UNION` operator removes all duplicate rows unless `UNION ALL` is used.
+
+There are no guarantees when it comes to row ordering, so if you want a specific ordering, use `ORDER BY` on particular columns(s).
+
+We often use the `UNION` operator to combine data from similar tables that are not perfectly normalized. Those tables are often found in the reporting system or data warehousing system.
+
+Let's create some example tables.
+
+Connect to the _**example**_ database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Create the tables.
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS sales2007q1;
+DROP TABLE IF EXISTS sales2007q2;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS sales2007q1 (
+  name    VARCHAR(64)  PRIMARY KEY,
+  amount  MONEY        NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sales2007q2 (
+  name    VARCHAR(64)  PRIMARY KEY,
+  amount  MONEY        NOT NULL
+)
+```
+
+```{sql connection=con_ex}
+INSERT INTO sales2007q1
+  (name, amount)
+VALUES
+  ('Mike', 150000.25),
+  ('Jon',  132000.75),
+  ('Mary', 100000.00);
+```
+
+```{sql connection=con_ex}
+INSERT INTO sales2007q2
+  (name, amount)
+VALUES
+  ('Mike', 120000.25),
+  ('Jon',  142000.75),
+  ('Mary', 100000.00);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM sales2007q1;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM sales2007q2;
+```
+
+### `UNION` example
+
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  sales2007q1
+UNION
+SELECT
+  *
+FROM
+  sales2007q2;
+```
+
+### `UNION ALL` example
+
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  sales2007q1
+UNION ALL
+SELECT
+  *
+FROM
+  sales2007q2;
+```
+
+Here's a `UNION ALL` with an `ORDER BY`. (Note that the `ORDER BY` must go at the very end of `UNION [ALL]` query.)
+
+```{sql connection=con_ex}
+SELECT
+  *
+FROM
+  sales2007q1
+UNION ALL
+SELECT
+  *
+FROM
+  sales2007q2
+ORDER BY
+  name,
+  amount DESC;
+```
+
+
+Do a little aggregate `SUM` with the `UNION ALL` result set as a subquery.
+
+```{sql connection=con_ex}
+SELECT
+  name, SUM(amount)
+FROM (
+  SELECT
+    *
+  FROM
+    sales2007q1
+  UNION ALL
+  SELECT
+    *
+  FROM
+    sales2007q2
+  ) AS sales2007q1q2
+GROUP BY
+  sales2007q1q2.name
+ORDER BY
+  SUM(amount) DESC;
+```
+
+
+
+
+
+
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
