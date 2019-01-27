@@ -18,7 +18,7 @@ library(RPostgres)
 
 ## UNION 
 
-The `UNION` operator combines result sets of two or more `SELECT` statements into a single result set.
+The `UNION` operator combines result sets of two or more `SELECT` statements into a single result set. In a Venn diagram where set $A$ is the result of one `SELECT` statement and set $B$ is the result of another `SELECT` statement, `UNION` returns the union of A and B, $A \cup B$.
 
 Here's the syntax.
 
@@ -166,8 +166,160 @@ ORDER BY
   SUM(amount) DESC;
 ```
 
+Disconnect from the _**example**_ database.
+```{r}
+dbDisconnect(con_ex)
+```
 
 
+
+## INTERSECT
+
+Like the `UNION` operator, the `INTERSECT` operator combines the result sets of two or more `SELECT` statements into a single result set. In a Venn diagram where set $A$ is the result of one `SELECT` statement and set $B$ is the result of another `SELECT` statement, `INTERSECT` returns the intersect of A and B, $A \cap B$.
+
+The rules for an `INTERSECT` operator queries are the same as those for `UNION`:
+
+1. Both queries must return the same number of columns.
+2. The corresponding columns in the queries must have compatible data types.
+
+Here's the syntax.
+
+```
+SELECT
+  column_1,
+  column_2
+FROM
+  table_1
+INTERSECT
+SELECT
+  column_1,
+  column_2
+FROM
+  table_2;
+```
+
+### `INTERSECT` operator example
+
+Connect to the _**example**_ database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Create the example tables.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS employees_2;
+DROP TABLE IF EXISTS keys_2;
+DROP TABLE IF EXISTS hipos_2;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS employees_2 (
+  employee_id    SERIAL        PRIMARY KEY,
+  employee_name  VARCHAR(255)  NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+-- "key employees"
+CREATE TABLE IF NOT EXISTS keys_2 (
+  employee_id     INT   PRIMARY KEY,
+  effective_date  DATE  NOT NULL --,
+  -- FOREIGN KEY employee_id REFERENCES employees_2(employee_id)
+);
+```
+
+```{sql connection=con_ex}
+-- "high potential employees"
+CREATE TABLE IF NOT EXISTS hipos_2 (
+  employee_id     INT   PRIMARY KEY,
+  effective_date  DATE  NOT NULL --,
+  -- FOREIGN KEY employee_id REFERENCES employees_2(employee_id)
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO employees_2
+  (employee_name)
+VALUES
+  ('Joyce Edwards'),
+  ('Diane Collins'),
+  ('Alice Stewart'),
+  ('Julie Sanchez'),
+  ('Heather Morris'),
+  ('Teresa Rogers'),
+  ('Doris Reed'),
+  ('Gloria Cook'),
+  ('Evelyn Morgan'),
+  ('Jean Bell');
+
+INSERT INTO keys_2
+  (employee_id, effective_date)
+VALUES
+  (1, '2000-02-01'),
+  (2, '2001-06-01'),
+  (5, '2002-01-01'),
+  (7, '2005-06-01');
+ 
+INSERT INTO hipos_2
+  (employee_id, effective_date)
+VALUES
+  (9, '2000-01-01'),
+  (2, '2002-06-01'),
+  (5, '2006-06-01'),
+  (10, '2005-06-01');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM keys_2;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM hipos_2;
+```
+
+To find which employees are both "key" and "high impact", use the `INTERSECT` operator.
+
+```{sql connection=con_ex}
+SELECT
+  employee_id
+FROM
+  keys_2
+INTERSECT
+SELECT
+  employee_id
+FROM
+  hipos_2;
+```
+
+Here's an `INTERSECT` subquery with an `INNER JOIN` and an `ORDER BY`.
+
+```{sql connection=con_ex}
+SELECT
+  keys_hipos.employee_id,
+  employees_2.employee_name
+FROM (
+  SELECT
+    employee_id
+  FROM
+    keys_2
+  INTERSECT
+  SELECT
+    employee_id
+  FROM
+    hipos_2
+) AS keys_hipos
+INNER JOIN
+  employees_2
+  ON keys_hipos.employee_id = employees_2.employee_id
+ORDER BY
+  keys_hipos.employee_id DESC;
+```
+
+Disconnect from the _**example**_ database.
+```{r}
+dbDisconnect(con_ex)
+```
 
 
 

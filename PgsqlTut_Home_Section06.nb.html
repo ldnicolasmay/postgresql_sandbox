@@ -310,7 +310,7 @@ $(document).ready(function () {
 <h1>Performing set operations</h1>
 <div id="union" class="section level2">
 <h2>UNION</h2>
-<p>The <code>UNION</code> operator combines result sets of two or more <code>SELECT</code> statements into a single result set.</p>
+<p>The <code>UNION</code> operator combines result sets of two or more <code>SELECT</code> statements into a single result set. In a Venn diagram where set <span class="math inline">\(A\)</span> is the result of one <code>SELECT</code> statement and set <span class="math inline">\(B\)</span> is the result of another <code>SELECT</code> statement, <code>UNION</code> returns the union of A and B, <span class="math inline">\(A \cup B\)</span>.</p>
 <p>Here’s the syntax.</p>
 <pre><code>SELECT
   column_1,
@@ -550,6 +550,251 @@ FROM
 <!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Disconnect from the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJEaXNjb25uZWN0KGNvbl9leClcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con_ex)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="intersect" class="section level2">
+<h2>INTERSECT</h2>
+<p>Like the <code>UNION</code> operator, the <code>INTERSECT</code> operator combines the result sets of two or more <code>SELECT</code> statements into a single result set. In a Venn diagram where set <span class="math inline">\(A\)</span> is the result of one <code>SELECT</code> statement and set <span class="math inline">\(B\)</span> is the result of another <code>SELECT</code> statement, <code>INTERSECT</code> returns the intersect of A and B, <span class="math inline">\(A \cap B\)</span>.</p>
+<p>The rules for an <code>INTERSECT</code> operator queries are the same as those for <code>UNION</code>:</p>
+<ol style="list-style-type: decimal">
+<li>Both queries must return the same number of columns.</li>
+<li>The corresponding columns in the queries must have compatible data types.</li>
+</ol>
+<p>Here’s the syntax.</p>
+<pre><code>SELECT
+  column_1,
+  column_2
+FROM
+  table_1
+INTERSECT
+SELECT
+  column_1,
+  column_2
+FROM
+  table_2;</code></pre>
+<div id="intersect-operator-example" class="section level3">
+<h3><code>INTERSECT</code> operator example</h3>
+<p>Connect to the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksIFwiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZVwiKVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con_ex &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;PostgreSQL AWS example&quot;</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Create the example tables.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5EUk9QIFRBQkxFIElGIEVYSVNUUyBlbXBsb3llZXNfMjtcbkRST1AgVEFCTEUgSUYgRVhJU1RTIGtleXNfMjtcbkRST1AgVEFCTEUgSUYgRVhJU1RTIGhpcG9zXzI7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> employees_2;
+<span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> keys_2;
+<span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> hipos_2;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBlbXBsb3llZXNfMiAoXG4gIGVtcGxveWVlX2lkICAgIFNFUklBTCAgICAgICAgUFJJTUFSWSBLRVksXG4gIGVtcGxveWVlX25hbWUgIFZBUkNIQVIoMjU1KSAgTk9UIE5VTExcbik7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> employees_2 (
+  employee_id    SERIAL        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  employee_name  <span class="dt">VARCHAR</span>(<span class="dv">255</span>)  <span class="kw">NOT</span> <span class="kw">NULL</span>
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBrZXlzXzIgKFxuICBlbXBsb3llZV9pZCAgICAgSU5UICAgUFJJTUFSWSBLRVksXG4gIGVmZmVjdGl2ZV9kYXRlICBEQVRFICBOT1QgTlVMTCAtLSxcbiAgLS0gRk9SRUlHTiBLRVkgZW1wbG95ZWVfaWQgUkVGRVJFTkNFUyBlbXBsb3llZXNfMihlbXBsb3llZV9pZClcbik7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> keys_2 (
+  employee_id     <span class="dt">INT</span>   <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  effective_date  <span class="dt">DATE</span>  <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="co">--,</span>
+  <span class="co">-- FOREIGN KEY employee_id REFERENCES employees_2(employee_id)</span>
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG4tLSBcImhpZ2ggcG90ZW50aWFsIC8gaGlnaCBpbXBhY3QgZW1wbG95ZWVzXCJcbkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIGhpcG9zXzIgKFxuICBlbXBsb3llZV9pZCAgICAgSU5UICAgUFJJTUFSWSBLRVksXG4gIGVmZmVjdGl2ZV9kYXRlICBEQVRFICBOT1QgTlVMTCAtLSxcbiAgLS0gRk9SRUlHTiBLRVkgZW1wbG95ZWVfaWQgUkVGRVJFTkNFUyBlbXBsb3llZXNfMihlbXBsb3llZV9pZClcbik7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="co">-- &quot;high potential / high impact employees&quot;</span>
+<span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> hipos_2 (
+  employee_id     <span class="dt">INT</span>   <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  effective_date  <span class="dt">DATE</span>  <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="co">--,</span>
+  <span class="co">-- FOREIGN KEY employee_id REFERENCES employees_2(employee_id)</span>
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBlbXBsb3llZXNfMlxuICAoZW1wbG95ZWVfbmFtZSlcblZBTFVFU1xuICAoJ0pveWNlIEVkd2FyZHMnKSxcbiAgKCdEaWFuZSBDb2xsaW5zJyksXG4gICgnQWxpY2UgU3Rld2FydCcpLFxuICAoJ0p1bGllIFNhbmNoZXonKSxcbiAgKCdIZWF0aGVyIE1vcnJpcycpLFxuICAoJ1RlcmVzYSBSb2dlcnMnKSxcbiAgKCdEb3JpcyBSZWVkJyksXG4gICgnR2xvcmlhIENvb2snKSxcbiAgKCdFdmVseW4gTW9yZ2FuJyksXG4gICgnSmVhbiBCZWxsJyk7XG5cbklOU0VSVCBJTlRPIGtleXNfMlxuICAoZW1wbG95ZWVfaWQsIGVmZmVjdGl2ZV9kYXRlKVxuVkFMVUVTXG4gICgxLCAnMjAwMC0wMi0wMScpLFxuICAoMiwgJzIwMDEtMDYtMDEnKSxcbiAgKDUsICcyMDAyLTAxLTAxJyksXG4gICg3LCAnMjAwNS0wNi0wMScpO1xuIFxuSU5TRVJUIElOVE8gaGlwb3NfMlxuICAoZW1wbG95ZWVfaWQsIGVmZmVjdGl2ZV9kYXRlKVxuVkFMVUVTXG4gICg5LCAnMjAwMC0wMS0wMScpLFxuICAoMiwgJzIwMDItMDYtMDEnKSxcbiAgKDUsICcyMDA2LTA2LTAxJyksXG4gICgxMCwgJzIwMDUtMDYtMDEnKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> employees_<span class="dv">2</span>
+  (employee_name)
+<span class="kw">VALUES</span>
+  (<span class="st">'Joyce Edwards'</span>),
+  (<span class="st">'Diane Collins'</span>),
+  (<span class="st">'Alice Stewart'</span>),
+  (<span class="st">'Julie Sanchez'</span>),
+  (<span class="st">'Heather Morris'</span>),
+  (<span class="st">'Teresa Rogers'</span>),
+  (<span class="st">'Doris Reed'</span>),
+  (<span class="st">'Gloria Cook'</span>),
+  (<span class="st">'Evelyn Morgan'</span>),
+  (<span class="st">'Jean Bell'</span>);
+
+<span class="kw">INSERT</span> <span class="kw">INTO</span> keys_<span class="dv">2</span>
+  (employee_id, effective_date)
+<span class="kw">VALUES</span>
+  (<span class="dv">1</span>, <span class="st">'2000-02-01'</span>),
+  (<span class="dv">2</span>, <span class="st">'2001-06-01'</span>),
+  (<span class="dv">5</span>, <span class="st">'2002-01-01'</span>),
+  (<span class="dv">7</span>, <span class="st">'2005-06-01'</span>);
+ 
+<span class="kw">INSERT</span> <span class="kw">INTO</span> hipos_<span class="dv">2</span>
+  (employee_id, effective_date)
+<span class="kw">VALUES</span>
+  (<span class="dv">9</span>, <span class="st">'2000-01-01'</span>),
+  (<span class="dv">2</span>, <span class="st">'2002-06-01'</span>),
+  (<span class="dv">5</span>, <span class="st">'2006-06-01'</span>),
+  (<span class="dv">10</span>, <span class="st">'2005-06-01'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGtleXNfMjtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> keys_2;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JpdGdZT0FGeVlJbElYeFdJR1lIeXZPQnhCMk9sakdBZ01PeFRDaDlCVUtmZEc0QU0xQU5aazNPU1N3dUJqSUVrQVJaWEJKTFVvSDBQM1RGZVltNXFUREZURkJCN3RUY2dwejh5dFRVK013VXFCQmZhbHBhYW5KSlpsbHFmQXJZSkpBcFRQL1JiT0VDeWlYcXBSVUJ6VVN6aDdNb3Yxd1BaaGZJdDB3Z3AvLy8vLzhQeEZFTS93QkMrVE13TWdFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["employee_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["effective_date"],"name":[2],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"2000-02-01"},{"1":"2","2":"2001-06-01"},{"1":"5","2":"2002-01-01"},{"1":"7","2":"2005-06-01"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGhpcG9zXzI7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> hipos_2;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JpdGdZT0FGeVFJeEo1VFBDc1JBemN4OElIR0hvMmtOUUpyQjRiZzhoRDc1aXdGQ080UDVhQWF6SnVja0ZoY0RHUUpJZ2l3dWlTV3BRUG9mdXVLOHhOeFVtR0ltcUNCM2FtNUJUbjVsYW1wOFpncFVpQzgxTFMwMXVTU3pMRFUrQld3U3lCU20vMmkyY0FIbEV2WFNpb0Jtb3RuRFdaUmZyZ2V6QytSYkpwRFQvLy8vL3dmaUtJWi9BTmwrZkdNeUFRQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["employee_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["effective_date"],"name":[2],"type":["date"],"align":["right"]}],"data":[{"1":"9","2":"2000-01-01"},{"1":"2","2":"2002-06-01"},{"1":"5","2":"2006-06-01"},{"1":"10","2":"2005-06-01"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>To find which employees are both “key” and “high impact”, use the <code>INTERSECT</code> operator.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1RcbiAgZW1wbG95ZWVfaWRcbkZST01cbiAga2V5c18yXG5JTlRFUlNFQ1RcblNFTEVDVFxuICBlbXBsb3llZV9pZFxuRlJPTVxuICBoaXBvc18yO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span>
+  employee_id
+<span class="kw">FROM</span>
+  keys_<span class="dv">2</span>
+<span class="kw">INTERSECT</span>
+<span class="kw">SELECT</span>
+  employee_id
+<span class="kw">FROM</span>
+  hipos_2;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0Jnc3dNUENDRlVJd0s1cEMxcnpFM05SaUlFTUFTWkE3TmJjZ0o3OHlOVFUrTXdWZGZYSk9Zakc2ZXE2VXhKSkV2YlFpb0ZGb3lqbUw4c3YxWUZhQTNkRUFKUDcvLy84UFNJRXhBS2lXakw3TUFBQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["employee_id"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"2"},{"1":"5"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Here’s an <code>INTERSECT</code> subquery with an <code>INNER JOIN</code> and an <code>ORDER BY</code>.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1RcbiAga2V5c19oaXBvcy5lbXBsb3llZV9pZCxcbiAgZW1wbG95ZWVzXzIuZW1wbG95ZWVfbmFtZVxuRlJPTSAoXG4gIFNFTEVDVFxuICAgIGVtcGxveWVlX2lkXG4gIEZST01cbiAgICBrZXlzXzJcbiAgSU5URVJTRUNUXG4gIFNFTEVDVFxuICAgIGVtcGxveWVlX2lkXG4gIEZST01cbiAgICBoaXBvc18yXG4pIEFTIGtleXNfaGlwb3NcbklOTkVSIEpPSU5cbiAgZW1wbG95ZWVzXzJcbiAgT04ga2V5c19oaXBvcy5lbXBsb3llZV9pZCA9IGVtcGxveWVlc18yLmVtcGxveWVlX2lkXG5PUkRFUiBCWVxuICBrZXlzX2hpcG9zLmVtcGxveWVlX2lkIERFU0M7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span>
+  keys_hipos.employee_id,
+  employees_2.employee_name
+<span class="kw">FROM</span> (
+  <span class="kw">SELECT</span>
+    employee_id
+  <span class="kw">FROM</span>
+    keys_<span class="dv">2</span>
+  <span class="kw">INTERSECT</span>
+  <span class="kw">SELECT</span>
+    employee_id
+  <span class="kw">FROM</span>
+    hipos_<span class="dv">2</span>
+) <span class="kw">AS</span> keys_hipos
+<span class="kw">INNER</span> <span class="kw">JOIN</span>
+  employees_<span class="dv">2</span>
+  <span class="kw">ON</span> keys_hipos.employee_id = employees_2.employee_id
+<span class="kw">ORDER</span> <span class="kw">BY</span>
+  keys_hipos.employee_id <span class="kw">DESC</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JpdGdZT0NGMHF4UVdnQk1ReFR5ZWFRbWxtU2tGaW40NWhjVlpSWkRSWGxkTWhQelVoV2M4M055TXZPSzBjeG16VXZNVFMxR000YzdOYmNnSjc4eU5UVStNd1ZtQ0Z3SXBBSGRrT1NjeEdLWUlUQkJycFRFa2tTOXRDSk01WnhGK2VWNk1IdkIvbWtBRXYvLy8vOEhwTUFZQUZzbjBkUVVBUUFBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["employee_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["employee_name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"5","2":"Heather Morris"},{"1":"2","2":"Diane Collins"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Disconnect from the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJEaXNjb25uZWN0KGNvbl9leClcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con_ex)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <pre><code>###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
 #==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
 #--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
@@ -580,7 +825,7 @@ FROM
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDYiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwotLS0KCkxvYWQgbGlicmFyaWVzLgpgYGB7cn0KbGlicmFyeShEQkkpCmxpYnJhcnkob2RiYykKbGlicmFyeShSUG9zdGdyZXMpCmBgYAoKCiMgUGVyZm9ybWluZyBzZXQgb3BlcmF0aW9ucwoKIyMgVU5JT04gCgpUaGUgYFVOSU9OYCBvcGVyYXRvciBjb21iaW5lcyByZXN1bHQgc2V0cyBvZiB0d28gb3IgbW9yZSBgU0VMRUNUYCBzdGF0ZW1lbnRzIGludG8gYSBzaW5nbGUgcmVzdWx0IHNldC4KCkhlcmUncyB0aGUgc3ludGF4LgoKYGBgClNFTEVDVAogIGNvbHVtbl8xLAogIGNvbHVtbl8yCkZST00KICB0YWJsZV8xClVOSU9OClNFTEVDVAogIGNvbHVtbl8xLAogIGNvbHVtbl8yCkZST00KICB0YWJsZV8yOwpgYGAKClRoZXNlIHJ1bGVzIGFwcGx5IHRvIGBVTklPTmAgcXVlcmllczoKCjEuIEJvdGggcXVlcmllcyBtdXN0IHJldHVybiB0aGUgc2FtZSBudW1iZXIgb2YgY29sdW1ucy4KMi4gVGhlIGNvcnJlc3BvbmRpbmcgY29sdW1ucyBpbiB0aGUgcXVlcmllcyBtdXN0IGhhdmUgY29tcGF0aWJsZSBkYXRhIHR5cGVzLgoKVGhlIGBVTklPTmAgb3BlcmF0b3IgcmVtb3ZlcyBhbGwgZHVwbGljYXRlIHJvd3MgdW5sZXNzIGBVTklPTiBBTExgIGlzIHVzZWQuCgpUaGVyZSBhcmUgbm8gZ3VhcmFudGVlcyB3aGVuIGl0IGNvbWVzIHRvIHJvdyBvcmRlcmluZywgc28gaWYgeW91IHdhbnQgYSBzcGVjaWZpYyBvcmRlcmluZywgdXNlIGBPUkRFUiBCWWAgb24gcGFydGljdWxhciBjb2x1bW5zKHMpLgoKV2Ugb2Z0ZW4gdXNlIHRoZSBgVU5JT05gIG9wZXJhdG9yIHRvIGNvbWJpbmUgZGF0YSBmcm9tIHNpbWlsYXIgdGFibGVzIHRoYXQgYXJlIG5vdCBwZXJmZWN0bHkgbm9ybWFsaXplZC4gVGhvc2UgdGFibGVzIGFyZSBvZnRlbiBmb3VuZCBpbiB0aGUgcmVwb3J0aW5nIHN5c3RlbSBvciBkYXRhIHdhcmVob3VzaW5nIHN5c3RlbS4KCkxldCdzIGNyZWF0ZSBzb21lIGV4YW1wbGUgdGFibGVzLgoKQ29ubmVjdCB0byB0aGUgXyoqZXhhbXBsZSoqXyBkYXRhYmFzZS4KYGBge3J9CmNvbl9leCA8LSBkYkNvbm5lY3Qob2RiYzo6b2RiYygpLCAiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZSIpCmBgYAoKQ3JlYXRlIHRoZSB0YWJsZXMuCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkRST1AgVEFCTEUgSUYgRVhJU1RTIHNhbGVzMjAwN3ExOwpEUk9QIFRBQkxFIElGIEVYSVNUUyBzYWxlczIwMDdxMjsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBzYWxlczIwMDdxMSAoCiAgbmFtZSAgICBWQVJDSEFSKDY0KSAgUFJJTUFSWSBLRVksCiAgYW1vdW50ICBNT05FWSAgICAgICAgTk9UIE5VTEwKKTsKCkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIHNhbGVzMjAwN3EyICgKICBuYW1lICAgIFZBUkNIQVIoNjQpICBQUklNQVJZIEtFWSwKICBhbW91bnQgIE1PTkVZICAgICAgICBOT1QgTlVMTAopCmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8gc2FsZXMyMDA3cTEKICAobmFtZSwgYW1vdW50KQpWQUxVRVMKICAoJ01pa2UnLCAxNTAwMDAuMjUpLAogICgnSm9uJywgIDEzMjAwMC43NSksCiAgKCdNYXJ5JywgMTAwMDAwLjAwKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpJTlNFUlQgSU5UTyBzYWxlczIwMDdxMgogIChuYW1lLCBhbW91bnQpClZBTFVFUwogICgnTWlrZScsIDEyMDAwMC4yNSksCiAgKCdKb24nLCAgMTQyMDAwLjc1KSwKICAoJ01hcnknLCAxMDAwMDAuMDApOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gc2FsZXMyMDA3cTE7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBzYWxlczIwMDdxMjsKYGBgCgojIyMgYFVOSU9OYCBleGFtcGxlCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QKICAqCkZST00KICBzYWxlczIwMDdxMQpVTklPTgpTRUxFQ1QKICAqCkZST00KICBzYWxlczIwMDdxMjsKYGBgCgojIyMgYFVOSU9OIEFMTGAgZXhhbXBsZQoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUCiAgKgpGUk9NCiAgc2FsZXMyMDA3cTEKVU5JT04gQUxMClNFTEVDVAogICoKRlJPTQogIHNhbGVzMjAwN3EyOwpgYGAKCkhlcmUncyBhIGBVTklPTiBBTExgIHdpdGggYW4gYE9SREVSIEJZYC4gKE5vdGUgdGhhdCB0aGUgYE9SREVSIEJZYCBtdXN0IGdvIGF0IHRoZSB2ZXJ5IGVuZCBvZiBgVU5JT04gW0FMTF1gIHF1ZXJ5LikKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVAogICoKRlJPTQogIHNhbGVzMjAwN3ExClVOSU9OIEFMTApTRUxFQ1QKICAqCkZST00KICBzYWxlczIwMDdxMgpPUkRFUiBCWQogIG5hbWUsCiAgYW1vdW50IERFU0M7CmBgYAoKCkRvIGEgbGl0dGxlIGFnZ3JlZ2F0ZSBgU1VNYCB3aXRoIHRoZSBgVU5JT04gQUxMYCByZXN1bHQgc2V0IGFzIGEgc3VicXVlcnkuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QKICBuYW1lLCBTVU0oYW1vdW50KQpGUk9NICgKICBTRUxFQ1QKICAgICoKICBGUk9NCiAgICBzYWxlczIwMDdxMQogIFVOSU9OIEFMTAogIFNFTEVDVAogICAgKgogIEZST00KICAgIHNhbGVzMjAwN3EyCiAgKSBBUyBzYWxlczIwMDdxMXEyCkdST1VQIEJZCiAgc2FsZXMyMDA3cTFxMi5uYW1lCk9SREVSIEJZCiAgU1VNKGFtb3VudCkgREVTQzsKYGBgCgoKCgoKCmBgYAojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDYiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwotLS0KCkxvYWQgbGlicmFyaWVzLgpgYGB7cn0KbGlicmFyeShEQkkpCmxpYnJhcnkob2RiYykKbGlicmFyeShSUG9zdGdyZXMpCmBgYAoKCiMgUGVyZm9ybWluZyBzZXQgb3BlcmF0aW9ucwoKIyMgVU5JT04gCgpUaGUgYFVOSU9OYCBvcGVyYXRvciBjb21iaW5lcyByZXN1bHQgc2V0cyBvZiB0d28gb3IgbW9yZSBgU0VMRUNUYCBzdGF0ZW1lbnRzIGludG8gYSBzaW5nbGUgcmVzdWx0IHNldC4gSW4gYSBWZW5uIGRpYWdyYW0gd2hlcmUgc2V0ICRBJCBpcyB0aGUgcmVzdWx0IG9mIG9uZSBgU0VMRUNUYCBzdGF0ZW1lbnQgYW5kIHNldCAkQiQgaXMgdGhlIHJlc3VsdCBvZiBhbm90aGVyIGBTRUxFQ1RgIHN0YXRlbWVudCwgYFVOSU9OYCByZXR1cm5zIHRoZSB1bmlvbiBvZiBBIGFuZCBCLCAkQSBcY3VwIEIkLgoKSGVyZSdzIHRoZSBzeW50YXguCgpgYGAKU0VMRUNUCiAgY29sdW1uXzEsCiAgY29sdW1uXzIKRlJPTQogIHRhYmxlXzEKVU5JT04KU0VMRUNUCiAgY29sdW1uXzEsCiAgY29sdW1uXzIKRlJPTQogIHRhYmxlXzI7CmBgYAoKVGhlc2UgcnVsZXMgYXBwbHkgdG8gYFVOSU9OYCBxdWVyaWVzOgoKMS4gQm90aCBxdWVyaWVzIG11c3QgcmV0dXJuIHRoZSBzYW1lIG51bWJlciBvZiBjb2x1bW5zLgoyLiBUaGUgY29ycmVzcG9uZGluZyBjb2x1bW5zIGluIHRoZSBxdWVyaWVzIG11c3QgaGF2ZSBjb21wYXRpYmxlIGRhdGEgdHlwZXMuCgpUaGUgYFVOSU9OYCBvcGVyYXRvciByZW1vdmVzIGFsbCBkdXBsaWNhdGUgcm93cyB1bmxlc3MgYFVOSU9OIEFMTGAgaXMgdXNlZC4KClRoZXJlIGFyZSBubyBndWFyYW50ZWVzIHdoZW4gaXQgY29tZXMgdG8gcm93IG9yZGVyaW5nLCBzbyBpZiB5b3Ugd2FudCBhIHNwZWNpZmljIG9yZGVyaW5nLCB1c2UgYE9SREVSIEJZYCBvbiBwYXJ0aWN1bGFyIGNvbHVtbnMocykuCgpXZSBvZnRlbiB1c2UgdGhlIGBVTklPTmAgb3BlcmF0b3IgdG8gY29tYmluZSBkYXRhIGZyb20gc2ltaWxhciB0YWJsZXMgdGhhdCBhcmUgbm90IHBlcmZlY3RseSBub3JtYWxpemVkLiBUaG9zZSB0YWJsZXMgYXJlIG9mdGVuIGZvdW5kIGluIHRoZSByZXBvcnRpbmcgc3lzdGVtIG9yIGRhdGEgd2FyZWhvdXNpbmcgc3lzdGVtLgoKTGV0J3MgY3JlYXRlIHNvbWUgZXhhbXBsZSB0YWJsZXMuCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksICJQb3N0Z3JlU1FMIEFXUyBleGFtcGxlIikKYGBgCgpDcmVhdGUgdGhlIHRhYmxlcy4KYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KRFJPUCBUQUJMRSBJRiBFWElTVFMgc2FsZXMyMDA3cTE7CkRST1AgVEFCTEUgSUYgRVhJU1RTIHNhbGVzMjAwN3EyOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIHNhbGVzMjAwN3ExICgKICBuYW1lICAgIFZBUkNIQVIoNjQpICBQUklNQVJZIEtFWSwKICBhbW91bnQgIE1PTkVZICAgICAgICBOT1QgTlVMTAopOwoKQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgc2FsZXMyMDA3cTIgKAogIG5hbWUgICAgVkFSQ0hBUig2NCkgIFBSSU1BUlkgS0VZLAogIGFtb3VudCAgTU9ORVkgICAgICAgIE5PVCBOVUxMCikKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpJTlNFUlQgSU5UTyBzYWxlczIwMDdxMQogIChuYW1lLCBhbW91bnQpClZBTFVFUwogICgnTWlrZScsIDE1MDAwMC4yNSksCiAgKCdKb24nLCAgMTMyMDAwLjc1KSwKICAoJ01hcnknLCAxMDAwMDAuMDApOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIHNhbGVzMjAwN3EyCiAgKG5hbWUsIGFtb3VudCkKVkFMVUVTCiAgKCdNaWtlJywgMTIwMDAwLjI1KSwKICAoJ0pvbicsICAxNDIwMDAuNzUpLAogICgnTWFyeScsIDEwMDAwMC4wMCk7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBzYWxlczIwMDdxMTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIHNhbGVzMjAwN3EyOwpgYGAKCiMjIyBgVU5JT05gIGV4YW1wbGUKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVAogICoKRlJPTQogIHNhbGVzMjAwN3ExClVOSU9OClNFTEVDVAogICoKRlJPTQogIHNhbGVzMjAwN3EyOwpgYGAKCiMjIyBgVU5JT04gQUxMYCBleGFtcGxlCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QKICAqCkZST00KICBzYWxlczIwMDdxMQpVTklPTiBBTEwKU0VMRUNUCiAgKgpGUk9NCiAgc2FsZXMyMDA3cTI7CmBgYAoKSGVyZSdzIGEgYFVOSU9OIEFMTGAgd2l0aCBhbiBgT1JERVIgQllgLiAoTm90ZSB0aGF0IHRoZSBgT1JERVIgQllgIG11c3QgZ28gYXQgdGhlIHZlcnkgZW5kIG9mIGBVTklPTiBbQUxMXWAgcXVlcnkuKQoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUCiAgKgpGUk9NCiAgc2FsZXMyMDA3cTEKVU5JT04gQUxMClNFTEVDVAogICoKRlJPTQogIHNhbGVzMjAwN3EyCk9SREVSIEJZCiAgbmFtZSwKICBhbW91bnQgREVTQzsKYGBgCgoKRG8gYSBsaXR0bGUgYWdncmVnYXRlIGBTVU1gIHdpdGggdGhlIGBVTklPTiBBTExgIHJlc3VsdCBzZXQgYXMgYSBzdWJxdWVyeS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVAogIG5hbWUsIFNVTShhbW91bnQpCkZST00gKAogIFNFTEVDVAogICAgKgogIEZST00KICAgIHNhbGVzMjAwN3ExCiAgVU5JT04gQUxMCiAgU0VMRUNUCiAgICAqCiAgRlJPTQogICAgc2FsZXMyMDA3cTIKICApIEFTIHNhbGVzMjAwN3ExcTIKR1JPVVAgQlkKICBzYWxlczIwMDdxMXEyLm5hbWUKT1JERVIgQlkKICBTVU0oYW1vdW50KSBERVNDOwpgYGAKCkRpc2Nvbm5lY3QgZnJvbSB0aGUgXyoqZXhhbXBsZSoqXyBkYXRhYmFzZS4KYGBge3J9CmRiRGlzY29ubmVjdChjb25fZXgpCmBgYAoKCgojIyBJTlRFUlNFQ1QKCkxpa2UgdGhlIGBVTklPTmAgb3BlcmF0b3IsIHRoZSBgSU5URVJTRUNUYCBvcGVyYXRvciBjb21iaW5lcyB0aGUgcmVzdWx0IHNldHMgb2YgdHdvIG9yIG1vcmUgYFNFTEVDVGAgc3RhdGVtZW50cyBpbnRvIGEgc2luZ2xlIHJlc3VsdCBzZXQuIEluIGEgVmVubiBkaWFncmFtIHdoZXJlIHNldCAkQSQgaXMgdGhlIHJlc3VsdCBvZiBvbmUgYFNFTEVDVGAgc3RhdGVtZW50IGFuZCBzZXQgJEIkIGlzIHRoZSByZXN1bHQgb2YgYW5vdGhlciBgU0VMRUNUYCBzdGF0ZW1lbnQsIGBJTlRFUlNFQ1RgIHJldHVybnMgdGhlIGludGVyc2VjdCBvZiBBIGFuZCBCLCAkQSBcY2FwIEIkLgoKVGhlIHJ1bGVzIGZvciBhbiBgSU5URVJTRUNUYCBvcGVyYXRvciBxdWVyaWVzIGFyZSB0aGUgc2FtZSBhcyB0aG9zZSBmb3IgYFVOSU9OYDoKCjEuIEJvdGggcXVlcmllcyBtdXN0IHJldHVybiB0aGUgc2FtZSBudW1iZXIgb2YgY29sdW1ucy4KMi4gVGhlIGNvcnJlc3BvbmRpbmcgY29sdW1ucyBpbiB0aGUgcXVlcmllcyBtdXN0IGhhdmUgY29tcGF0aWJsZSBkYXRhIHR5cGVzLgoKSGVyZSdzIHRoZSBzeW50YXguCgpgYGAKU0VMRUNUCiAgY29sdW1uXzEsCiAgY29sdW1uXzIKRlJPTQogIHRhYmxlXzEKSU5URVJTRUNUClNFTEVDVAogIGNvbHVtbl8xLAogIGNvbHVtbl8yCkZST00KICB0YWJsZV8yOwpgYGAKCiMjIyBgSU5URVJTRUNUYCBvcGVyYXRvciBleGFtcGxlCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksICJQb3N0Z3JlU1FMIEFXUyBleGFtcGxlIikKYGBgCgpDcmVhdGUgdGhlIGV4YW1wbGUgdGFibGVzLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KRFJPUCBUQUJMRSBJRiBFWElTVFMgZW1wbG95ZWVzXzI7CkRST1AgVEFCTEUgSUYgRVhJU1RTIGtleXNfMjsKRFJPUCBUQUJMRSBJRiBFWElTVFMgaGlwb3NfMjsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBlbXBsb3llZXNfMiAoCiAgZW1wbG95ZWVfaWQgICAgU0VSSUFMICAgICAgICBQUklNQVJZIEtFWSwKICBlbXBsb3llZV9uYW1lICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMCik7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KLS0gImtleSBlbXBsb3llZXMiCkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIGtleXNfMiAoCiAgZW1wbG95ZWVfaWQgICAgIElOVCAgIFBSSU1BUlkgS0VZLAogIGVmZmVjdGl2ZV9kYXRlICBEQVRFICBOT1QgTlVMTCAtLSwKICAtLSBGT1JFSUdOIEtFWSBlbXBsb3llZV9pZCBSRUZFUkVOQ0VTIGVtcGxveWVlc18yKGVtcGxveWVlX2lkKQopOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9Ci0tICJoaWdoIHBvdGVudGlhbCBlbXBsb3llZXMiCkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIGhpcG9zXzIgKAogIGVtcGxveWVlX2lkICAgICBJTlQgICBQUklNQVJZIEtFWSwKICBlZmZlY3RpdmVfZGF0ZSAgREFURSAgTk9UIE5VTEwgLS0sCiAgLS0gRk9SRUlHTiBLRVkgZW1wbG95ZWVfaWQgUkVGRVJFTkNFUyBlbXBsb3llZXNfMihlbXBsb3llZV9pZCkKKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpJTlNFUlQgSU5UTyBlbXBsb3llZXNfMgogIChlbXBsb3llZV9uYW1lKQpWQUxVRVMKICAoJ0pveWNlIEVkd2FyZHMnKSwKICAoJ0RpYW5lIENvbGxpbnMnKSwKICAoJ0FsaWNlIFN0ZXdhcnQnKSwKICAoJ0p1bGllIFNhbmNoZXonKSwKICAoJ0hlYXRoZXIgTW9ycmlzJyksCiAgKCdUZXJlc2EgUm9nZXJzJyksCiAgKCdEb3JpcyBSZWVkJyksCiAgKCdHbG9yaWEgQ29vaycpLAogICgnRXZlbHluIE1vcmdhbicpLAogICgnSmVhbiBCZWxsJyk7CgpJTlNFUlQgSU5UTyBrZXlzXzIKICAoZW1wbG95ZWVfaWQsIGVmZmVjdGl2ZV9kYXRlKQpWQUxVRVMKICAoMSwgJzIwMDAtMDItMDEnKSwKICAoMiwgJzIwMDEtMDYtMDEnKSwKICAoNSwgJzIwMDItMDEtMDEnKSwKICAoNywgJzIwMDUtMDYtMDEnKTsKIApJTlNFUlQgSU5UTyBoaXBvc18yCiAgKGVtcGxveWVlX2lkLCBlZmZlY3RpdmVfZGF0ZSkKVkFMVUVTCiAgKDksICcyMDAwLTAxLTAxJyksCiAgKDIsICcyMDAyLTA2LTAxJyksCiAgKDUsICcyMDA2LTA2LTAxJyksCiAgKDEwLCAnMjAwNS0wNi0wMScpOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00ga2V5c18yOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gaGlwb3NfMjsKYGBgCgpUbyBmaW5kIHdoaWNoIGVtcGxveWVlcyBhcmUgYm90aCAia2V5IiBhbmQgImhpZ2ggaW1wYWN0IiwgdXNlIHRoZSBgSU5URVJTRUNUYCBvcGVyYXRvci4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVAogIGVtcGxveWVlX2lkCkZST00KICBrZXlzXzIKSU5URVJTRUNUClNFTEVDVAogIGVtcGxveWVlX2lkCkZST00KICBoaXBvc18yOwpgYGAKCkhlcmUncyBhbiBgSU5URVJTRUNUYCBzdWJxdWVyeSB3aXRoIGFuIGBJTk5FUiBKT0lOYCBhbmQgYW4gYE9SREVSIEJZYC4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVAogIGtleXNfaGlwb3MuZW1wbG95ZWVfaWQsCiAgZW1wbG95ZWVzXzIuZW1wbG95ZWVfbmFtZQpGUk9NICgKICBTRUxFQ1QKICAgIGVtcGxveWVlX2lkCiAgRlJPTQogICAga2V5c18yCiAgSU5URVJTRUNUCiAgU0VMRUNUCiAgICBlbXBsb3llZV9pZAogIEZST00KICAgIGhpcG9zXzIKKSBBUyBrZXlzX2hpcG9zCklOTkVSIEpPSU4KICBlbXBsb3llZXNfMgogIE9OIGtleXNfaGlwb3MuZW1wbG95ZWVfaWQgPSBlbXBsb3llZXNfMi5lbXBsb3llZV9pZApPUkRFUiBCWQogIGtleXNfaGlwb3MuZW1wbG95ZWVfaWQgREVTQzsKYGBgCgpEaXNjb25uZWN0IGZyb20gdGhlIF8qKmV4YW1wbGUqKl8gZGF0YWJhc2UuCmBgYHtyfQpkYkRpc2Nvbm5lY3QoY29uX2V4KQpgYGAKCgoKYGBgCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKYGBgCg==</div>
 
 
 
