@@ -1,0 +1,274 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 7"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+
+# Grouping Sets
+
+## GROUPING SETS 
+
+Let's start by creating an example table called "sales".
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS sales;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS sales (
+  brand     VARCHAR  NOT NULL,
+  segment   VARCHAR  NOT NULL,
+  quantity  INT      NOT NULL,
+  PRIMARY KEY (brand, segment)
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO sales
+  (brand, segment, quantity)
+VALUES
+  ('ABC', 'Premium', 100),
+  ('ABC', 'Basic',   200),
+  ('XYZ', 'Premium', 100),
+  ('XYZ', 'Basic',   300);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM sales;
+```
+
+### `GROUPING SETS` example
+
+A grouping set is a set of columns by which you group. Typically, a single aggregate query defines a single grouping set.
+
+For example, this query defines a grouping set of the `brand` and `segment`. It returns the number of products sold by `brand` and `segment`.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  brand,
+  segment;
+```
+
+This query returns the number of products sold by `brand`. It defines a grouping set of the `brand`.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  brand;
+```
+
+This query returns the number of products sold by `segment`. It defines a grouping set of the `segment`.
+
+```{sql connection=con_ex}
+SELECT
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  segment;
+```
+
+This query returns the number of products sold for all `brand`s and `segment`s. It defines an empty grouping set.
+
+```{sql connection=con_ex}
+SELECT
+  SUM(quantity)
+FROM
+  sales;
+```
+
+Suppose instead of the four separate result sets above, you wanted to see a unified result set with the aggregated data for all grouping sets. To achieve this, you use the `UNION ALL` to unify all the queries above.
+
+Because the `UNION ALL` requires all result sets to have the same number of columns with compatible data types, you need to adjust the queries by adding `NULL` to the selection list of each as shown below.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  brand,
+  segment
+
+UNION ALL
+
+SELECT
+  brand,
+  NULL,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  brand
+
+UNION ALL
+
+SELECT
+  NULL,
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  segment
+
+UNION ALL
+
+SELECT
+  NULL,
+  NULL,
+  SUM(quantity)
+FROM
+  sales;
+```
+
+This query with the `UNION ALL`s has two disadvantages:
+
+1. It's super long to write.
+2. It has performance issues because the PostgreSQL engine has to scan the "sales" table separately for each of the four (sub)queries joined by `UNION ALL`s.
+
+PostgreSQL provides `GROUPING SETS` -- which is a subclause of `GROUP BY` -- to make this kind of query more efficient.
+
+Here's the syntax.
+
+```
+SELECT
+  column_1,
+  column_2,
+  aggregate_function(column_3)
+FROM
+  table_name
+GROUP BY
+  GROUPING SETS (
+    (column_1, column_2),
+    (column_1),
+    (column_2),
+    ()
+  );
+```
+
+Applying this syntax to your previous `UNION ALL` approach, we get this.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  GROUPING SETS(
+    (brand, segment),
+    (brand),
+    (segment),
+    ()
+  );
+```
+
+Using `GROUPING SETS` is much easier to read and the PostgreSQL engine optimizes the return speed by reducing the number of scans it has to make of the "sales" table.
+
+
+## GROUPING function
+
+The `GROUPING` function accepts a name of a column and returns bit 0 if the row is a member of the current grouping set and 1 otherwise.
+
+Here's an example.
+
+```{sql connection=con_ex}
+SELECT
+  GROUPING(brand) AS grouping_brand,
+  GROUPING(segment) AS grouping_segment,
+  brand,
+  segment,
+  SUM(quantity)
+FROM
+  sales
+GROUP BY
+  GROUPING SETS(
+    (brand, segment),
+    (brand),
+    (segment),
+    ()
+  )
+ORDER BY
+  grouping_brand,
+  grouping_segment,
+  brand,
+  segment;
+```
+
+0 + 0 means the row is in the `(brand, segment)` grouping set.
+
+0 + 1 means the row is in the `(brand)` grouping set.
+
+1 + 0 means the row is in the `(segment)` grouping set.
+
+1 + 1 means the row is in the `()` grouping set.
+
+
+
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
+
+
+
+
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
