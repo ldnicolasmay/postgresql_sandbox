@@ -243,6 +243,126 @@ dbDisconnect(con_ex)
 ```
 
 
+## CUBE
+
+`CUBE` is a shorthand for listing all possible grouping sets from a list of columns.
+
+For example if we want to group by `col_1`, `col_2`, and `col_3`, all possible grouping sets are `(col_1, col_2, col_3)`, `(col_1, col_2)`, `(col_1, col_3)`, `(col_2, col_3)`, `(col_1)`, `(col_2)`, `(col_3)`, and `()`.
+
+So instead of writing this...
+```
+SELECT
+  col_1,
+  col_2,
+  col_3,
+  aggregate_function(col_4)
+FROM
+  table_1
+GROUP BY
+  GROUPING SETS (
+    (col_1, col_2, col_3),
+    (col_1, col_2),
+    (col_1, col_3),
+    (col_2, col_3),
+    (col_1),
+    (col_2),
+    (col_3),
+    ()
+  );  
+```
+
+... we can write this...
+
+```
+SELECT
+  col_1,
+  col_2,
+  col_3,
+  aggregate_function(col_4)
+FROM
+  table_1
+GROUP BY
+  CUBE (
+    col_1,
+    col_2,
+    col_3
+  );
+```
+
+You can also do a partial `CUBE` grouping.
+
+```
+SELECT
+  col_1,
+  col_2,
+  col_3,
+  aggregate_function(col_4)
+FROM
+  table_1
+GROUP BY
+  col_1,
+  CUBE (
+    col_1,
+    col_2
+  );
+```
+
+Here's an example.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Let's use the "sales" table we already created.
+
+```{sql connection=con_ex}
+SELECT * FROM sales;
+```
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity),
+  GROUPING(brand) AS grouping_brand,
+  GROUPING(segment) AS grouping_segment
+FROM
+  sales
+GROUP BY
+  CUBE(
+    brand,
+    segment
+  )
+ORDER BY
+  grouping_brand,
+  grouping_segment,
+  brand,
+  segment;
+```
+
+This is a partial cube.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity),
+  GROUPING(brand) AS grouping_brand,
+  GROUPING(segment) AS grouping_segment
+FROM
+  sales
+GROUP BY
+  brand,
+  CUBE(segment) -- (segment) & () => (brand, segment) & (brand)
+ORDER BY
+  grouping_brand,
+  grouping_segment,
+  brand,
+  segment;
+```
+
 
 
 ```
