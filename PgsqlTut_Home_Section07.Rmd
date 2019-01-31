@@ -201,6 +201,8 @@ Using `GROUPING SETS` is much easier to read and the PostgreSQL engine optimizes
 
 The `GROUPING` function accepts a name of a column and returns bit 0 if the row is a member of the current grouping set and 1 otherwise.
 
+### `GROUPING` function example
+
 Here's an example.
 
 ```{sql connection=con_ex}
@@ -239,7 +241,7 @@ ORDER BY
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
 ```
 
 
@@ -307,7 +309,7 @@ GROUP BY
   );
 ```
 
-Here's an example.
+### `CUBE` example
 
 Connect to the _**example**_ database.
 
@@ -363,6 +365,201 @@ ORDER BY
   segment;
 ```
 
+Disconnect from _**example**_ database.
+
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
+```
+
+
+## ROLLUP
+
+Different from the `CUBE` subclause, `ROLLUP` does _**not**_ generate all possible grouping sets based on the specified columns. `ROLLUP` only generates a subset of all possible grouping sets based on the assumption of a column grouping hierarchy. 
+For example, using `col_1`, `col_2`, and `col_3` as grouping columns, `CUBE` generates all possible grouping sets:
+
+```
+(col_1, col_2, col_3)
+(col_1, col_2)
+(col_1, col_3)
+(col_2, col_3)
+(col_1)
+(col_2)
+(col_3)
+()
+```
+
+But the subclause `ROLLUP (col_1, col_2, col_3)` only generates four grouping subsets assuming the hierarchy `col_1` $>$ `col_2` $>$ `col_3` as follows:
+
+```
+(col_1, col_2, col_3)
+(col_1, col_2)
+(col_1)
+()
+```
+
+A common use of `ROLLUP` is to calculate aggregations by year, month, and date (assuming the hierarchy year $>$ month $>$ date).
+
+Here's the syntax.
+
+```
+SELECT
+  col_1,
+  col_2,
+  col_3,
+  aggregate_function(col_4)
+FROM
+  table_1
+GROUP BY
+  ROLLUP (
+    col_1,
+    col_2,
+    col_3
+  );
+```
+
+It's also possible to partial rollups to reduce the number of subtotals generated.
+
+```
+SELECT
+  col_1,
+  col_2,
+  col_3,
+  aggregate_function(col_4)
+FROM
+  table_1
+GROUP BY
+  col_1
+  ROLLUP (
+    col_2,
+    col_3
+  );
+```
+
+### `ROLLUP` example
+
+Let's use the previously used "sales" table as an example.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity),
+  GROUPING(brand) AS grouping_brand,
+  GROUPING(segment) AS grouping_segment
+FROM
+  sales
+GROUP BY
+  ROLLUP(
+    brand,
+    segment
+  ) -- => (brand, segment), (brand), ()
+ORDER BY
+  grouping_brand,
+  grouping_segment,
+  brand,
+  segment;
+```
+
+Here's what happens when we change the column grouping hierarchy by swapping the order of `brand` and `segment`.
+
+```{sql connection=con_ex}
+SELECT
+  segment,
+  brand,
+  SUM(quantity),
+  GROUPING(segment) AS grouping_segment,
+  GROUPING(brand) AS grouping_brand
+FROM
+  sales
+GROUP BY
+  ROLLUP(
+    segment,
+    brand
+  ) -- => (segment, brand), (segment), ()
+ORDER BY
+  grouping_segment,
+  grouping_brand,
+  segment,
+  brand;
+```
+
+And here's a partial `ROLLUP` example.
+
+```{sql connection=con_ex}
+SELECT
+  brand,
+  segment,
+  SUM(quantity),
+  GROUPING(brand) as grouping_brand,
+  GROUPING(segment) as grouping_segment
+FROM
+  sales
+GROUP BY
+  brand,
+  ROLLUP(
+    segment
+  ) -- => (brand, segment), (brand)
+ORDER BY
+  grouping_brand,
+  grouping_segment,
+  brand,
+  segment;
+```
+
+And here's an example using the _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+Let's use the "rental" table.
+
+First, let's preview the table.
+
+```{sql connection=con_dvd}
+SELECT * FROM rental LIMIT 5;
+```
+
+We can use `COUNT` on the `rental_id` column and extract the year, month, and day from the `rental_date` column.
+
+```{sql connection=con_dvd}
+SELECT
+  EXTRACT(YEAR FROM rental_date) AS year,
+  EXTRACT(MONTH FROM rental_date) AS month,
+  EXTRACT(DAY FROM rental_date) AS day,
+  COUNT(rental_id) --,
+  -- GROUPING(EXTRACT(YEAR FROM rental_date)) AS grouping_year,
+  -- GROUPING(EXTRACT(MONTH FROM rental_date)) AS grouping_month,
+  -- GROUPING(EXTRACT(DAY FROM rental_date)) AS grouping_day
+FROM
+  rental
+GROUP BY
+  ROLLUP(
+    year,
+    month,
+    day
+  )
+ORDER BY
+  -- grouping_year,
+  -- grouping_month,
+  -- grouping_day,
+  year,
+  month,
+  day;
+```
+
+Disconnect from both the _**example**_ and _**dvdrental**_ databases.
+
+```{r}
+if(exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
+if(exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd) }
+```
 
 
 ```
