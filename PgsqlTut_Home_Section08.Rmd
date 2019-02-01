@@ -1,0 +1,221 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 7"
+output: 
+  html_notebook:
+    theme: cerulean
+    highlight: espresso
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+
+# Subquery
+
+## Subquery (Inner Query)
+
+Suppose we want to find the films whose rental rate is higher than the average rental rate. We can do this in two steps:
+
+1. Find the average rental rate by using the `SELECT` statement and `AVG` function.
+2. Use the result of the first query in the second `SELECT` statement to find the films we want.
+
+Connect to the _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+1. Get the average rental rate.
+```{sql connection=con_dvd}
+SELECT
+  AVG(rental_rate)
+FROM
+  film;
+```
+
+The average rental rate is $2.98.
+
+No we can get the films whose rental rate is higher than the average rental rage.
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  rental_rate
+FROM
+  film
+WHERE
+  rental_rate > 2.98;
+```
+
+This 2-step solution isn't elegant. We can solve this problem with one query using a subquery (a.k.a., inner query).
+
+A subquery is a query nested inside another query such as `SELECT`, `INSERT`, `DELETE`, and `UPDATE`. Here we'll only focus on the `SELECT statement.
+
+### Subquery example
+
+Here's how we'd construct a subquery within a query to solve the above problem in 1 step.
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  rental_rate
+FROM
+  film
+WHERE
+  rental_rate > (
+    SELECT
+      AVG(rental_rate)
+    FROM
+      film
+    );
+```
+
+### Subquery with `IN` operator example
+
+Say we want to get the titles for all the films that were returned between May 29, 2005 and May 30, 2005.
+
+We have to use the "rental" and join the "inventory" table.
+
+```{sql connection=con_dvd}
+SELECT * FROM rental LIMIT 5;
+```
+
+```{sql connection=con_dvd}
+SELECT * FROM inventory LIMIT 5;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  inventory.film_id
+FROM
+  rental
+INNER JOIN 
+  inventory
+  ON rental.inventory_id = inventory.inventory_id
+WHERE
+  return_date BETWEEN '2005-05-29' AND '2005-05-30'
+ORDER BY film_id;
+```
+
+```{sql connection=con_dvd}
+SELECT * FROM film LIMIT 5;
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film.film_id,
+  film.title
+FROM
+  film
+WHERE
+  film_id IN (
+    SELECT
+      inventory.film_id
+    FROM
+      rental
+    INNER JOIN 
+      inventory
+      ON rental.inventory_id = inventory.inventory_id
+    WHERE
+      return_date BETWEEN '2005-05-29' AND '2005-05-30'
+    ORDER BY
+      film_id
+  );
+```
+
+### Subquery with `EXISTS` operator example
+
+A subquery can be an input of the `EXISTS` operator. If the subquery returns any row, the `EXISTS` operator returns true. If the subquery returns no row, the result of the `EXISTS` operator is false.
+
+The `EXISTS` operator only caures about the number of rows returned from the subquery (0 or 1+), not about the content of the rows. So, the common coding convention of `EXISTS` is as follows.
+
+```
+EXISTS (SELECT 1 FROM table WHERE [condition]);
+```
+
+Here's an example.
+
+This `INNER JOIN` returns all the `first_name`, `last_name` rows where there's a `customer_id` in both the "payment" and "customer" tables.
+
+```{sql connection=con_dvd}
+SELECT
+  first_name,
+  last_name
+FROM
+  payment
+INNER JOIN
+  customer
+  ON payment.customer_id = customer.customer_id
+ORDER BY
+  first_name,
+  last_name;
+```
+
+But notice we have repeated rows.
+
+The repeated rows can be eliminated by using a subquery with the `EXISTS` operator.
+
+```{sql connection=con_dvd}
+SELECT
+  first_name,
+  last_name
+FROM
+  customer
+WHERE
+  EXISTS (
+    SELECT
+      1
+    FROM
+      payment
+    WHERE
+      payment.customer_id = customer.customer_id
+  )
+ORDER BY
+  first_name,
+  last_name;
+```
+
+_Note: This last thing (subquery with `EXISTS`) isn't super clear what's going on here. May need to revisit._
+
+Disconnect from the _**dvdrental**_ database.
+
+```{r}
+if (exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd); }
+```
+
+
+
+
+```
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
