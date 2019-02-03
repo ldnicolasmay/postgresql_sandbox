@@ -343,6 +343,80 @@ Note that the `<> ANY` operator is different from `NOT IN`. The expression...
 `x <> a OR x <> b OR x <> c`.
 
 
+## ALL Operator
+
+The `ALL` operator is similar to the `ANY` operator in terms of syntax and query rules. The only difference is the logic. With `ANY`, something like `... col_1 >= ANY([subquery])` would return rows where the `col_1` values are greater than or equal to the _**smallest**_ value in the subquery return. With `ALL`, a similar query like `... col_1 >= ALL([subquery])` would return rows where the `col_1` values are greater than or equal to the _**biggest**_ value in the subquery return.
+
+### `ALL` operator example
+
+Connect to the _**dvdrental**_ database.
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+The following returns the average film length of films grouped by film category.
+
+```{r}
+dbListFields(con_dvd, "film")
+```
+
+```{r}
+dbListFields(con_dvd, "film_category")
+```
+
+```{sql connection=con_dvd}
+SELECT
+  film_category.category_id,
+  AVG(film.length)
+FROM
+  film
+INNER JOIN
+  film_category
+  USING(film_id) -- same as `ON film.film_id = film_category.film_id`
+GROUP BY
+  film_category.category_id
+ORDER BY
+  AVG(film.length) DESC;
+```
+
+We'll use the `avg` column for the subquery in a query that utilizes the `ALL` operator.
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  length
+FROM
+  film
+WHERE
+  length > ALL(
+    SELECT
+      AVG(film.length)
+    FROM
+      film
+    INNER JOIN
+      film_category
+      USING(film_id)
+    GROUP BY
+      film_category.category_id
+  )
+ORDER BY
+  length ASC;
+```
+
+The query with the `ALL` operator returns only those films whose lengths are greater than the biggest value returned in the subquery (128.2027).
+
+Disconnect from the _**dvdrental**_ database.
+```{r}
+if (exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd); }
+```
+
+
+## EXCEPT Operator
+
+
+
+
 ```
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
 #==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
