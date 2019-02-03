@@ -190,6 +190,157 @@ if (exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd); }
 ```
 
 
+## ANY Operator
+
+The PostgreSQL `ANY` operator compares a value to a set of values returned by a subquery. The following illustrates the the syntax of the `ANY` operator.
+
+```
+SELECT
+  col_1
+FROM
+  table_1
+WHERE
+  col_2 >= ANY(
+    [subquery]
+  );
+```
+
+Here are the rules for an `ANY` query:
+
+1. The subquery must return exactly one columns.
+2. The `ANY` operator must be preceded by by one of the following comparison operators: `=`, `<>`/`!=`, `<`, `>`, `<=`, `>=`.
+3. The `ANY` operator returns true if any value of the subquery meets the condition... otherwise it returns false.
+
+Note that `SOME` is a synonym for `ANY`. They're the same.
+
+### `ANY` operator examples
+
+We'll use the "film" and "film_category" tables from the _**dvdrental**_ database.
+
+Connect to the database.
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+```{r}
+dbListFields(con_dvd, "film")
+```
+
+```{r}
+dbListFields(con_dvd, "film_category")
+```
+
+The following example returns the maximum length of film grouped by category.
+
+```{sql connection=con_dvd}
+SELECT
+  film_category.category_id,
+  MAX(film.length)
+FROM
+  film
+INNER JOIN
+  film_category
+  ON film.film_id = film_category.film_id
+GROUP BY
+  film_category.category_id
+ORDER BY
+  film_category.category_id;
+```
+
+To use `ANY`, we need to return exactly one columns... the "max" column.
+
+```{sql connection=con_dvd}
+SELECT
+  MAX(film.length)
+FROM
+  film
+INNER JOIN
+  film_category
+  ON film.film_id = film_category.film_id
+GROUP BY
+  film_category.category_id
+ORDER BY
+  film_category.category_id;
+```
+
+We can use the above in the subquery after an `ANY` operator. This `ANY` operator query returns all the films whose lengths are greater than or equal to the returned list of lengths in the subquery. (So, basically the films whose lengths are greater than or equal to 178 minutes.)
+
+```{sql connection=con_dvd}
+SELECT
+  title
+FROM
+  film
+WHERE
+  length >= ANY(
+    SELECT
+      MAX(film.length)
+    FROM
+      film
+    INNER JOIN
+      film_category
+      ON film.film_id = film_category.film_id
+    GROUP BY
+      film_category.category_id
+  );
+```
+
+Note that if the subquery doesn't return any rows, then the entire query returns no rows.
+
+### `ANY` vs. `IN`
+
+`= ANY` is equivalent to the `IN` operator.
+
+The following example gets the film whose category is either `Action` or `Drama`.
+
+```{sql connection=con_dvd}
+SELECT
+  title,
+  category_id
+FROM
+  film
+INNER JOIN 
+  film_category
+  USING(film_id)
+WHERE
+  category_id = ANY(
+    SELECT
+      category_id
+    FROM
+      category
+    WHERE
+      NAME = 'Action' OR NAME = 'Drama'
+    );
+```
+
+The following statement uses the IN operator which produces the same result.
+
+```{sql connection=con_dvd}
+SELECT
+  title,
+  category_id
+FROM
+  film
+INNER JOIN 
+  film_category
+  USING(film_id)
+WHERE
+  category_id IN(
+    SELECT
+      category_id
+    FROM
+      category
+    WHERE
+      NAME = 'Action' OR NAME = 'Drama'
+    );
+```
+
+Note that the `<> ANY` operator is different from `NOT IN`. The expression...
+
+`x <> ANY (a,b,c)`
+
+... is equivalent to...
+
+`x <> a OR x <> b OR x <> c`.
 
 
 ```
