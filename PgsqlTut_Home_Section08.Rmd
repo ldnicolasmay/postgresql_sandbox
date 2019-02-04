@@ -412,8 +412,121 @@ if (exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd); }
 ```
 
 
-## EXCEPT Operator
+## EXISTS Operator
 
+The `EXISTS` operator is used to test for the existence of rows in a subquery. If the subquery returns at least one row, the result of `EXISTS` is true for the corresponding row. In case the subquery returns no row, the result of `EXISTS` is false for the corresponding row.
+
+The result of `EXISTS` depends on whether any row returned by the subquery, and not on the content of the rows. Therefore, the columns that appear on the `SELECT` clause of the subquery are not important.
+
+For this reason, the common coding convention is to write `EXISTS` in the following form.
+
+```
+SELECT
+  col_1
+FROM
+  table_1
+WHERE
+  EXISTS(
+    SELECT
+      1 -- this isn't important... as long as it evaluates to something
+    FROM
+      table_2
+    WHERE
+      table_2.col_2 = table_1.col_1
+  );
+```
+
+### `EXISTS` operator examples
+
+We'll use the "customer" and "payment" table from the _**dvdrental**_ database.
+
+Connect to the database.
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+```{r}
+dbListFields(con_dvd, "customer")
+```
+
+```{r}
+dbListFields(con_dvd, "payment")
+```
+
+A) Find customers who have at least one payment whose amount is greater than 11.
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  first_name,
+  last_name
+FROM
+  customer AS c
+WHERE
+  EXISTS(
+    SELECT
+      1
+    FROM
+      payment AS p
+    WHERE
+      c.customer_id = p.customer_id 
+      AND amount > 11.00
+  )
+ORDER BY
+  first_name,
+  last_name;
+```
+
+In this example, for each customer in the "customer" table, the subquery checks the "payment" table to find if that customer made at least one payment (`c.customer_id = p.customer_id`) and the amount is greater than 11 (`amount > 11`).
+
+B) NOT EXISTS example
+
+`NOT EXISTS` is opposite to `EXISTS`, meaning that if the subquery returns no row, `NOT EXISTS` returns true for the corresponding row. If the subquery returns a row, `NOT EXISTS` returns false for that row.
+
+The following example returns customers who have not made any payment that is greater than $11.00.
+
+```{sql connection=con_dvd}
+SELECT
+  customer_id,
+  first_name,
+  last_name
+FROM
+  customer AS c
+WHERE
+  NOT EXISTS(
+    SELECT
+      1
+    FROM
+      payment AS p
+    WHERE
+      c.customer_id = p.customer_id
+      AND amount > 11.00
+  );
+```
+
+C) EXISTS and NULL
+
+If the subquery returns `NULL`, `EXISTS` returns true. See the following example
+
+```{sql connection=con_dvd}
+SELECT
+  first_name,
+  last_name
+FROM
+  customer
+WHERE
+  EXISTS(
+    SELECT NULL
+  )
+ORDER BY
+  first_name,
+  last_name;
+```
+
+Disconnect from the _**dvdrental**_ database.
+```{r}
+if (exists("con_dvd")) { dbDisconnect(con_dvd); rm(con_dvd); }
+```
 
 
 
