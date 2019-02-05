@@ -408,6 +408,451 @@ div.tocify {
 <h1>Modifying data</h1>
 <div id="insert" class="section level2">
 <h2>INSERT</h2>
+<p>When you create a new table, it doesn’t have any data. You need to insert data into the table. <code>INSERT</code> allows you to insert one or more rows into a table at a time.</p>
+<p>Here’s the syntax for a single row insert.</p>
+<pre><code>INSERT INTO table_1
+  (col_1, col_2, ...)
+VALUES
+  (value_1, value_2, ...);</code></pre>
+<p>Here’s the syntax for a multiple row insert.</p>
+<pre><code>INSERT INTO table_1
+  (col_1, col_2, ...)
+VALUES
+  (value_1a, value_2a, ...),
+  (value_1b, value_2b, ...);</code></pre>
+<p>To insert data that comes form another table, you can use <code>INSERT INTO SELECT</code>.</p>
+<pre><code>INSERT INTO destination_table
+  (d_col_1, d_col_2, ...)
+SELECT
+  s_col_A, 
+  s_col_b, 
+  ...
+FROM
+  source_table
+WHERE          -- `WHERE` clause is optional
+  [condition];</code></pre>
+<div id="insert-examples" class="section level3">
+<h3><code>INSERT</code> examples</h3>
+<p>Let’s create a table called “link”.</p>
+<p>Connect to the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksIFwiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZVwiKVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con_ex &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;PostgreSQL AWS example&quot;</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5EUk9QIFRBQkxFIElGIEVYSVNUUyBsaW5rO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgbGluayhcbiAgaWQgICAgICAgICAgIHNlcmlhbCAgICAgICAgUFJJTUFSWSBLRVksXG4gIHVybCAgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLFxuICBuYW1lICAgICAgICAgVkFSQ0hBUigyNTUpICBOT1QgTlVMTCxcbiAgZGVzY3JpcHRpb24gIFZBUkNIQVIoMjU1KSxcbiAgcmVsICAgICAgICAgIFZBUkNIQVIoNTApXG4pO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">link</span>(
+  <span class="kw">id</span>           serial        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  url          <span class="dt">VARCHAR</span>(<span class="dv">255</span>)  <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  name         <span class="dt">VARCHAR</span>(<span class="dv">255</span>)  <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  description  <span class="dt">VARCHAR</span>(<span class="dv">255</span>),
+  rel          <span class="dt">VARCHAR</span>(<span class="dv">50</span>)
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Insert one row into the “link” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3LnBvc3RncmVzcWx0dXRvcmlhbC5jb20nLCdQb3N0Z3JlU1FMIFR1dG9yaWFsJyk7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
+  (url, name)
+<span class="kw">VALUES</span>
+  (<span class="st">'http://www.postgresqltutorial.com'</span>,<span class="st">'PostgreSQL Tutorial'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Character data has to be enclosed in single quotes, <code>'</code>.</p>
+<p>If you omit any column that accepts the <code>NULL</code> value in the <code>INSERT</code> statement, the column will take its default value. If not default value is set for the column, the column will take the <code>NULL</code> value.</p>
+<p>Verify that the <code>INSERT</code> worked.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEyV1F2UTdDSUJTRnIxQ0cxcGlZOUFYMEJXamk2T3pvNE4vUWxiU29UV2lwUUZOSG4xd0ZTNDJ0Sk9keWdJK2JBNGROdW9yU0NBQVFZSUlBWVdzRFpNc0VBZ2pkZkFmQXNUWEVhdlk1NkRUL2daWlhZK3Axa3JSdFMydXB6VVZ4ZlJPbU1WSVZUTkJNbHFNTDhhNmpqdnZ0NHVTeEx3SVF2dXo0WHcrQ2tZcVZYSHVJK0UxVTVON2hSZ2x2QTBkNlA4MjV6bFJSbTBKV1BhbTRHUGZPQk5ONmxEbkttV0gwckZ5eklSNHEyZEkranZzajlMREZ2K0hwOUFhMWJieElhQUVBQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>If you want to insert a string that contains a single quote character, such as <em>O’Reilly Media</em>, you have to use a single quote escape character.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lm9yZWlsbHkuY29tJywgJ08nJ1JlaWxseSBNZWRpYScpO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
+  (url, name)
+<span class="kw">VALUES</span>
+  (<span class="st">'http://www.oreilly.com'</span>, <span class="st">'O</span><span class="ch">''</span><span class="st">Reilly Media'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEzVlFQUXZDTUJBOTAzWm9SUkVFWjUzY0tqZzZPeXArRHE2aGpScEltNXBFcXB1L1hFM1RSS3hnNE80OTd0NjlYTEtkSDZiUklRSUFCRjZBQUhtYStraW5GdmdRVm5nRDhQcWFCRG82UmxnMWErd1pySVdqczFMRmJESXB5ekl1dUZRblFlU0ZxYXZpZ21JV0p6eXp3c0dYa0F0Q0didWJidE91djY0OWRwdkZjRzlOYkt1N0dtL04ySEJKVW9vL2d3RGhTNTh2L0ZOdlBEREljVWFrRlFlMmlHaHFtWGNWN2w2L1VscmVUb2xNQkMwVTVibFRDc0ordlJPR3BmTjJ4U2pGQ3NkSFVaazE1YUhnWmV6V01YLzkwRW12L05SZzRnMDdoL0VEc0FFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Insert multiple rows into the “link” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lmdvb2dsZS5jb20nLCdHb29nbGUnKSxcbiAgKCdodHRwOi8vd3d3LnlhaG9vLmNvbScsJ1lhaG9vJyksXG4gICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
+  (url, name)
+<span class="kw">VALUES</span>
+  (<span class="st">'http://www.google.com'</span>,<span class="st">'Google'</span>),
+  (<span class="st">'http://www.yahoo.com'</span>,<span class="st">'Yahoo'</span>),
+  (<span class="st">'http://www.bing.com'</span>,<span class="st">'Bing'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE1VlNzVTdETUJDOU9nbFNna0JJZ2M1bFlrc2xSa2FFeEFLQ0ZvWXltc1NrbHR4Y2NGeUZidnczRW1DN05uSTZGVXZuZDc3M2ZINldQYjlaWEdhTERBQUlSQWtCRXVrMEpub2FRUXlwd1ErQUtOZEpvdVBJNGNodTBJUlJ1OXFKeGUybTg2VlM3ZFYwMnZkOTBXS25hc202ZDZIV0NpV25vaWh4NVlUalFJaVNjU0UyQVhzV3NEVmlMVmhBbmdia2hpNFJBeTRQdUZmZTFKWWFXc3dmdDc2ZVpuZVRaMmZNVWNjUEYzTnJaWExQS2s1ZDllRFdPbkNyNU1VYzZSYnh0VDdqcno5QStxUEhIdmhQL2VCZGtvYXVXTGR6S2NJcmwwVnI2YThURzZYTER5dldsWkszaW1QamxaS0ozZDZsb0ozdjdZdFpSUlV0M3FScE5wU25FdnZDMnpGZmhIenFTVnYrMHZCdDRoZlhlZWtNWndJQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="add-a-column-with-alter-table" class="section level3">
+<h3>Add a column with <code>ALTER TABLE</code></h3>
+<p>Add a new column names <code>last_update</code> into the “link” table and set its default to <code>CURRENT_DATE</code>.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5BTFRFUiBUQUJMRSBcbiAgbGlua1xuQUREIENPTFVNTiBcbiAgbGFzdF91cGRhdGUgREFURTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">ALTER</span> <span class="kw">TABLE</span> 
+  <span class="kw">link</span>
+<span class="kw">ADD</span> <span class="kw">COLUMN</span> 
+  last_update <span class="dt">DATE</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE1VlNQVS9ETUJBOW5BK1VWRlJJQWVZeXNhVVNJeU9xeEFJQ0NrT1prRWxNYWltTmcrTXFkSUxmd3E5RVFtbzVKdzV5c3dDV2ZIZSs5K3ozWkhzNm1aMkdzeEFBQ0RnZUFlSmc2UklNTytCQ29QTXJnQk5oNGVQY3crazFvTjZBZ0dhYjNuNlQyMDNIYzZYS3MvRzRydXU0RkpYS0pLdGVjclZVUW5LYXg0bFlHT0tSUlJTUzhUeGZXZWloaFdaQ1pEbXp3QU1MWE5HNUVCWVdXZGdUTDdJRzJyWVkzYlMrN200dlIvZkdtSUdHMXlmVHhzcm9pcVdjbXE1LzBUZ3dLKzlCUzVxRmU0NGFQK2NEQkJzY2Y4ai81RHREelgvN3hBaTdINy9sM2p0NlNVNnJ5b2gyVFhkQ0ZjTzg3cE1MdW1BZDJUZE53bE5UT1V2WjNaV3JtYVllcEt4S0pDOFZGMFhIbEt4akRsQmZQUzdMdEpIVWNtVFRzeE1pUnVObnFZL2NOaFJJVWNlZEtmMEx5VHNHdkpXdjFqMnN2d0hzVnZOS3lnSUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5BTFRFUiBUQUJMRVxuICBsaW5rXG5BTFRFUiBDT0xVTU5cbiAgbGFzdF91cGRhdGVcblNFVCBERUZBVUxUIENVUlJFTlRfREFURTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">ALTER</span> <span class="kw">TABLE</span>
+  <span class="kw">link</span>
+<span class="kw">ALTER</span> <span class="kw">COLUMN</span>
+  last_update
+<span class="kw">SET</span> <span class="kw">DEFAULT</span> <span class="fu">CURRENT_DATE</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Insert a new row using the new <code>last_update</code> column.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3LmZhY2Vib29rLmNvbScsICdGYWNlYm9vaycsICcyMDEzLTA2LTAxJyk7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  <span class="kw">link</span>(url, name, last_update)
+<span class="kw">VALUES</span>
+  (<span class="st">'http://www.facebook.com'</span>, <span class="st">'Facebook'</span>, <span class="st">'2013-06-01'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE1MVNQVS9ETUJDOU9rbWhxYWlRd3NkYUpyWlVZbVJDcUlJRkJCU0dNaUUzY1ZPTHRBNk9xOUFKZmdzL2lOOVRNYlRZcm8zY0xnZ3MyZTk4NzUzdjJYS3YyejhKK3lFQUlQQUNCTWlUb1kva1VnTWZHZ3BmQWJ4SUJuVTVkd3pXZElFa2xGck93T1IzTmE0S2owWkNGS2VkVGxWVmNjRktrWEZTdnVSaUtoaW5PSThUTmpiQ0EwZklPS0Y1UG5QWWZZZk5HTXR5NHBCN0RqbkRJOFljTG5LNEFaMWtEblhvVUVPY2tBRmp6NXBldjBGMHU3SjlmM2ZWZmpDK0RkVzZPZTVwcCsxcmtsSnNzdlZMYmREc2drZmx5R3o4YzJuQnhOc1hwdWRQUDRER1VvNC80RC9ydkphcWU1dkxGYlkrZnNPenovazc2TEgySllJa3gyVnBUTmlrMzhXQ1NGeHNpaWQ0VEt6WXZpeWlxWW04S2JkdjZpdWxpWnNwS1JOT0MwSFp4Q281c2NxbTdDK2Vwa1dxVzZwMmFMbGhKNVFjam9kY0hibHVxTUZaRlZ0VDZrTWpkVWY1T2w4cjk3RDRCaXlNL2xVVkF3QUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>You can also use the <code>DEFAULT</code> keyword to set the default value for the <code>last_update</code> or any column that has a default value.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpXG5WQUxVRVNcbiAgKCdodHRwczovL3d3dy50dW1ibHIuY29tLycsICdUdW1ibHInLCBERUZBVUxUKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  <span class="kw">link</span>(url, name, last_update)
+<span class="kw">VALUES</span>
+  (<span class="st">'https://www.tumblr.com/'</span>, <span class="st">'Tumblr'</span>, <span class="kw">DEFAULT</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R2MDdETUJER2paTVUyb29LcWZ4Wnk4U1dTb3hNRlVLd2dJRFNvVXpJVGR6VUlxMkQ0eWgwQW9rMzRZR1FlSnV5dFBnU0c3bFprTUNTYzJmL3ZvdS9zNUwrMmZDNE1Xd2doREJ5UEl5d28xSVhxOGNHY2xFZDRqTkNUbHNsTlRXMzFkd3NJQlFvQUdvMVBjMkI3UlN4TEQ2Y1NKbWNkTHQ1bnZzSlQyVWthUG9VeTB4eXdVanNCM3lxaGZ1V2tBdks0bmh1MFQyTFJweEhNYlhncmdYblpNSzV4ZG9XRzdGWlpLRURDNDFKUUVlY1AxWnhxcm5NcHFOWUFPMVdHbXpmbEYzZDNWNTJCcm90alZyWFIvMmlrYzRWRFJuUnU3V0x3cjllZWZkZ1dDL2NVK1ZRNTF2bjJwSXBHeFFXZms1SHFMNVM0dy94bi9WT0MrcGZGZ2pDKzIreDk3RjRoYXozK1liS3NmWnRlVUZNMGxTYk1wdnVHWkZVeFdWVlBDTlRhc1ExdllsWnFETW5FK2JtWFZEcXZCblNOQkFza1l6UGpGSlFvMnlxOCtWRGxvVEZrWEFjWGxYc05CUWovbGpBSzljTjFRWFBmV01LL2d3TXZhcGIraXJkbytVM1hCMG5URjREQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>What happens when I don’t use <code>DEFAULT</code> in an <code>INSERT</code> statement?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBsaW5rKHVybCwgbmFtZSwgZGVzY3JpcHRpb24pXG5WQUxVRVNcbiAgKCdodHRwczovL2h0ZGcub3JnJywgJ0hvdyB0byBEZXNpZ24gUHJvZ3JhbXMnLCAnQW4gaW50cm9kdXRpb24gdG8gcHJvZ3JhbW1pbmcgYW5kIGNvbXB1dGluZycpXG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  <span class="kw">link</span>(url, name, description)
+<span class="kw">VALUES</span>
+  (<span class="st">'https://htdg.org'</span>, <span class="st">'How to Design Programs'</span>, <span class="st">'An introdution to programming and computing'</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R2VTdETUJESFRaS1dmb2dLcVh5c1lXSkFhaVZHcG9JcVlBQUJoUUVtNURhdWE1SEV3WEVVT29IRW0vQkFTTHhOcDhJNXNaSEpnaENSbkR2N2QvYjk3K0tNaHJmN3Jkc1dRc2hCYnMxQmpndXU1OEJyQlhtb3Fld1RRbTRYbkRxTU5SaU5BcW9OQUZRMGpKcm1xNXF2RjdZOFlHY21aWExRNytkNTNrdDRLcWtnNldNb004a0Z3MkZ2d2lNZHVHVUZja0ZZR000dHVtbFJ5amtOaVFVM0xEakhNODR0MXJYWW1NWFVRdHNXbXVJSkdYUCtVTVdwNWpLTHhxRlF0Sy94dXNFekdWQlFUQ3VGZHkvTGFxK3Z6dndiWGE1R25ZdmRVVkdnZjA0Q2h2VnEvYVNvUzg5cWQ2b1FQZkdPUUxuMkc4ZGFxdGwyVTBnelhUemx1Uys1UHlRcG83Ri9LVGdWT0VxL3RTSFUvSVRuejdZOGZlOHc5bGtzQlE4eXlYaXNFaVZsaGdnRStqZ09mT2hRQWpDbS8wNzViZDJPT3VkNWdkUVZlL3ZORHQ0WEw4b2JmTHdpMjFZdWRtMFM0dFQweFN4NlF5d0oyR1UxT01ZUk1jRjF2ZWl3UUh0dUpzeW45VlNrOXRzQlNTZUNKYXBWSmxJUUU5bUcvUEkrUzRJaXBVcm5mRmJrdElEaDNsU29JMzhLYWdxZTk0d285VnM2cW1ibzFxSlVqNVpmK0dGR3lOc0RBQUE9In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The answer is that (as explained above) the default value (<code>CURRENT_DATE</code>) is inserted into the field.</p>
+</div>
+<div id="insert-data-from-another-table" class="section level3">
+<h3>Insert data from another table</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5EUk9QIFRBQkxFIElGIEVYSVNUUyBsaW5rX3RtcDtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> link_tmp;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgbGlua190bXAgKExJS0UgbGluayk7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> link_tmp (<span class="kw">LIKE</span> <span class="kw">link</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbmtfdG1wO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> link_tmp;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JqTFlnSmlYQVFJRThOUE1mQkFheFNEVzVKekU0bUtvSXBnZ2kwdGlTU3FRL29ldU9DOHhOeFdtbUEwcXlKU1pBbVV4bHhibHdFd0FxWVN5dVZOU2k1T0xNZ3RLTXZQellDcUxVbUVxdVlIMmw4U1hGcVNBclFSWngvUWZ6VGxjUUxsRXZiUWlrSkdvRHVJc3lpL1hnemtLRkF4TURReHc4QStFQWJEbm9BMUxBUUFBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBsaW5rX3RtcFxuU0VMRUNUXG4gICpcbkZST01cbiAgbGlua1xuV0hFUkVcbiAgbGFzdF91cGRhdGUgSVMgTk9UIE5VTEw7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  link_tmp
+<span class="kw">SELECT</span>
+  *
+<span class="kw">FROM</span>
+  <span class="kw">link</span>
+<span class="kw">WHERE</span>
+  last_update <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbmtfdG1wO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> link_tmp;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEzVlN3VXJFTUJBZGsyN2RkbEVXQkwzMkxyVGcwZE1LUlR5S2VOaWJaTnR1dDlnbUpVMnBSOEgvRS93YkwrNDZhWk95Rml4TTMyVGV5NXRKeUZPOHZ2SFhQZ0FRb0RNQ2hHTHFFUHlkZ0FPZXhqY0Flb0dKaTNHR1FVMStpakhIV1BhMVFYeTFVNnEramFLdTY4SXRTN0tORUs5aElxcGp1akc4YXF0TktUVWJHWHBwNloxSzgxRElmT0krdnplV1p1MCs5eFptZGZrZ3VrQ0pJTTZhSXVmQm94UzVaRlV6ZWdCNEIveEdISFpkMy9HZzRFcUt0RldGNE5xZ0huWldCYzhEeHRNQUo2eVI1UG0vVmlQU2M4MnZQci9mRVdIMTlRSEhPTG5aV1ZLeXhzNW5pMDdNVklhNG40bzVxeklyZGsyUkZLbkphQ3RMNjZDVkpsK2tXWlBJb3RaSHMwcVpXZVVDKzZ1WHRrNzdscm9kT1V6RzhaRmo0VlpxeTc4RGVWSjBvUjFLdnd1aXo0eTM4RE5NRC90ZjNmcFJpVndDQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="get-the-last-insert-id-with-postgresql-returning" class="section level3">
+<h3>Get the last insert ID with PostgreSQL <code>RETURNING</code></h3>
+<p>If you want to know the last value assigned to a serial field during an <code>INSERT</code>, use <code>RETURNING</code>.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3LnBvc3RncmVzcWwub3JnJywnUG9zdGdyZVNRTCcsREVGQVVMVClcblJFVFVSTklOR1xuICBpZDtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  <span class="kw">link</span>(url, name, last_update)
+<span class="kw">VALUES</span>
+  (<span class="st">'http://www.postgresql.org'</span>,<span class="st">'PostgreSQL'</span>,<span class="kw">DEFAULT</span>)
+<span class="kw">RETURNING</span>
+  <span class="kw">id</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0Jnc3dNUEJDYVU0MFJheDVpYm1weFVDR0FKSWdVMllLdXJMa25NUmlkR1ZjS1lrbGlYcHBSVUFUMEpSekZ1V1g2OEZNQmxuTjFBQWsvZ01Ca1BvSHdnQitNTG9QdndBQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"9"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>This last <code>INSERT</code> shows that the <code>id</code> value is 9.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R6VTdiUUJESEY5dEpJYWdvVW9DS20zdmlVQ21ST1BhVVZsSGhBQ0tGSE5KVHRZbVh6UXJiNjY3WGNuTnFKZDZFQjBMaWFjaUpNR3ZQdHB1QVZGVllHczk0Zm4vdmZNaStHSXlQV3VNV0ljUWpmc01qbmc5aDRNRnRnd1JreS9pZmhQZ2RDSnBnYjhHcVpQVUNBS01HYXlCL0E3YUptbmJsNjBQZXo3VE9Qdlo2WlZsMk01bHJybGorSTlhRmxrclF1RHVWQ1FyM0hhRlVUTVR4M0tGN0R1VlM4cGc1Y05lQmN6cVQwbUVkaDAxRXloMzB6a0ZYZE1vbVVsNnY0eHk1THBKSnJBenRJVzViUE5NUmg0NDU1ZzllSExnU3JHNm1NNnpwNWRmVGNJVDdRTFJ6Zm5oUmJTQThZNUdnbUcwZVY0UGpVK09ibVJRZmdzOHdHc2FiWDNBVys5cW82dDJ1K1VTV29aYmhnT1dDcCtGUVNhNW9raU50L2UzcFQ3ZGdTN2orMjljbmZ2aVVoaUxWU2thRkZqSTFwYk82WmdJdGh6U05RbGhxQmpEbHpoR3ZLLzNNK3pzbS9yVWc1a3U5L1pmdjN5MSttNmgvZjBOZThtdi9TV01hMHp6SHBtMHlHRkROd0QrdWkxT2FNQ3R1WXRJVEVVWitvZXhIRUJnbHh0c1J5NmRLWkdhRlZxbVlWVzVEZmYyOXlLS3FwQ25uTGRmYWFRR2ozU3Rsamx4dGFFdkpzbXViTW4rNVoyYUhyVDNVM1pQSEp5dkh0V3NxQkFBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Disconnect from the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWYgKGV4aXN0cyhcImNvbl9leFwiKSkgeyBkYkRpc2Nvbm5lY3QoY29uX2V4KTsgcm0oY29uX2V4KTsgfVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="kw">exists</span>(<span class="st">&quot;con_ex&quot;</span>)) { <span class="kw">dbDisconnect</span>(con_ex); <span class="kw">rm</span>(con_ex); }</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <pre><code>###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
 #==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
 #--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
@@ -436,8 +881,9 @@ div.tocify {
 <!-- rnb-text-end -->
 </div>
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDgiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IHRydWUKLS0tCgpMb2FkIGxpYnJhcmllcy4KYGBge3J9CmxpYnJhcnkoREJJKQpsaWJyYXJ5KG9kYmMpCmxpYnJhcnkoUlBvc3RncmVzKQpgYGAKCgojIE1vZGlmeWluZyBkYXRhCgojIyBJTlNFUlQKCgoKCgoKYGBgCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKYGBgCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDgiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IHRydWUKLS0tCgpMb2FkIGxpYnJhcmllcy4KYGBge3J9CmxpYnJhcnkoREJJKQpsaWJyYXJ5KG9kYmMpCmxpYnJhcnkoUlBvc3RncmVzKQpgYGAKCgojIE1vZGlmeWluZyBkYXRhCgojIyBJTlNFUlQKCldoZW4geW91IGNyZWF0ZSBhIG5ldyB0YWJsZSwgaXQgZG9lc24ndCBoYXZlIGFueSBkYXRhLiBZb3UgbmVlZCB0byBpbnNlcnQgZGF0YSBpbnRvIHRoZSB0YWJsZS4gYElOU0VSVGAgYWxsb3dzIHlvdSB0byBpbnNlcnQgb25lIG9yIG1vcmUgcm93cyBpbnRvIGEgdGFibGUgYXQgYSB0aW1lLgoKSGVyZSdzIHRoZSBzeW50YXggZm9yIGEgc2luZ2xlIHJvdyBpbnNlcnQuCmBgYApJTlNFUlQgSU5UTyB0YWJsZV8xCiAgKGNvbF8xLCBjb2xfMiwgLi4uKQpWQUxVRVMKICAodmFsdWVfMSwgdmFsdWVfMiwgLi4uKTsKYGBgCgpIZXJlJ3MgdGhlIHN5bnRheCBmb3IgYSBtdWx0aXBsZSByb3cgaW5zZXJ0LgpgYGAKSU5TRVJUIElOVE8gdGFibGVfMQogIChjb2xfMSwgY29sXzIsIC4uLikKVkFMVUVTCiAgKHZhbHVlXzFhLCB2YWx1ZV8yYSwgLi4uKSwKICAodmFsdWVfMWIsIHZhbHVlXzJiLCAuLi4pOwpgYGAKClRvIGluc2VydCBkYXRhIHRoYXQgY29tZXMgZm9ybSBhbm90aGVyIHRhYmxlLCB5b3UgY2FuIHVzZSBgSU5TRVJUIElOVE8gU0VMRUNUYC4KYGBgCklOU0VSVCBJTlRPIGRlc3RpbmF0aW9uX3RhYmxlCiAgKGRfY29sXzEsIGRfY29sXzIsIC4uLikKU0VMRUNUCiAgc19jb2xfQSwgCiAgc19jb2xfYiwgCiAgLi4uCkZST00KICBzb3VyY2VfdGFibGUKV0hFUkUgICAgICAgICAgLS0gYFdIRVJFYCBjbGF1c2UgaXMgb3B0aW9uYWwKICBbY29uZGl0aW9uXTsKYGBgCgojIyMgYElOU0VSVGAgZXhhbXBsZXMKCkxldCdzIGNyZWF0ZSBhIHRhYmxlIGNhbGxlZCAibGluayIuCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksICJQb3N0Z3JlU1FMIEFXUyBleGFtcGxlIikKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpEUk9QIFRBQkxFIElGIEVYSVNUUyBsaW5rOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rKAogIGlkICAgICAgICAgICBzZXJpYWwgICAgICAgIFBSSU1BUlkgS0VZLAogIHVybCAgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIG5hbWUgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIGRlc2NyaXB0aW9uICBWQVJDSEFSKDI1NSksCiAgcmVsICAgICAgICAgIFZBUkNIQVIoNTApCik7CmBgYAoKSW5zZXJ0IG9uZSByb3cgaW50byB0aGUgImxpbmsiIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8gCiAgbGluayh1cmwsIG5hbWUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsdHV0b3JpYWwuY29tJywnUG9zdGdyZVNRTCBUdXRvcmlhbCcpOwpgYGAKCkNoYXJhY3RlciBkYXRhIGhhcyB0byBiZSBlbmNsb3NlZCBpbiBzaW5nbGUgcXVvdGVzLCBgJ2AuCgpJZiB5b3Ugb21pdCBhbnkgY29sdW1uIHRoYXQgYWNjZXB0cyB0aGUgYE5VTExgIHZhbHVlIGluIHRoZSBgSU5TRVJUYCBzdGF0ZW1lbnQsIHRoZSBjb2x1bW4gd2lsbCB0YWtlIGl0cyBkZWZhdWx0IHZhbHVlLiBJZiBub3QgZGVmYXVsdCB2YWx1ZSBpcyBzZXQgZm9yIHRoZSBjb2x1bW4sIHRoZSBjb2x1bW4gd2lsbCB0YWtlIHRoZSBgTlVMTGAgdmFsdWUuCgpWZXJpZnkgdGhhdCB0aGUgYElOU0VSVGAgd29ya2VkLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCklmIHlvdSB3YW50IHRvIGluc2VydCBhIHN0cmluZyB0aGF0IGNvbnRhaW5zIGEgc2luZ2xlIHF1b3RlIGNoYXJhY3Rlciwgc3VjaCBhcyBfTydSZWlsbHkgTWVkaWFfLCB5b3UgaGF2ZSB0byB1c2UgYSBzaW5nbGUgcXVvdGUgZXNjYXBlIGNoYXJhY3Rlci4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cub3JlaWxseS5jb20nLCAnTycnUmVpbGx5IE1lZGlhJyk7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCkluc2VydCBtdWx0aXBsZSByb3dzIGludG8gdGhlICJsaW5rIiB0YWJsZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZ29vZ2xlLmNvbScsJ0dvb2dsZScpLAogICgnaHR0cDovL3d3dy55YWhvby5jb20nLCdZYWhvbycpLAogICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKIyMjIEFkZCBhIGNvbHVtbiB3aXRoIGBBTFRFUiBUQUJMRWAKCkFkZCBhIG5ldyBjb2x1bW4gbmFtZXMgYGxhc3RfdXBkYXRlYCBpbnRvIHRoZSAibGluayIgdGFibGUgYW5kIHNldCBpdHMgZGVmYXVsdCB0byBgQ1VSUkVOVF9EQVRFYC4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkFMVEVSIFRBQkxFIAogIGxpbmsKQUREIENPTFVNTiAKICBsYXN0X3VwZGF0ZSBEQVRFOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpBTFRFUiBUQUJMRQogIGxpbmsKQUxURVIgQ09MVU1OCiAgbGFzdF91cGRhdGUKU0VUIERFRkFVTFQgQ1VSUkVOVF9EQVRFOwpgYGAKCkluc2VydCBhIG5ldyByb3cgdXNpbmcgdGhlIG5ldyBgbGFzdF91cGRhdGVgIGNvbHVtbi4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZmFjZWJvb2suY29tJywgJ0ZhY2Vib29rJywgJzIwMTMtMDYtMDEnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKWW91IGNhbiBhbHNvIHVzZSB0aGUgYERFRkFVTFRgIGtleXdvcmQgdG8gc2V0IHRoZSBkZWZhdWx0IHZhbHVlIGZvciB0aGUgYGxhc3RfdXBkYXRlYCBvciBhbnkgY29sdW1uIHRoYXQgaGFzIGEgZGVmYXVsdCB2YWx1ZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHBzOi8vd3d3LnR1bWJsci5jb20vJywgJ1R1bWJscicsIERFRkFVTFQpOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpXaGF0IGhhcHBlbnMgd2hlbiBJIGRvbid0IHVzZSBgREVGQVVMVGAgaW4gYW4gYElOU0VSVGAgc3RhdGVtZW50PwoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgZGVzY3JpcHRpb24pClZBTFVFUwogICgnaHR0cHM6Ly9odGRnLm9yZycsICdIb3cgdG8gRGVzaWduIFByb2dyYW1zJywgJ0FuIGludHJvZHV0aW9uIHRvIHByb2dyYW1taW5nIGFuZCBjb21wdXRpbmcnKQpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpUaGUgYW5zd2VyIGlzIHRoYXQgKGFzIGV4cGxhaW5lZCBhYm92ZSkgdGhlIGRlZmF1bHQgdmFsdWUgKGBDVVJSRU5UX0RBVEVgKSBpcyBpbnNlcnRlZCBpbnRvIHRoZSBmaWVsZC4KCiMjIyBJbnNlcnQgZGF0YSBmcm9tIGFub3RoZXIgdGFibGUKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkRST1AgVEFCTEUgSUYgRVhJU1RTIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rX3RtcCAoTElLRSBsaW5rKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGlua190bXAKU0VMRUNUCiAgKgpGUk9NCiAgbGluawpXSEVSRQogIGxhc3RfdXBkYXRlIElTIE5PVCBOVUxMOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGlua190bXA7CmBgYAoKIyMjIEdldCB0aGUgbGFzdCBpbnNlcnQgSUQgd2l0aCBQb3N0Z3JlU1FMIGBSRVRVUk5JTkdgCgpJZiB5b3Ugd2FudCB0byBrbm93IHRoZSBsYXN0IHZhbHVlIGFzc2lnbmVkIHRvIGEgc2VyaWFsIGZpZWxkIGR1cmluZyBhbiBgSU5TRVJUYCwgdXNlIGBSRVRVUk5JTkdgLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsLm9yZycsJ1Bvc3RncmVTUUwnLERFRkFVTFQpClJFVFVSTklORwogIGlkOwpgYGAKClRoaXMgbGFzdCBgSU5TRVJUYCBzaG93cyB0aGF0IHRoZSBgaWRgIHZhbHVlIGlzIDkuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKRGlzY29ubmVjdCBmcm9tIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KaWYgKGV4aXN0cygiY29uX2V4IikpIHsgZGJEaXNjb25uZWN0KGNvbl9leCk7IHJtKGNvbl9leCk7IH0KYGBgCgoKCmBgYAojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCmBgYAo=</div>
 
 
 </div>

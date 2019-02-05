@@ -20,8 +20,225 @@ library(RPostgres)
 
 ## INSERT
 
+When you create a new table, it doesn't have any data. You need to insert data into the table. `INSERT` allows you to insert one or more rows into a table at a time.
 
+Here's the syntax for a single row insert.
+```
+INSERT INTO table_1
+  (col_1, col_2, ...)
+VALUES
+  (value_1, value_2, ...);
+```
 
+Here's the syntax for a multiple row insert.
+```
+INSERT INTO table_1
+  (col_1, col_2, ...)
+VALUES
+  (value_1a, value_2a, ...),
+  (value_1b, value_2b, ...);
+```
+
+To insert data that comes form another table, you can use `INSERT INTO SELECT`.
+```
+INSERT INTO destination_table
+  (d_col_1, d_col_2, ...)
+SELECT
+  s_col_A, 
+  s_col_b, 
+  ...
+FROM
+  source_table
+WHERE          -- `WHERE` clause is optional
+  [condition];
+```
+
+### `INSERT` examples
+
+Let's create a table called "link".
+
+Connect to the _**example**_ database.
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS link;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE link(
+  id           serial        PRIMARY KEY,
+  url          VARCHAR(255)  NOT NULL,
+  name         VARCHAR(255)  NOT NULL,
+  description  VARCHAR(255),
+  rel          VARCHAR(50)
+);
+```
+
+Insert one row into the "link" table.
+
+```{sql connection=con_ex}
+INSERT INTO 
+  link(url, name)
+VALUES
+  ('http://www.postgresqltutorial.com','PostgreSQL Tutorial');
+```
+
+Character data has to be enclosed in single quotes, `'`.
+
+If you omit any column that accepts the `NULL` value in the `INSERT` statement, the column will take its default value. If not default value is set for the column, the column will take the `NULL` value.
+
+Verify that the `INSERT` worked.
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+If you want to insert a string that contains a single quote character, such as _O'Reilly Media_, you have to use a single quote escape character.
+
+```{sql connection=con_ex}
+INSERT INTO 
+  link(url, name)
+VALUES
+  ('http://www.oreilly.com', 'O''Reilly Media');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+Insert multiple rows into the "link" table.
+
+```{sql connection=con_ex}
+INSERT INTO 
+  link(url, name)
+VALUES
+  ('http://www.google.com','Google'),
+  ('http://www.yahoo.com','Yahoo'),
+  ('http://www.bing.com','Bing');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+### Add a column with `ALTER TABLE`
+
+Add a new column names `last_update` into the "link" table and set its default to `CURRENT_DATE`.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link
+ADD COLUMN 
+  last_update DATE;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+```{sql connection=con_ex}
+ALTER TABLE
+  link
+ALTER COLUMN
+  last_update
+SET DEFAULT CURRENT_DATE;
+```
+
+Insert a new row using the new `last_update` column.
+
+```{sql connection=con_ex}
+INSERT INTO
+  link(url, name, last_update)
+VALUES
+  ('http://www.facebook.com', 'Facebook', '2013-06-01');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+You can also use the `DEFAULT` keyword to set the default value for the `last_update` or any column that has a default value.
+
+```{sql connection=con_ex}
+INSERT INTO
+  link(url, name, last_update)
+VALUES
+  ('https://www.tumblr.com/', 'Tumblr', DEFAULT);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+What happens when I don't use `DEFAULT` in an `INSERT` statement?
+
+```{sql connection=con_ex}
+INSERT INTO
+  link(url, name, description)
+VALUES
+  ('https://htdg.org', 'How to Design Programs', 'An introdution to programming and computing')
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+The answer is that (as explained above) the default value (`CURRENT_DATE`) is inserted into the field.
+
+### Insert data from another table
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS link_tmp;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE link_tmp (LIKE link);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_tmp;
+```
+
+```{sql connection=con_ex}
+INSERT INTO
+  link_tmp
+SELECT
+  *
+FROM
+  link
+WHERE
+  last_update IS NOT NULL;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_tmp;
+```
+
+### Get the last insert ID with PostgreSQL `RETURNING`
+
+If you want to know the last value assigned to a serial field during an `INSERT`, use `RETURNING`.
+
+```{sql connection=con_ex}
+INSERT INTO
+  link(url, name, last_update)
+VALUES
+  ('http://www.postgresql.org','PostgreSQL',DEFAULT)
+RETURNING
+  id;
+```
+
+This last `INSERT` shows that the `id` value is 9.
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+Disconnect from the _**example**_ database.
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
+```
 
 
 
