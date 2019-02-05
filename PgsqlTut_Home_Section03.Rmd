@@ -4,6 +4,8 @@ output:
   html_notebook:
     theme: cerulean
     highlight: espresso
+    toc: true
+    toc_float: true
 ---
 
 # Filtering Data
@@ -477,6 +479,11 @@ con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
 ```
 
 First let's create a _contacts_ table.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS contacts;
+```
+
 
 ```{sql connection=con_ex}
 CREATE TABLE contacts(

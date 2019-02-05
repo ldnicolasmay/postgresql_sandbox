@@ -140,6 +140,10 @@ First, let's create a table called `t1` in the `example` database.
 con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
 ```
 
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS t1;
+```
+
 
 ```{sql connection=con_ex}
 CREATE TABLE IF NOT EXISTS t1(
@@ -211,6 +215,11 @@ FROM
 ORDER BY
   bcolor,
   fcolor;
+```
+
+Disconnect from _**example**_ database.
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
 ```
 
 

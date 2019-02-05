@@ -4,6 +4,8 @@ output:
   html_notebook:
     theme: cerulean
     highlight: espresso
+    toc: true
+    toc_float: true
 ---
 
 # Joining Multiple Tables
