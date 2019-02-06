@@ -479,9 +479,9 @@ WHERE          -- `WHERE` clause is optional
 <p>Insert one row into the “link” table.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3LnBvc3RncmVzcWx0dXRvcmlhbC5jb20nLCdQb3N0Z3JlU1FMIFR1dG9yaWFsJyk7XG5gYGAifQ== -->
-<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
-  (url, name)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBcbiAgbGluayh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3LnBvc3RncmVzcWx0dXRvcmlhbC5jb20nLCdQb3N0Z3JlU1FMIFR1dG9yaWFsJyk7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> 
+  <span class="kw">link</span>(url, name)
 <span class="kw">VALUES</span>
   (<span class="st">'http://www.postgresqltutorial.com'</span>,<span class="st">'PostgreSQL Tutorial'</span>);</code></pre></div>
 <!-- rnb-source-end -->
@@ -514,9 +514,9 @@ WHERE          -- `WHERE` clause is optional
 <p>If you want to insert a string that contains a single quote character, such as <em>O’Reilly Media</em>, you have to use a single quote escape character.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lm9yZWlsbHkuY29tJywgJ08nJ1JlaWxseSBNZWRpYScpO1xuYGBgIn0= -->
-<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
-  (url, name)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBcbiAgbGluayh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lm9yZWlsbHkuY29tJywgJ08nJ1JlaWxseSBNZWRpYScpO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> 
+  <span class="kw">link</span>(url, name)
 <span class="kw">VALUES</span>
   (<span class="st">'http://www.oreilly.com'</span>, <span class="st">'O</span><span class="ch">''</span><span class="st">Reilly Media'</span>);</code></pre></div>
 <!-- rnb-source-end -->
@@ -546,9 +546,9 @@ WHERE          -- `WHERE` clause is optional
 <p>Insert multiple rows into the “link” table.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBsaW5rXG4gICh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lmdvb2dsZS5jb20nLCdHb29nbGUnKSxcbiAgKCdodHRwOi8vd3d3LnlhaG9vLmNvbScsJ1lhaG9vJyksXG4gICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTtcbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">link</span>
-  (url, name)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBcbiAgbGluayh1cmwsIG5hbWUpXG5WQUxVRVNcbiAgKCdodHRwOi8vd3d3Lmdvb2dsZS5jb20nLCdHb29nbGUnKSxcbiAgKCdodHRwOi8vd3d3LnlhaG9vLmNvbScsJ1lhaG9vJyksXG4gICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> 
+  <span class="kw">link</span>(url, name)
 <span class="kw">VALUES</span>
   (<span class="st">'http://www.google.com'</span>,<span class="st">'Google'</span>),
   (<span class="st">'http://www.yahoo.com'</span>,<span class="st">'Yahoo'</span>),
@@ -685,10 +685,10 @@ WHERE          -- `WHERE` clause is optional
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
 <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R2MDdETUJER2paTVUyb29LcWZ4Wnk4U1dTb3hNRlVLd2dJRFNvVXpJVGR6VUlxMkQ0eWgwQW9rMzRZR1FlSnV5dFBnU0c3bFprTUNTYzJmL3ZvdS9zNUwrMmZDNE1Xd2doREJ5UEl5d28xSVhxOGNHY2xFZDRqTkNUbHNsTlRXMzFkd3NJQlFvQUdvMVBjMkI3UlN4TEQ2Y1NKbWNkTHQ1bnZzSlQyVWthUG9VeTB4eXdVanNCM3lxaGZ1V2tBdks0bmh1MFQyTFJweEhNYlhncmdYblpNSzV4ZG9XRzdGWlpLRURDNDFKUUVlY1AxWnhxcm5NcHFOWUFPMVdHbXpmbEYzZDNWNTJCcm90alZyWFIvMmlrYzRWRFJuUnU3V0x3cjllZWZkZ1dDL2NVK1ZRNTF2bjJwSXBHeFFXZms1SHFMNVM0dy94bi9WT0MrcGZGZ2pDKzIreDk3RjRoYXozK1liS3NmWnRlVUZNMGxTYk1wdnVHWkZVeFdWVlBDTlRhc1ExdllsWnFETW5FK2JtWFZEcXZCblNOQkFza1l6UGpGSlFvMnlxOCtWRGxvVEZrWEFjWGxYc05CUWovbGpBSzljTjFRWFBmV01LL2d3TXZhcGIraXJkbytVM1hCMG5URjREQUFBPSJ9 -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1RUMC9DTUJqR2E3ZWhRQ1FtK09lS0oyOGo4ZWlKR0tJWGpZb2M4R1RLVmtaam9iUHJNamhwNGpmeEE1bjRiZkFDdHFVMVpSY1RiZEs5Yi90NzN2VjVtNjNYSFp6V0JqVUFBQVJlQUFIMFpPcEQrZGdDUHFpcU9BUEFhOHFrSXVldW5Oc2FxZ0lKbEZyT3dIREY5blJjRngrUGhValAydTJpS01LVVpTTGhPSHVtSWhlTUUwVERpRTJNOE5BUk1vNEpwWE9ISGpnMFlTeWgySUg3RHB5ak1XTU9henBzU0thSmc0NGNORUlSSGpMMlZNYVo0U0tmRENsWHRGMXFzSG03N3VyKzdxclZOMjBaMUxnNTZlbEdXdGM0SnNqc1ZpNjFmN01LSHBSaHMvRFBwVU9UNzF3WVM3YXNyeTM4bkE1QWRTWEhIK0kvNjcyR3FuOVpBQlhlZjR1ZGo4V3J5anFmYngyZ3g4YTNGVVFVWlpreFpUZjlMaEpZeG1WWlBFVVRiTVVWc3dsSmJESXY1L2JtZmFVMGVUM0dXY1JKS2dpYldpWEhWbG1YNTR2SFBJMzFrZW80dUNyWnFVbUd3aEZYcjl3MFZPV3NDSzBwOVdkQTFhdThwYSsxZTdEOEJsQTVlZzVlQXdBQSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -717,10 +717,10 @@ WHERE          -- `WHERE` clause is optional
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
 <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R2VTdETUJESFRaS1dmb2dLcVh5c1lXSkFhaVZHcG9JcVlBQUJoUUVtNURhdWE1SEV3WEVVT29IRW0vQkFTTHhOcDhJNXNaSEpnaENSbkR2N2QvYjk3K0tNaHJmN3Jkc1dRc2hCYnMxQmpndXU1OEJyQlhtb3Fld1RRbTRYbkRxTU5SaU5BcW9OQUZRMGpKcm1xNXF2RjdZOFlHY21aWExRNytkNTNrdDRLcWtnNldNb004a0Z3MkZ2d2lNZHVHVUZja0ZZR000dHVtbFJ5amtOaVFVM0xEakhNODR0MXJYWW1NWFVRdHNXbXVJSkdYUCtVTVdwNWpLTHhxRlF0Sy94dXNFekdWQlFUQ3VGZHkvTGFxK3Z6dndiWGE1R25ZdmRVVkdnZjA0Q2h2VnEvYVNvUzg5cWQ2b1FQZkdPUUxuMkc4ZGFxdGwyVTBnelhUemx1Uys1UHlRcG83Ri9LVGdWT0VxL3RTSFUvSVRuejdZOGZlOHc5bGtzQlE4eXlYaXNFaVZsaGdnRStqZ09mT2hRQWpDbS8wNzViZDJPT3VkNWdkUVZlL3ZORHQ0WEw4b2JmTHdpMjFZdWRtMFM0dFQweFN4NlF5d0oyR1UxT01ZUk1jRjF2ZWl3UUh0dUpzeW45VlNrOXRzQlNTZUNKYXBWSmxJUUU5bUcvUEkrUzRJaXBVcm5mRmJrdElEaDNsU29JMzhLYWdxZTk0d285VnM2cW1ibzFxSlVqNVpmK0dGR3lOc0RBQUE9In0= -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R2VTdETUJESFRaS1dmZ2hVcVh5c1lXSkFhaVZHcG9JcVlBQlJvRU9aa05zWTF5S0pnK01vZEFLSk4rR0JrSGliVHNBNXNaSEpnaENSbkR2N2QvYjk3K0pjRFNmN3JVa0xJZVFndCtZZ3h3WFhjK0MxZ2p6VVZQWVJJYmNMVGgzR0dveEdBZFVHQUNvYVJrM3pWYzA3aFMwUDJKbExtUnowKzNtZTl4S2VTaXBJK2hES1RITEJjTmliOFVnSGJsbUJYQkFXaGd1TGJscVVjazVEWXNFTkN5N3duSE9MZFMwMlpURzEwTGFGN3ZDTVREbS9yK0pVYzVsRjAxQW8ydGU0WS9CY0JoUVUwMHJoM1ZGWjdmWGxtVC9XNVdxMGZyRjdWUlRvbjVPQVliMWFQeW5xMHJQYWpTcEVUN3dqVUs3OXhyR1dhcmFOQzJtbWk2Yzg5eVgzaHlSbE5QWkhnbE9Cby9SYkcwTE5UM2orYk12VDl3NWpuOFZTOENDVGpNY3FVVkptaUVDZ2orUEFodzRsQUdQNjc1VGYxbDFYNXp3dGticGlyNy9ad2R2eVdYbUQ5NWVCYlNzWHV6WUxjV3I2WWhhOUlaWUU3RWMxT01ZUk1jRjF2ZWl3UUh0dUpzeW45VlNrOXRzQlNXZUNKYXBWSmxJUUU5bUcvUEkyUzRJaXBVcm5mRmJrdElEaDNwMVFSLzRVMUJRODd4bFI2cmQwVk0zUXJXV3BIbjE4QVRSZFpYVGJBd0FBIn0= -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -798,10 +798,10 @@ WHERE          -- `WHERE` clause is optional
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbmtfdG1wO1xuYGBgIn0= -->
 <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> link_tmp;</code></pre></div>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEzVlN3VXJFTUJBZGsyN2RkbEVXQkwzMkxyVGcwZE1LUlR5S2VOaWJaTnR1dDlnbUpVMnBSOEgvRS93YkwrNDZhWk95Rml4TTMyVGV5NXRKeUZPOHZ2SFhQZ0FRb0RNQ2hHTHFFUHlkZ0FPZXhqY0Flb0dKaTNHR1FVMStpakhIV1BhMVFYeTFVNnEramFLdTY4SXRTN0tORUs5aElxcGp1akc4YXF0TktUVWJHWHBwNloxSzgxRElmT0krdnplV1p1MCs5eFptZGZrZ3VrQ0pJTTZhSXVmQm94UzVaRlV6ZWdCNEIveEdISFpkMy9HZzRFcUt0RldGNE5xZ0huWldCYzhEeHRNQUo2eVI1UG0vVmlQU2M4MnZQci9mRVdIMTlRSEhPTG5aV1ZLeXhzNW5pMDdNVklhNG40bzVxeklyZGsyUkZLbkphQ3RMNjZDVkpsK2tXWlBJb3RaSHMwcVpXZVVDKzZ1WHRrNzdscm9kT1V6RzhaRmo0VlpxeTc4RGVWSjBvUjFLdnd1aXo0eTM4RE5NRC90ZjNmcFJpVndDQUFBPSJ9 -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEzVlN3VXJFTUJBZDArNjY3YUlzQ0hydFhXakJvNmNLUlR5S2VOaWJaTnR1TjlnbUpVMnBSOEgvRS93YkwrNDZhWk95Rml4TTMyVGV5NXRKeUZPeXZ2SFhQZ0FRY0dZRWlJT3BTL0IzQWk1NEd0OEFuQXRNNWhobkdJN0pUekVXR0t1K05vaXZka3JWdDFIVWRWMjRwV20rRWVJMVRFVjFURGVHVjIyMUthVm1JME92TEwxVFdSRUtXVXpjRi9mRzBxem56NzJGV1YwK2lDNVFJa2p5aGhVOGVKU2lrTFJxUmc4QTc0RGZpTU91NnpzZU1LNmt5RnJGQk5jRzliQ3pZcndJS004Q25MQkdraGYvV28zb25HcysvdngrUjRUNDZ5TSt4c25OenRLU05uWStXM1FUcW5MRS9WVE1hWlZiOGR3VUNjdE01clN5dEE1YWFmSmxsamVwWkxVK21sWEszQ3FYMkYrOXRIWFd0OVR0eUdFeWpvOGNEYmRTVy80ZHlKT2lDKzFRK2wwUWZXYThoWjloZXRqL0FoSEdjalZjQWdBQSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -836,10 +836,260 @@ WHERE          -- `WHERE` clause is optional
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
 <div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R6VTdiUUJESEY5dEpJYWdvVW9DS20zdmlVQ21ST1BhVVZsSGhBQ0tGSE5KVHRZbVh6UXJiNjY3WGNuTnFKZDZFQjBMaWFjaUpNR3ZQdHB1QVZGVllHczk0Zm4vdmZNaStHSXlQV3VNV0ljUWpmc01qbmc5aDRNRnRnd1JreS9pZmhQZ2RDSnBnYjhHcVpQVUNBS01HYXlCL0E3YUptbmJsNjBQZXo3VE9Qdlo2WlZsMk01bHJybGorSTlhRmxrclF1RHVWQ1FyM0hhRlVUTVR4M0tGN0R1VlM4cGc1Y05lQmN6cVQwbUVkaDAxRXloMzB6a0ZYZE1vbVVsNnY0eHk1THBKSnJBenRJVzViUE5NUmg0NDU1ZzllSExnU3JHNm1NNnpwNWRmVGNJVDdRTFJ6Zm5oUmJTQThZNUdnbUcwZVY0UGpVK09ibVJRZmdzOHdHc2FiWDNBVys5cW82dDJ1K1VTV29aYmhnT1dDcCtGUVNhNW9raU50L2UzcFQ3ZGdTN2orMjljbmZ2aVVoaUxWU2thRkZqSTFwYk82WmdJdGh6U05RbGhxQmpEbHpoR3ZLLzNNK3pzbS9yVWc1a3U5L1pmdjN5MSttNmgvZjBOZThtdi9TV01hMHp6SHBtMHlHRkROd0QrdWkxT2FNQ3R1WXRJVEVVWitvZXhIRUJnbHh0c1J5NmRLWkdhRlZxbVlWVzVEZmYyOXlLS3FwQ25uTGRmYWFRR2ozU3Rsamx4dGFFdkpzbXViTW4rNVoyYUhyVDNVM1pQSEp5dkh0V3NxQkFBQSJ9 -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R6VTdiUUJESHQ3YVRKa0ZGU09GRHZaa1RoMHFKMUNPbmdLTENBVVNnSE1JSmJlSmxzNnJ0TmV1MURLZFc0azE0SUtRK1RUa0JzL1pzdXdtUkVLcWw4WXpuOS9mT2greXo0ZmhyWjl3aGhIakViM2pFOHlFTVBMaDlJQUZwRzM5RGlOK0ZvQW4yQ2F4S1ZpOEFNR3F3QnZLUFlDM1VyRlcrUG1SN3BuVzIyKytYWmRuTFpLNjVZdmwxckFzdGxhQnhieW9URkc0NlFxbVlpT05iaDI0NGxFdkpZK2JBZFFmZTBwbVVEdXM2YkNKUzdxQXRCMTNSS1p0SStXTVI1OGgxa1V4aVpXZ2Y4WnJGTXgxeDZKaGovdlBTZ1N2Qi9HYTZvNXArUHowS3ozRWZpRlpQZHM2cURZVEhMQklVczgyRGFuQjhhbHlZU2ZFaDJJZlJNRzU5dzFuc2ErZFY3M2JOaDdJTXRReUhMQmM4RFVkS2NrV1RIR25uWDA5L3V3VjdodXZkdmo3eHkxNGFpbFFyR1JWYXlOU1V6dXFhQ2JRYzBqUUtZYWtad0pRN1IveGY2VmZlWHpYeHowZGl2dFQ3dC96ZzRmR1hpUWEvN3diTC9NSi8wcGpHTk0reGFac01obFF6OEUrTDRwUW16SXFibVBSRWhKRmZLUHNSQkVhSjhVckU4cWtTbVZtaFZTcG1sU3RRWDE4V1dWU1ZOT1c4NTRWMk9zQm83MHFaSStjYmFpdFo5bXhUNWkvM3pPeXd0VDkxOStUcEJmVHNMVDhxQkFBQSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-05"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-05"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"NA","6":"2019-02-05"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Disconnect from the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="update" class="section level2">
+<h2>UPDATE</h2>
+<p>To change the values of columns in a table, use <code>UPDATE</code>.</p>
+<p>Here’s the syntax.</p>
+<pre><code>UPDATE 
+  table_1
+SET
+  col_1 = value_1,
+  col_2 = value_2,
+  ...
+WHERE
+  [condition];</code></pre>
+<p>If you omit the <code>WHERE</code> clause, all the rows in a column will be updated.</p>
+<div id="update-examples" class="section level3">
+<h3><code>UPDATE</code> examples</h3>
+<p>We’ll use the “link” table created above.</p>
+<p>Connect to the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksIFwiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZVwiKVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con_ex &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;PostgreSQL AWS example&quot;</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUXVpdHRpbmcgZnJvbSBsaW5lcyA2Ni02NyAoUGdzcWxUdXRfSG9tZV9TZWN0aW9uMDkuUm1kKSBcbiJ9 -->
+<pre><code>Quitting from lines 66-67 (PgsqlTut_Home_Section09.Rmd) </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2V1R6VTdiUUJESHQ3YVRKa0ZGU09GRHZaa1RoMHFKMUNPbmdLTENBVVNnSE1JSmJlSmxzNnJ0TmV1MURLZFc0azE0SUtRK1RUa0JzL1pzdXdtUkVLcWw4WXpuOS9mT2greXo0ZmhyWjl3aGhIakViM2pFOHlFTVBMaDlJQUZwRzM5RGlOK0ZvQW4yQ2F4S1ZpOEFNR3F3QnZLUFlDM1VyRlcrUG1SN3BuVzIyKytYWmRuTFpLNjVZdmwxckFzdGxhQnhieW9URkc0NlFxbVlpT05iaDI0NGxFdkpZK2JBZFFmZTBwbVVEdXM2YkNKUzdxQXRCMTNSS1p0SStXTVI1OGgxa1V4aVpXZ2Y4WnJGTXgxeDZKaGovdlBTZ1N2Qi9HYTZvNXArUHowS3ozRWZpRlpQZHM2cURZVEhMQklVczgyRGFuQjhhbHlZU2ZFaDJJZlJNRzU5dzFuc2ErZFY3M2JOaDdJTXRReUhMQmM4RFVkS2NrV1RIR25uWDA5L3V3VjdodXZkdmo3eHkxNGFpbFFyR1JWYXlOU1V6dXFhQ2JRYzBqUUtZYWtad0pRN1IveGY2VmZlWHpYeHowZGl2dFQ3dC96ZzRmR1hpUWEvN3diTC9NSi8wcGpHTk0reGFac01obFF6OEUrTDRwUW16SXFibVBSRWhKRmZLUHNSQkVhSjhVckU4cWtTbVZtaFZTcG1sU3RRWDE4V1dWU1ZOT1c4NTRWMk9zQm83MHFaSStjYmFpdFo5bXhUNWkvM3pPeXd0VDkxOStUcEJmVHNMVDhxQkFBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"<NA>"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"<NA>"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"<NA>"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"<NA>"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"<NA>"},{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Let’s change the <code>NULL</code> values in the <code>last_update</code> column to the <code>DEFAULT</code> value (i.e., <code>CURRENT_DATE</code>).</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5VUERBVEVcbiAgbGlua1xuU0VUXG4gIGxhc3RfdXBkYXRlID0gREVGQVVMVFxuV0hFUkVcbiAgbGFzdF91cGRhdGUgSVMgTlVMTDtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">UPDATE</span>
+  <span class="kw">link</span>
+<span class="kw">SET</span>
+  last_update = <span class="kw">DEFAULT</span>
+<span class="kw">WHERE</span>
+  last_update <span class="kw">IS</span> <span class="kw">NULL</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE2VlRUVXZEUUJCZGs3UzJGVVh3QzIveDVFRkl3YU9uS2tVOUtOYVBnNTVrMjZ6cFlwS0ptdzNSbStEL0UvdzFlbEpuazEzZEZrSFF3R1JtOXIzTXZKbXdaLzNMN2M1bGh4RGlFTGZoRU1mRjBIUHdOVU04MGxiK25oQjNDWU1tMmp4YVc4ZXphQzJkejFRRmtLaStSbXVnTFZaWVhXUnRMR1cyMCsyV1pSbmMwQkViQXR3R0kwaHNPTmU0TEpKaExCVGExZkNpZ2NjeWpBSVFrVDVmdDZwbWtNdElzUHd1dGdnYlB4SmtJVUZ3R2xzQ1ZpMGlDTWJqK01GQ1Z5dzBBb2hpWm9ITEZ2aEF4d0FXdG1SaFE1NUdGVFM1bWRhK1hvZk9teGZWK0ViWElaUytCTC9QY2g2bC9rQkFKR2lTYTdRenFHYzZQejB5RGI5UC9Bczlwb1lXVGpiUHFzSDhZeFp5YXRvZFZQUG9ySEdsQnRDSnQ0ZUt2OVNpZmVEejVXdk8xbTdxODFRS0NBdkpJVlZTczFwamdoLzdOQTE5SERsRHNDbzFXZUozLzNQclAzdDNRY1c5NTdkSDlLVDM4dFQ3ajUrNko0MVJUUE5jaXphSFhwOUtodjU5bXB6U2hCbHlVeDg2UE5TUld3anoyenpGMVBGY3lQS1I0SmxhdFdFS1pwaHoyRjllRjFsWXRWVHRuSThwT1IzRWFIQWpWTWxKUVcwQlpXQkVxVnZ1cUIzaDFsNXI5ZVQ5RTZ0TGIxSXFCQUFBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"NA","6":"2019-02-06"},{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"NA","6":"2019-02-06"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"NA","6":"2019-02-06"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"NA","6":"2019-02-06"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"NA","6":"2019-02-06"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Now let’s update all rows in a particular column. To do this, omit the <code>WHERE</code> clause.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5VUERBVEVcbiAgbGlua1xuU0VUXG4gIHJlbCA9ICdub2ZvbGxvdyc7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">UPDATE</span>
+  <span class="kw">link</span>
+<span class="kw">SET</span>
+  rel = <span class="st">'nofollow'</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE4VlVRVS9iTUJRMlNWcG9FVldsd2hDMzdMUURVaXJ0dUZPSHFzRUJOR0E5d0dseUd6ZTE1dVJsanFPTUd4TC9ENGxmQXlmZ09iRTd0MExhZ2NNaXZiejMvSDErNzN1MmtzdngxZWZ1VlpjUTRoRy81UkhQeHpEdzhMVkJBdExSL2c4aC9nQ0ROdG9PV3NmRW0yaGJKdCtvQ3lCUjcwWnJvZlZyckNteXYxQXEvekljVmxVVnplbU1UUUYrUlROSVhiZ3d1Q3JUcVpBYUhScTRiK0dGaXBNSVpHTFdENXlxT1JRcWthejRMUnpDeHpjSnFsUWdPUldPZ0E4T0VTVGpRdHc0Nko2REpnQ0pZQTY0NjRBM2RBSGdZQU1IbS9Jc3FhSFZrOW42Wm83RDVPMUpQYjdWZFFKVnFDQWNzNEluV1hndUlaRTBMUXphUFc5bStuRnhhaHYrWFFrblprd0Q5YjUvdXF3SEM4OVl6S2x0ZDF6UFk3TFd0UjdBSk1FUktsNnFSWHZCWitrYnp1SFhMT1Naa2hDWGlrT21wZWFOeGhRM2h6U0xReHc1UjdBdXRWcmkzMzdsb0RLWWd4QlEvZmVjK0QydGEzVC9kSXVlakI3dVJ1L3hhOTliYXlab1Vaamg3V0l3cG9xaGYxNG5aelJsbHR3Mml4NlBUZVNYMGw1L29Ka20zbzVaTVpNODExZG1tWkpaNWpiMlZ6L0xQSzViNm5iZXk1cWNMbUkwbWt0ZGNsVlFSMElWV1ZINmIrSHBNOExiZkd6VWsrZFhVOUc4LzNJRUFBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"nofollow","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"nofollow","6":"2019-02-06"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"3","2":"http://www.google.com","3":"Google","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"NA","5":"nofollow","6":"2019-02-06"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"NA","5":"nofollow","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Update a column from another column within the same table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5VUERBVEVcbiAgbGlua1xuU0VUXG4gIGRlc2NyaXB0aW9uID0gbmFtZTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">UPDATE</span>
+  <span class="kw">link</span>
+<span class="kw">SET</span>
+  description = name;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbms7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">link</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE5V1V6MC9DTUJUSHl6WVFSaVFtK0NQZTVzbmJTRHg2SW9hb0I0MklIUEJreWxiR1l0bkRyc3ZrWnVML1orSmZveWRtTzlwWWlEY1B4c05iMyt2blM5LzNkUm1EM3VqRUhia0lJUXZaVlF0WnRrZ2RTendxeUVFTnVUNGpaTGRGVWhPeExhS2g4aTBSZFZWWHlnT0VVUDVhUkZYRVRzbFdoeHhNT1orZmRqcDVudnNUSEpBeHdLTWZ3TXpFcWVJOG00MHBrN1NqOEk3R1V4NUdQckJJN1I4YXA4NGg1UkVqNlJNMUJFYy9DbmpHZ2NXWUdnYjJEU0V3RWxPNk1PaWVRU09BaUJJRDdocHdnYWNBQm1zYmJCd25VWW5XYjZaK3JxNUQxYlZoT2I3MmRRbTV4OEhya1RTT0VxL1BJR0o0bGlycTlsY3ozZDFlNlliZk85NVFqYWxRNitaNFVBN21YWk13eHJyZFJUbVBxcXIzY2dCVk9HZkM4ZjkybThBRUtJWDh6MnRrdDZTdjd0dm5pMWhSOS8yMSs1dDE0eE90QmhTbnFScGViem85eklsWWw1dmlCTStJRnRmVXBoV0hLck16cHQrQkk1VXFiNFlrRFZnODV6RWtXc21JVmpaRmYvNlF6Y095cFd4bkZSdDJYTUd3UDJIeXlIVkREUWE1cjAzSlB4aEwzbEZSRkI4cjkyajVCWEk2TFVXbEJBQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"Facebook","5":"nofollow","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"Tumblr","5":"nofollow","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"How to Design Programs","5":"nofollow","6":"2019-02-06"},{"1":"9","2":"http://www.postgresql.org","3":"PostgreSQL","4":"PostgreSQL","5":"nofollow","6":"2019-02-06"},{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"PostgreSQL Tutorial","5":"nofollow","6":"2019-02-06"},{"1":"2","2":"http://www.oreilly.com","3":"O'Reilly Media","4":"O'Reilly Media","5":"nofollow","6":"2019-02-06"},{"1":"3","2":"http://www.google.com","3":"Google","4":"Google","5":"nofollow","6":"2019-02-06"},{"1":"4","2":"http://www.yahoo.com","3":"Yahoo","4":"Yahoo","5":"nofollow","6":"2019-02-06"},{"1":"5","2":"http://www.bing.com","3":"Bing","4":"Bing","5":"nofollow","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="update-join-example" class="section level3">
+<h3><code>UPDATE</code> join example</h3>
+<p>Let’s look at the “link_tmp” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbmtfdG1wO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> link_tmp;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEzVlN3VXJFTUJBZDArNjY3YUlzQ0hydFhXakJvNmNLUlR5S2VOaWJaTnR1TjlnbUpVMnBSOEgvRS93YkwrNDZhWk95Rml4TTMyVGV5NXRKeUZPeXZ2SFhQZ0FRY0dZRWlJT3BTL0IzQWk1NEd0OEFuQXRNNWhobkdJN0pUekVXR0t1K05vaXZka3JWdDFIVWRWMjRwV20rRWVJMVRFVjFURGVHVjIyMUthVm1JME92TEwxVFdSRUtXVXpjRi9mRzBxem56NzJGV1YwK2lDNVFJa2p5aGhVOGVKU2lrTFJxUmc4QTc0RGZpTU91NnpzZU1LNmt5RnJGQk5jRzliQ3pZcndJS004Q25MQkdraGYvV28zb25HcysvdngrUjRUNDZ5TSt4c25OenRLU05uWStXM1FUcW5MRS9WVE1hWlZiOGR3VUNjdE01clN5dEE1YWFmSmxsamVwWkxVK21sWEszQ3FYMkYrOXRIWFd0OVR0eUdFeWpvOGNEYmRTVy80ZHlKT2lDKzFRK2wwUWZXYThoWjloZXRqL0FoSEdjalZjQWdBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"NA","5":"NA","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"NA","5":"NA","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"An introdution to programming and computing","5":"NA","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Here we can update corresponding values in the “link_tmp” table that come from “link” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5VUERBVEVcbiAgbGlua190bXBcblNFVFxuICByZWwgPSBsaW5rLnJlbCxcbiAgZGVzY3JpcHRpb24gPSBsaW5rLmRlc2NyaXB0aW9uLFxuICBsYXN0X3VwZGF0ZSA9IGxpbmsubGFzdF91cGRhdGVcbkZST01cbiAgbGlua1xuV0hFUkVcbiAgbGlua190bXAuaWQgPSBsaW5rLmlkO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">UPDATE</span>
+  link_tmp
+<span class="kw">SET</span>
+  rel = link.rel,
+  description = link.description,
+  last_update = link.last_update
+<span class="kw">FROM</span>
+  <span class="kw">link</span>
+<span class="kw">WHERE</span>
+  link_tmp.id = link.id;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGxpbmtfdG1wO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> link_tmp;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE3VlNzVTdETUJBOTdMUzBxVUNWa0dETkZ5UVNJMU9HQ0RFaXhOQ3RjaE1ualVoeWtlUElqRWo4SHhKL3cwS0RuZHBTeWNMRWNMNTM5NTdmbmFNOEpadGJmK01EQUFFNkkwQ29oaDdSeHhsNHNEVDVGWUJlYVREWGNhR0RXbnl1WTZGalBmYU80cHU5bE8xZEZDbWx3cHlsZklmNEVxWlluOUtkNVdWZjd5cGgyTWpTYTBmdlpWYUVLSXFKKytMZVd0cDYvanhhMk9yNkFWVWdNVWg0VnhaTjhDaXdFS3p1L3NPandSeXJDdFdmTmRCTGN5LysrSHJUR2VMUDkvZzBUejcxTEsxWTU0YTVwcGN3eVhVK1RNVU5xN2tUejIyVGxKbEZ0QmVWY3pCS2kxY1o3MUpSdHJMRXhpa0ZkOHFWbmkrM2ZadU5JODA0TWt6VzhUWEh3bHdZeTk4TExRV3EwQzFsZmhSaTNqd013L2R4ZXpqOEFQdDJXQnh0QWdBQSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"6","2":"http://www.facebook.com","3":"Facebook","4":"Facebook","5":"nofollow","6":"2013-06-01"},{"1":"7","2":"https://www.tumblr.com/","3":"Tumblr","4":"Tumblr","5":"nofollow","6":"2019-02-06"},{"1":"8","2":"https://htdg.org","3":"How to Design Programs","4":"How to Design Programs","5":"nofollow","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="update-with-returning-example" class="section level3">
+<h3><code>UPDATE</code> with <code>RETURNING</code> example</h3>
+<p>The <code>UPDATE</code> statement returns the number of affected rows by default. The PostgreSQL <code>UPDATE</code> statement also returns updated entries using the <code>RETURNING</code> clause. This addition is a PostgreSQL’s extension to the SQL standard.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5VUERBVEVcbiAgbGlua1xuU0VUXG4gIGRlc2NyaXB0aW9uID0gJ0xlYXJuIFBvc3RncmVTUUwgZmFzdCBhbmQgZWFzeScsXG4gIHJlbCA9ICdmb2xsb3cnXG5XSEVSRVxuICBpZCA9IDFcblJFVFVSTklOR1xuICBpZCxcbiAgZGVzY3JpcHRpb24sXG4gIHJlbDtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">UPDATE</span>
+  <span class="kw">link</span>
+<span class="kw">SET</span>
+  description = <span class="st">'Learn PostgreSQL fast and easy'</span>,
+  rel = <span class="st">'follow'</span>
+<span class="kw">WHERE</span>
+  <span class="kw">id</span> = <span class="dv">1</span>
+<span class="kw">RETURNING</span>
+  <span class="kw">id</span>,
+  description,
+  rel;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVB5d3JDTUJCY2sxWm9SUkM4Uzc2Z0I3L0JZdzgrTHIwdVRTcUZtRWcyVUwzNTVXcWlFU1FMc3pQc0RqdnNjZGR0NjY0R0FBYThaTUI0a0FVTGJRWUZWSkZ2QUh3ZFJOd3NQNHN2Vm4rbVRhdlFHYkczNU05T25RNnRHSkM4UUNPRlFycG43dmxndGJaVEZsUWF2Q2hLVnA2R2JKUkpMYVNpM28xWFAxcVRSdHdwblIvcE5SSmxlYlZFajgzZ3d2M01Yams3TmIvYytCeDdoUFlLRmVnWjhRYUFPWjAySVFFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["description"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"Learn PostgreSQL fast and easy","3":"follow"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Verify the udpate.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgXG4gICogXG5GUk9NIFxuICBsaW5rXG5XSEVSRVxuICBpZCA9IDE7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> 
+  * 
+<span class="kw">FROM</span> 
+  <span class="kw">link</span>
+<span class="kw">WHERE</span>
+  <span class="kw">id</span> = <span class="dv">1</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUExMlJ2MnJETUJER3I3SmppRU5LSVh0eFhzQ0JqcDB5Wk16UWYwTzJJbXc1TVNpV0k1MVJ1eFg2aEgyaHBDZmJna1NDMDMxSXY3djdoTjQydTZkMGx3SUFnMmpDZ0VVa1kwYmJIY1F3ZGZrTElGcVFTQ2ptL2NVUUQxZlE4b0RZUHE5VzF0cThWUWIzV3BpVHhBNlZycm5NQzNVTUNoWXZBL1grdXMwK1JpeEFIcmVDNnlhN0FpdHVNT05ObVFsdXZnTTZxWlNVeXBMWGUzZTYvdnRkUTc5dUhqTXBKRGNtS0kwM0hBWGxjd2czL0NnOG5JeUhyQzVIRlhWYStnNk9IUFdzRktiUWRZdTFhanlwaFNkbk5COC91N2JzUjdweDdCTFlTZW1PNTVWMkxXOE5UYld5dVRmbHZvTDkwSGFoTmJpSDh6OWxZWERNendFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["url"],"name":[2],"type":["chr"],"align":["left"]},{"label":["name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["description"],"name":[4],"type":["chr"],"align":["left"]},{"label":["rel"],"name":[5],"type":["chr"],"align":["left"]},{"label":["last_update"],"name":[6],"type":["date"],"align":["right"]}],"data":[{"1":"1","2":"http://www.postgresqltutorial.com","3":"PostgreSQL Tutorial","4":"Learn PostgreSQL fast and easy","5":"follow","6":"2019-02-06"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
   </script>
 </div>
 <!-- rnb-frame-end -->
@@ -883,7 +1133,7 @@ WHERE          -- `WHERE` clause is optional
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDgiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IHRydWUKLS0tCgpMb2FkIGxpYnJhcmllcy4KYGBge3J9CmxpYnJhcnkoREJJKQpsaWJyYXJ5KG9kYmMpCmxpYnJhcnkoUlBvc3RncmVzKQpgYGAKCgojIE1vZGlmeWluZyBkYXRhCgojIyBJTlNFUlQKCldoZW4geW91IGNyZWF0ZSBhIG5ldyB0YWJsZSwgaXQgZG9lc24ndCBoYXZlIGFueSBkYXRhLiBZb3UgbmVlZCB0byBpbnNlcnQgZGF0YSBpbnRvIHRoZSB0YWJsZS4gYElOU0VSVGAgYWxsb3dzIHlvdSB0byBpbnNlcnQgb25lIG9yIG1vcmUgcm93cyBpbnRvIGEgdGFibGUgYXQgYSB0aW1lLgoKSGVyZSdzIHRoZSBzeW50YXggZm9yIGEgc2luZ2xlIHJvdyBpbnNlcnQuCmBgYApJTlNFUlQgSU5UTyB0YWJsZV8xCiAgKGNvbF8xLCBjb2xfMiwgLi4uKQpWQUxVRVMKICAodmFsdWVfMSwgdmFsdWVfMiwgLi4uKTsKYGBgCgpIZXJlJ3MgdGhlIHN5bnRheCBmb3IgYSBtdWx0aXBsZSByb3cgaW5zZXJ0LgpgYGAKSU5TRVJUIElOVE8gdGFibGVfMQogIChjb2xfMSwgY29sXzIsIC4uLikKVkFMVUVTCiAgKHZhbHVlXzFhLCB2YWx1ZV8yYSwgLi4uKSwKICAodmFsdWVfMWIsIHZhbHVlXzJiLCAuLi4pOwpgYGAKClRvIGluc2VydCBkYXRhIHRoYXQgY29tZXMgZm9ybSBhbm90aGVyIHRhYmxlLCB5b3UgY2FuIHVzZSBgSU5TRVJUIElOVE8gU0VMRUNUYC4KYGBgCklOU0VSVCBJTlRPIGRlc3RpbmF0aW9uX3RhYmxlCiAgKGRfY29sXzEsIGRfY29sXzIsIC4uLikKU0VMRUNUCiAgc19jb2xfQSwgCiAgc19jb2xfYiwgCiAgLi4uCkZST00KICBzb3VyY2VfdGFibGUKV0hFUkUgICAgICAgICAgLS0gYFdIRVJFYCBjbGF1c2UgaXMgb3B0aW9uYWwKICBbY29uZGl0aW9uXTsKYGBgCgojIyMgYElOU0VSVGAgZXhhbXBsZXMKCkxldCdzIGNyZWF0ZSBhIHRhYmxlIGNhbGxlZCAibGluayIuCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksICJQb3N0Z3JlU1FMIEFXUyBleGFtcGxlIikKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpEUk9QIFRBQkxFIElGIEVYSVNUUyBsaW5rOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rKAogIGlkICAgICAgICAgICBzZXJpYWwgICAgICAgIFBSSU1BUlkgS0VZLAogIHVybCAgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIG5hbWUgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIGRlc2NyaXB0aW9uICBWQVJDSEFSKDI1NSksCiAgcmVsICAgICAgICAgIFZBUkNIQVIoNTApCik7CmBgYAoKSW5zZXJ0IG9uZSByb3cgaW50byB0aGUgImxpbmsiIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8gCiAgbGluayh1cmwsIG5hbWUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsdHV0b3JpYWwuY29tJywnUG9zdGdyZVNRTCBUdXRvcmlhbCcpOwpgYGAKCkNoYXJhY3RlciBkYXRhIGhhcyB0byBiZSBlbmNsb3NlZCBpbiBzaW5nbGUgcXVvdGVzLCBgJ2AuCgpJZiB5b3Ugb21pdCBhbnkgY29sdW1uIHRoYXQgYWNjZXB0cyB0aGUgYE5VTExgIHZhbHVlIGluIHRoZSBgSU5TRVJUYCBzdGF0ZW1lbnQsIHRoZSBjb2x1bW4gd2lsbCB0YWtlIGl0cyBkZWZhdWx0IHZhbHVlLiBJZiBub3QgZGVmYXVsdCB2YWx1ZSBpcyBzZXQgZm9yIHRoZSBjb2x1bW4sIHRoZSBjb2x1bW4gd2lsbCB0YWtlIHRoZSBgTlVMTGAgdmFsdWUuCgpWZXJpZnkgdGhhdCB0aGUgYElOU0VSVGAgd29ya2VkLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCklmIHlvdSB3YW50IHRvIGluc2VydCBhIHN0cmluZyB0aGF0IGNvbnRhaW5zIGEgc2luZ2xlIHF1b3RlIGNoYXJhY3Rlciwgc3VjaCBhcyBfTydSZWlsbHkgTWVkaWFfLCB5b3UgaGF2ZSB0byB1c2UgYSBzaW5nbGUgcXVvdGUgZXNjYXBlIGNoYXJhY3Rlci4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cub3JlaWxseS5jb20nLCAnTycnUmVpbGx5IE1lZGlhJyk7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCkluc2VydCBtdWx0aXBsZSByb3dzIGludG8gdGhlICJsaW5rIiB0YWJsZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZ29vZ2xlLmNvbScsJ0dvb2dsZScpLAogICgnaHR0cDovL3d3dy55YWhvby5jb20nLCdZYWhvbycpLAogICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKIyMjIEFkZCBhIGNvbHVtbiB3aXRoIGBBTFRFUiBUQUJMRWAKCkFkZCBhIG5ldyBjb2x1bW4gbmFtZXMgYGxhc3RfdXBkYXRlYCBpbnRvIHRoZSAibGluayIgdGFibGUgYW5kIHNldCBpdHMgZGVmYXVsdCB0byBgQ1VSUkVOVF9EQVRFYC4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkFMVEVSIFRBQkxFIAogIGxpbmsKQUREIENPTFVNTiAKICBsYXN0X3VwZGF0ZSBEQVRFOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpBTFRFUiBUQUJMRQogIGxpbmsKQUxURVIgQ09MVU1OCiAgbGFzdF91cGRhdGUKU0VUIERFRkFVTFQgQ1VSUkVOVF9EQVRFOwpgYGAKCkluc2VydCBhIG5ldyByb3cgdXNpbmcgdGhlIG5ldyBgbGFzdF91cGRhdGVgIGNvbHVtbi4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZmFjZWJvb2suY29tJywgJ0ZhY2Vib29rJywgJzIwMTMtMDYtMDEnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKWW91IGNhbiBhbHNvIHVzZSB0aGUgYERFRkFVTFRgIGtleXdvcmQgdG8gc2V0IHRoZSBkZWZhdWx0IHZhbHVlIGZvciB0aGUgYGxhc3RfdXBkYXRlYCBvciBhbnkgY29sdW1uIHRoYXQgaGFzIGEgZGVmYXVsdCB2YWx1ZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHBzOi8vd3d3LnR1bWJsci5jb20vJywgJ1R1bWJscicsIERFRkFVTFQpOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpXaGF0IGhhcHBlbnMgd2hlbiBJIGRvbid0IHVzZSBgREVGQVVMVGAgaW4gYW4gYElOU0VSVGAgc3RhdGVtZW50PwoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgZGVzY3JpcHRpb24pClZBTFVFUwogICgnaHR0cHM6Ly9odGRnLm9yZycsICdIb3cgdG8gRGVzaWduIFByb2dyYW1zJywgJ0FuIGludHJvZHV0aW9uIHRvIHByb2dyYW1taW5nIGFuZCBjb21wdXRpbmcnKQpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpUaGUgYW5zd2VyIGlzIHRoYXQgKGFzIGV4cGxhaW5lZCBhYm92ZSkgdGhlIGRlZmF1bHQgdmFsdWUgKGBDVVJSRU5UX0RBVEVgKSBpcyBpbnNlcnRlZCBpbnRvIHRoZSBmaWVsZC4KCiMjIyBJbnNlcnQgZGF0YSBmcm9tIGFub3RoZXIgdGFibGUKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkRST1AgVEFCTEUgSUYgRVhJU1RTIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rX3RtcCAoTElLRSBsaW5rKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGlua190bXAKU0VMRUNUCiAgKgpGUk9NCiAgbGluawpXSEVSRQogIGxhc3RfdXBkYXRlIElTIE5PVCBOVUxMOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGlua190bXA7CmBgYAoKIyMjIEdldCB0aGUgbGFzdCBpbnNlcnQgSUQgd2l0aCBQb3N0Z3JlU1FMIGBSRVRVUk5JTkdgCgpJZiB5b3Ugd2FudCB0byBrbm93IHRoZSBsYXN0IHZhbHVlIGFzc2lnbmVkIHRvIGEgc2VyaWFsIGZpZWxkIGR1cmluZyBhbiBgSU5TRVJUYCwgdXNlIGBSRVRVUk5JTkdgLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsLm9yZycsJ1Bvc3RncmVTUUwnLERFRkFVTFQpClJFVFVSTklORwogIGlkOwpgYGAKClRoaXMgbGFzdCBgSU5TRVJUYCBzaG93cyB0aGF0IHRoZSBgaWRgIHZhbHVlIGlzIDkuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKRGlzY29ubmVjdCBmcm9tIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KaWYgKGV4aXN0cygiY29uX2V4IikpIHsgZGJEaXNjb25uZWN0KGNvbl9leCk7IHJtKGNvbl9leCk7IH0KYGBgCgoKCmBgYAojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDgiCm91dHB1dDogCiAgaHRtbF9ub3RlYm9vazoKICAgIHRoZW1lOiBjZXJ1bGVhbgogICAgaGlnaGxpZ2h0OiBlc3ByZXNzbwogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IHRydWUKLS0tCgpMb2FkIGxpYnJhcmllcy4KYGBge3J9CmxpYnJhcnkoREJJKQpsaWJyYXJ5KG9kYmMpCmxpYnJhcnkoUlBvc3RncmVzKQpgYGAKCgojIE1vZGlmeWluZyBkYXRhCgojIyBJTlNFUlQKCldoZW4geW91IGNyZWF0ZSBhIG5ldyB0YWJsZSwgaXQgZG9lc24ndCBoYXZlIGFueSBkYXRhLiBZb3UgbmVlZCB0byBpbnNlcnQgZGF0YSBpbnRvIHRoZSB0YWJsZS4gYElOU0VSVGAgYWxsb3dzIHlvdSB0byBpbnNlcnQgb25lIG9yIG1vcmUgcm93cyBpbnRvIGEgdGFibGUgYXQgYSB0aW1lLgoKSGVyZSdzIHRoZSBzeW50YXggZm9yIGEgc2luZ2xlIHJvdyBpbnNlcnQuCmBgYApJTlNFUlQgSU5UTyB0YWJsZV8xCiAgKGNvbF8xLCBjb2xfMiwgLi4uKQpWQUxVRVMKICAodmFsdWVfMSwgdmFsdWVfMiwgLi4uKTsKYGBgCgpIZXJlJ3MgdGhlIHN5bnRheCBmb3IgYSBtdWx0aXBsZSByb3cgaW5zZXJ0LgpgYGAKSU5TRVJUIElOVE8gdGFibGVfMQogIChjb2xfMSwgY29sXzIsIC4uLikKVkFMVUVTCiAgKHZhbHVlXzFhLCB2YWx1ZV8yYSwgLi4uKSwKICAodmFsdWVfMWIsIHZhbHVlXzJiLCAuLi4pOwpgYGAKClRvIGluc2VydCBkYXRhIHRoYXQgY29tZXMgZm9ybSBhbm90aGVyIHRhYmxlLCB5b3UgY2FuIHVzZSBgSU5TRVJUIElOVE8gU0VMRUNUYC4KYGBgCklOU0VSVCBJTlRPIGRlc3RpbmF0aW9uX3RhYmxlCiAgKGRfY29sXzEsIGRfY29sXzIsIC4uLikKU0VMRUNUCiAgc19jb2xfQSwgCiAgc19jb2xfYiwgCiAgLi4uCkZST00KICBzb3VyY2VfdGFibGUKV0hFUkUgICAgICAgICAgLS0gYFdIRVJFYCBjbGF1c2UgaXMgb3B0aW9uYWwKICBbY29uZGl0aW9uXTsKYGBgCgojIyMgYElOU0VSVGAgZXhhbXBsZXMKCkxldCdzIGNyZWF0ZSBhIHRhYmxlIGNhbGxlZCAibGluayIuCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksICJQb3N0Z3JlU1FMIEFXUyBleGFtcGxlIikKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpEUk9QIFRBQkxFIElGIEVYSVNUUyBsaW5rOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rKAogIGlkICAgICAgICAgICBzZXJpYWwgICAgICAgIFBSSU1BUlkgS0VZLAogIHVybCAgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIG5hbWUgICAgICAgICBWQVJDSEFSKDI1NSkgIE5PVCBOVUxMLAogIGRlc2NyaXB0aW9uICBWQVJDSEFSKDI1NSksCiAgcmVsICAgICAgICAgIFZBUkNIQVIoNTApCik7CmBgYAoKSW5zZXJ0IG9uZSByb3cgaW50byB0aGUgImxpbmsiIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8gCiAgbGluayh1cmwsIG5hbWUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsdHV0b3JpYWwuY29tJywnUG9zdGdyZVNRTCBUdXRvcmlhbCcpOwpgYGAKCkNoYXJhY3RlciBkYXRhIGhhcyB0byBiZSBlbmNsb3NlZCBpbiBzaW5nbGUgcXVvdGVzLCBgJ2AuCgpJZiB5b3Ugb21pdCBhbnkgY29sdW1uIHRoYXQgYWNjZXB0cyB0aGUgYE5VTExgIHZhbHVlIGluIHRoZSBgSU5TRVJUYCBzdGF0ZW1lbnQsIHRoZSBjb2x1bW4gd2lsbCB0YWtlIGl0cyBkZWZhdWx0IHZhbHVlLiBJZiBub3QgZGVmYXVsdCB2YWx1ZSBpcyBzZXQgZm9yIHRoZSBjb2x1bW4sIHRoZSBjb2x1bW4gd2lsbCB0YWtlIHRoZSBgTlVMTGAgdmFsdWUuCgpWZXJpZnkgdGhhdCB0aGUgYElOU0VSVGAgd29ya2VkLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCklmIHlvdSB3YW50IHRvIGluc2VydCBhIHN0cmluZyB0aGF0IGNvbnRhaW5zIGEgc2luZ2xlIHF1b3RlIGNoYXJhY3Rlciwgc3VjaCBhcyBfTydSZWlsbHkgTWVkaWFfLCB5b3UgaGF2ZSB0byB1c2UgYSBzaW5nbGUgcXVvdGUgZXNjYXBlIGNoYXJhY3Rlci4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cub3JlaWxseS5jb20nLCAnTycnUmVpbGx5IE1lZGlhJyk7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCkluc2VydCBtdWx0aXBsZSByb3dzIGludG8gdGhlICJsaW5rIiB0YWJsZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPIAogIGxpbmsodXJsLCBuYW1lKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZ29vZ2xlLmNvbScsJ0dvb2dsZScpLAogICgnaHR0cDovL3d3dy55YWhvby5jb20nLCdZYWhvbycpLAogICgnaHR0cDovL3d3dy5iaW5nLmNvbScsJ0JpbmcnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKIyMjIEFkZCBhIGNvbHVtbiB3aXRoIGBBTFRFUiBUQUJMRWAKCkFkZCBhIG5ldyBjb2x1bW4gbmFtZXMgYGxhc3RfdXBkYXRlYCBpbnRvIHRoZSAibGluayIgdGFibGUgYW5kIHNldCBpdHMgZGVmYXVsdCB0byBgQ1VSUkVOVF9EQVRFYC4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkFMVEVSIFRBQkxFIAogIGxpbmsKQUREIENPTFVNTiAKICBsYXN0X3VwZGF0ZSBEQVRFOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpBTFRFUiBUQUJMRQogIGxpbmsKQUxURVIgQ09MVU1OCiAgbGFzdF91cGRhdGUKU0VUIERFRkFVTFQgQ1VSUkVOVF9EQVRFOwpgYGAKCkluc2VydCBhIG5ldyByb3cgdXNpbmcgdGhlIG5ldyBgbGFzdF91cGRhdGVgIGNvbHVtbi4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHA6Ly93d3cuZmFjZWJvb2suY29tJywgJ0ZhY2Vib29rJywgJzIwMTMtMDYtMDEnKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKWW91IGNhbiBhbHNvIHVzZSB0aGUgYERFRkFVTFRgIGtleXdvcmQgdG8gc2V0IHRoZSBkZWZhdWx0IHZhbHVlIGZvciB0aGUgYGxhc3RfdXBkYXRlYCBvciBhbnkgY29sdW1uIHRoYXQgaGFzIGEgZGVmYXVsdCB2YWx1ZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGluayh1cmwsIG5hbWUsIGxhc3RfdXBkYXRlKQpWQUxVRVMKICAoJ2h0dHBzOi8vd3d3LnR1bWJsci5jb20vJywgJ1R1bWJscicsIERFRkFVTFQpOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpXaGF0IGhhcHBlbnMgd2hlbiBJIGRvbid0IHVzZSBgREVGQVVMVGAgaW4gYW4gYElOU0VSVGAgc3RhdGVtZW50PwoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgZGVzY3JpcHRpb24pClZBTFVFUwogICgnaHR0cHM6Ly9odGRnLm9yZycsICdIb3cgdG8gRGVzaWduIFByb2dyYW1zJywgJ0FuIGludHJvZHV0aW9uIHRvIHByb2dyYW1taW5nIGFuZCBjb21wdXRpbmcnKQpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpUaGUgYW5zd2VyIGlzIHRoYXQgKGFzIGV4cGxhaW5lZCBhYm92ZSkgdGhlIGRlZmF1bHQgdmFsdWUgKGBDVVJSRU5UX0RBVEVgKSBpcyBpbnNlcnRlZCBpbnRvIHRoZSBmaWVsZC4KCiMjIyBJbnNlcnQgZGF0YSBmcm9tIGFub3RoZXIgdGFibGUKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkRST1AgVEFCTEUgSUYgRVhJU1RTIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBsaW5rX3RtcCAoTElLRSBsaW5rKTsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbmtfdG1wOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgbGlua190bXAKU0VMRUNUCiAgKgpGUk9NCiAgbGluawpXSEVSRQogIGxhc3RfdXBkYXRlIElTIE5PVCBOVUxMOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGlua190bXA7CmBgYAoKIyMjIEdldCB0aGUgbGFzdCBpbnNlcnQgSUQgd2l0aCBQb3N0Z3JlU1FMIGBSRVRVUk5JTkdgCgpJZiB5b3Ugd2FudCB0byBrbm93IHRoZSBsYXN0IHZhbHVlIGFzc2lnbmVkIHRvIGEgc2VyaWFsIGZpZWxkIGR1cmluZyBhbiBgSU5TRVJUYCwgdXNlIGBSRVRVUk5JTkdgLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KSU5TRVJUIElOVE8KICBsaW5rKHVybCwgbmFtZSwgbGFzdF91cGRhdGUpClZBTFVFUwogICgnaHR0cDovL3d3dy5wb3N0Z3Jlc3FsLm9yZycsJ1Bvc3RncmVTUUwnLERFRkFVTFQpClJFVFVSTklORwogIGlkOwpgYGAKClRoaXMgbGFzdCBgSU5TRVJUYCBzaG93cyB0aGF0IHRoZSBgaWRgIHZhbHVlIGlzIDkuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKRGlzY29ubmVjdCBmcm9tIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgpgYGB7cn0KaWYgKGV4aXN0cygiY29uX2V4IikpIHsgZGJEaXNjb25uZWN0KGNvbl9leCk7IHJtKGNvbl9leCk7IH0KYGBgCgoKIyMgVVBEQVRFCgpUbyBjaGFuZ2UgdGhlIHZhbHVlcyBvZiBjb2x1bW5zIGluIGEgdGFibGUsIHVzZSBgVVBEQVRFYC4KCkhlcmUncyB0aGUgc3ludGF4LgoKYGBgClVQREFURSAKICB0YWJsZV8xClNFVAogIGNvbF8xID0gdmFsdWVfMSwKICBjb2xfMiA9IHZhbHVlXzIsCiAgLi4uCldIRVJFCiAgW2NvbmRpdGlvbl07CmBgYAoKSWYgeW91IG9taXQgdGhlIGBXSEVSRWAgY2xhdXNlLCBhbGwgdGhlIHJvd3MgaW4gYSBjb2x1bW4gd2lsbCBiZSB1cGRhdGVkLgoKIyMjIGBVUERBVEVgIGV4YW1wbGVzCgpXZSdsbCB1c2UgdGhlICJsaW5rIiB0YWJsZSBjcmVhdGVkIGFib3ZlLgoKQ29ubmVjdCB0byB0aGUgXyoqZXhhbXBsZSoqXyBkYXRhYmFzZS4KCmBgYHtyfQpjb25fZXggPC0gZGJDb25uZWN0KG9kYmM6Om9kYmMoKSwgIlBvc3RncmVTUUwgQVdTIGV4YW1wbGUiKQpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGluazsKYGBgCgpMZXQncyBjaGFuZ2UgdGhlIGBOVUxMYCB2YWx1ZXMgaW4gdGhlIGBsYXN0X3VwZGF0ZWAgY29sdW1uIHRvIHRoZSBgREVGQVVMVGAgdmFsdWUgKGkuZS4sIGBDVVJSRU5UX0RBVEVgKS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClVQREFURQogIGxpbmsKU0VUCiAgbGFzdF91cGRhdGUgPSBERUZBVUxUCldIRVJFCiAgbGFzdF91cGRhdGUgSVMgTlVMTDsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKTm93IGxldCdzIHVwZGF0ZSBhbGwgcm93cyBpbiBhIHBhcnRpY3VsYXIgY29sdW1uLiBUbyBkbyB0aGlzLCBvbWl0IHRoZSBgV0hFUkVgIGNsYXVzZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClVQREFURQogIGxpbmsKU0VUCiAgcmVsID0gJ25vZm9sbG93JzsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbms7CmBgYAoKVXBkYXRlIGEgY29sdW1uIGZyb20gYW5vdGhlciBjb2x1bW4gd2l0aGluIHRoZSBzYW1lIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KVVBEQVRFCiAgbGluawpTRVQKICBkZXNjcmlwdGlvbiA9IG5hbWU7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSBsaW5rOwpgYGAKCiMjIyBgVVBEQVRFYCBqb2luIGV4YW1wbGUKCkxldCdzIGxvb2sgYXQgdGhlICJsaW5rX3RtcCIgdGFibGUuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QgKiBGUk9NIGxpbmtfdG1wOwpgYGAKCkhlcmUgd2UgY2FuIHVwZGF0ZSBjb3JyZXNwb25kaW5nIHZhbHVlcyBpbiB0aGUgImxpbmtfdG1wIiB0YWJsZSB0aGF0IGNvbWUgZnJvbSAibGluayIgdGFibGUuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpVUERBVEUKICBsaW5rX3RtcApTRVQKICByZWwgPSBsaW5rLnJlbCwKICBkZXNjcmlwdGlvbiA9IGxpbmsuZGVzY3JpcHRpb24sCiAgbGFzdF91cGRhdGUgPSBsaW5rLmxhc3RfdXBkYXRlCkZST00KICBsaW5rCldIRVJFCiAgbGlua190bXAuaWQgPSBsaW5rLmlkOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gbGlua190bXA7CmBgYAoKIyMjIGBVUERBVEVgIHdpdGggYFJFVFVSTklOR2AgZXhhbXBsZQoKVGhlIGBVUERBVEVgIHN0YXRlbWVudCByZXR1cm5zIHRoZSBudW1iZXIgb2YgYWZmZWN0ZWQgcm93cyBieSBkZWZhdWx0LiBUaGUgUG9zdGdyZVNRTCBgVVBEQVRFYCBzdGF0ZW1lbnQgYWxzbyByZXR1cm5zIHVwZGF0ZWQgZW50cmllcyB1c2luZyB0aGUgYFJFVFVSTklOR2AgY2xhdXNlLiBUaGlzIGFkZGl0aW9uIGlzIGEgUG9zdGdyZVNRTOKAmXMgZXh0ZW5zaW9uIHRvIHRoZSBTUUwgc3RhbmRhcmQuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpVUERBVEUKICBsaW5rClNFVAogIGRlc2NyaXB0aW9uID0gJ0xlYXJuIFBvc3RncmVTUUwgZmFzdCBhbmQgZWFzeScsCiAgcmVsID0gJ2ZvbGxvdycKV0hFUkUKICBpZCA9IDEKUkVUVVJOSU5HCiAgaWQsCiAgZGVzY3JpcHRpb24sCiAgcmVsOwpgYGAKClZlcmlmeSB0aGUgdWRwYXRlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUIAogICogCkZST00gCiAgbGluawpXSEVSRQogIGlkID0gMTsKYGBgCgpEaXNjb25uZWN0IGZyb20gdGhlIF8qKmV4YW1wbGUqKl8gZGF0YWJhc2UuCgpgYGB7cn0KaWYgKGV4aXN0cygiY29uX2V4IikpIHsgZGJEaXNjb25uZWN0KGNvbl9leCk7IHJtKGNvbl9leCk7IH0KYGBgCgoKCmBgYAojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCiM9PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgIEVYVFJBICA6ICBTUEFDRSAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAjCiNAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCAgICAjPT0tLSAtLT09IyAgICBAIyM9PS0tLT09IyNAICAgQCMjPT0tLS09PSMjQCMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojPS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT09IyNAICAgICM9IyAgICBAIyM9PS0tLT0jCiMtLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLS09PSMjQCAgICMgICBAIyM9PS0tLT09IyNAICAgICM9PS09PSMgICAgQCMjPT0tLSMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojIyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyM9PS0tLT09IyNAIyM9PS0tLT09IyNAICAgICM9PS0tICA6ICAtLT09IyAgICBAIyMjCmBgYAo=</div>
 
 
 </div>
