@@ -506,6 +506,127 @@ if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
 ```
 
 
+## UPSERT
+
+
+
+
+
+## DELETE
+
+To delete data from a table, use `DELETE`.
+
+Here's the syntax.
+
+```
+DELETE FROM
+  table_1
+WHERE
+  [condition];
+```
+
+*If you omit the `WHERE` clause, the `DELETE` statement will DELETE ALL THE ROWS FROM THE TABLE!*
+
+The `DELETE` statement returns the number of deleted rows. It may not the same as the number of rows specified by the condition in the `WHERE` clause because the table may contain a `BEFORE DELETE` trigger that does something else before deletion. If no row is deleted, the `DELETE` statement returns zero.
+
+If you want to check the condition that references one or more columns from another table, use the `USING` clause.
+
+```
+DELETE FROM
+  table_1
+USING
+  table_2
+WHERE
+  table_1.id = table_2.id
+  AND ...;
+```
+
+You can also use a subquery to do the same thing.
+
+```
+DELETE FROM
+  table_1
+WHERE table_1.id = (SELECT id from table_2);
+```
+
+### `DELETE` examples
+
+We will use the "link" and "link_tmp" tables that we created.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_tmp;
+```
+
+`DELETE` using the `WHERE` clause.
+
+```{sql connection=con_ex}
+DELETE FROM
+  link
+WHERE
+  id = 8;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+`DELETE` using a `USING` clause... suppose you want to remove all the rows in the "link" table that have ID values in `id` column of the "link_tmp" table (i.e., `6`, `7`, and `8`).
+
+```{sql connection=con_ex}
+DELETE FROM
+  link
+USING
+  link_tmp
+WHERE
+  link.id = link_tmp.id;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+`DELETE` all the rows from a table.
+
+```{sql connection=con_ex}
+DELETE FROM
+  link;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link;
+```
+
+To delete all the rows in the "link_tmp" table and return the deleted rows, use the `RETURNING` clause in the `DELETE` statement.
+
+```{sql connection=con_ex}
+DELETE FROM
+  link_tmp
+RETURNING
+  *; -- return all columns
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_tmp;
+```
+
+Disconnect from the _**example**_ database.
+
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
+```
+
+
+
 
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
