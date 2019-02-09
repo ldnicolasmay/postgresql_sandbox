@@ -2,8 +2,8 @@
 title: "PostgreSQL Tutorial - Home - Section 8"
 output: 
   html_notebook:
-    theme: cerulean
-    highlight: espresso
+    theme: sandstone
+    highlight: zenburn
     toc: true
     toc_float: true
 ---
@@ -410,8 +410,8 @@ dbListTables(con_ex)
 ```
 
 ```{sql connection=con_ex}
-DROP TABLE IF EXISTS product_segment;
 DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS product_segment;
 ```
 
 ```{sql connection=con_ex}
@@ -508,7 +508,160 @@ if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
 
 ## UPSERT
 
+In relational databases, the term upsert is referred to as a merge. The idea is that when you insert a new row into the table, PostgreSQL will update the row if it already exists, otherwise, PostgreSQL inserts the new row. That is why we call the action is upsert (update or insert).
 
+To use the upsert feature in PostgreSQL, use `INSERT ON CONFLICT`. 
+
+Here's the syntax.
+
+```
+INSERT INTO
+  table_1(col_1, col_2, ...)
+VALUES
+  (val_1, val_2, ...)
+ON CONFLICT
+  [target] [action];
+```
+
+A "target" can be:
+
+* a column name
+* `ON CONSTRAINT [constraint_name]`, where the "constraint_name" could be a name of a `UNIQUE` constraint (to be covered later)
+* `WHERE [predicate]`, a `WHERE` clause with a predicate
+
+An "action" can be:
+
+* `DO NOTHING`, meaning do nothing if the row already exists in the table
+* `DO UPDATE SET col_1 = val_1, ... WHERE [condition]`, meaning only update some of the fields in table
+
+`ON CONFLICT` is only availabe in PostgreSQL 9.5 and later.
+
+### Upsert examples
+
+We'll create a new table "customers" to demonstrate upsert examples.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS customers;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS customers(
+  customer_id  SERIAL   PRIMARY KEY,
+  name         VARCHAR  UNIQUE,
+  email        VARCHAR  NOT NULL,
+  active       BOOL     NOT NULL DEFAULT TRUE
+);
+```
+
+The "customers" table consists of four columns: `customer_id`, `name`, `email`, and `active`. The name column has an associated unique constraint to guarantee that the uniqueness of the "customers."
+
+Do this in the terminal to get the details of the "customers" table.
+
+```
+$ ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-54-157-224-52.compute-1.amazonaws.com
+$ psql -U postgres
+```
+
+```
+postgres=# \l
+postgres=# \c example
+postgres=# \dt
+postgres=# \d customers
+```
+
+`\d customers` in `psql` prints this:
+
+```
+                                        Table "public.customers"
+   Column    |       Type        | Collation | Nullable |                    Default                     
+-------------+-------------------+-----------+----------+------------------------------------------------
+ customer_id | integer           |           | not null | nextval('customers_customer_id_seq'::regclass)
+ name        | character varying |           |          | 
+ email       | character varying |           | not null | 
+ active      | boolean           |           | not null | true
+Indexes:
+    "customers_pkey" PRIMARY KEY, btree (customer_id)
+    "customers_name_key" UNIQUE CONSTRAINT, btree (name)
+```
+
+Noteice in the `\d customers` printout there are two indexes, `customers_pkey` and `customers_name_key`. We're going to work with the `customers_name_key` as a point of conflict.
+
+Let's insert some rows into the "customers" table.
+
+```{sql connection=con_ex}
+INSERT INTO
+  customers(name, email)
+VALUES
+  ('IBM',        'contact@ibm.com'),
+  ( 'Microsoft', 'contact@microsoft.com'),
+  ('Intel',      'contact@intel.com');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers;
+```
+
+If Microsoft changes its email from `contact@microsoft.com` to `hotline@microsoft.com`, we can update the table using `UPDATE`.
+
+But we want to demonstrate upsert, so we'll use `INSERT ON CONFLICT`.
+
+```{sql connection=con_ex}
+INSERT INTO
+  customers(name, email)
+VALUES
+  ('Microsoft', 'hotline@microsoft.com')
+ON CONFLICT ON CONSTRAINT customers_name_key
+  DO NOTHING;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers;
+```
+
+Notice that Microsoft's email didn't change. That's because the `name` value 'Microsoft' already exists in the table. So, it does nothing.
+
+Here's an easier way to write the same statement as above.
+
+```{sql connection=con_ex}
+INSERT INTO
+  customers(name, email)
+VALUES
+  ('Microsoft', 'hotline@microsoft.com')
+ON CONFLICT (name)
+  DO NOTHING;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers;
+```
+
+If you want to concatenate the old email with the new one (separated by a semicolon) when inserting/updating/upserting a customer that already exists, use the `UPDATE` clause as the action of the `INSERT` statement.
+
+```{sql connection=con_ex}
+INSERT INTO
+  customers(name, email)
+VALUES
+  ('Microsoft', 'hotline@microsoft.com')
+ON CONFLICT (name)
+  DO UPDATE
+    SET email = EXCLUDED.email || ';' || customers.email;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers;
+```
+
+There's a lot of new stuff here and some of it is unexplained. I'll definitely have to circle back to make sense of it. And this will be important in my upcoming data unification project.
+
+Disconnect from the _**example**_ database.
+
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
+```
 
 
 
@@ -624,8 +777,6 @@ Disconnect from the _**example**_ database.
 ```{r}
 if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex); }
 ```
-
-
 
 
 ```{r echo=FALSE}
