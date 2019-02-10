@@ -1,5 +1,5 @@
 ---
-title: "PostgreSQL Tutorial - Home - Section 8"
+title: "PostgreSQL Tutorial - Home - Section 9"
 output: 
   html_notebook:
     theme: sandstone

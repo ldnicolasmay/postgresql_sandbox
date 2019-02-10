@@ -1,0 +1,171 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 10"
+output: 
+  html_notebook:
+    theme: sandstone
+    highlight: zenburn
+    toc: true
+    toc_float: true
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+# Import and Export
+
+## Import CSV File into a PostgreSQL Table
+
+There are a couple of ways to import CSV data.
+
+First, let's create the table that will be the container for the CSV data.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS persons;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS persons(
+  id          SERIAL       NOT NULL,
+  first_name  VARCHAR(50)          ,
+  last_name   VARCHAR(50)          ,
+  dob         DATE                 ,
+  email       VARCHAR(255)         ,
+  CONSTRAINT persons_pkey PRIMARY KEY (id)
+);
+```
+
+Let's also create the CSV that we'll upload.
+
+```{r}
+data <- tibble::tibble(
+  `First Name`    = c("John", "Lily"),
+  `Last Name`     = c("Doe", "Bush"),
+  `Date of Birth` = as.Date(c("1990-01-05", "1995-02-05")),
+  `Email`         = c("johndoe@postgresqltutorial.com",
+                      "lily.bush@postgresqltutorial.com")
+)
+readr::write_csv(data, "persons.csv", na = "")
+```
+
+Copy the CSV file to the server.
+
+```{bash}
+scp -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ~/Box\ Sync/Learning/postgresql_sandbox/persons.csv ubuntu@ec2-52-87-233-230.compute-1.amazonaws.com:/home/ubuntu/
+```
+
+```{sql connection=con_ex}
+COPY
+  persons(first_name, last_name, dob, email)
+FROM
+  '/home/ubuntu/persons.csv' DELIMITER ',' CSV HEADER;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM persons;
+```
+
+Here's an explanation of the `COPY` statement in PostgreSQL:
+
+1. First, you specify the table with column names after the `COPY` keyword. The order of the columns must the the same as in the CSV file. In case the CSV file contains all columns of the table, you don’t have to specify them explicitly, for example.
+
+```
+COPY
+  persons
+FROM
+  `/path/to/file.csv DELIMITER ',' CSV HEADER;
+```
+
+2. Second, you put the CSV file path after the FROM keyword. Because CSV file format is used, you need to specify `DELIMITER` as well as `CSV` keywords.
+
+3. Third, `HEADER` keyword indicates that the CSV file contains a header line with column names. When importing data, PostgreSQL ignores the first line, which is the header line of the file.
+
+You can also import data using the pgAdmin tool. To do this, we'll first get rid of all the records/rows in the table using `TRUNCATE TABLE persons;` from the pgAdmin tool.
+
+## Export a PostgreSQL table to a CSV File
+
+```{sql connection=con_ex}
+SELECT * FROM persons;
+```
+
+The easiest way to export data of a table to a CSV file is to use a `COPY` statement.
+
+Since the "postgres" user can't write to the `/home/ubuntu/` directory, we'll write it to `/tmp/`.
+
+```{sql connection=con_ex}
+COPY 
+  persons
+TO
+  '/tmp/persons_tbl.csv' DELIMITER ',' CSV HEADER;
+```
+
+Now let's copy the CSV file from `/tmp/` to `/home/ubuntu/`.
+
+```{bash}
+scp -i "~/Box Sync/Keys/ubuntu_18_04_postgresql.pem" "ubuntu@ec2-52-87-233-230.compute-1.amazonaws.com:/tmp/persons_tbl.csv" .
+
+cat "./persons_tbl.csv"
+
+scp -i "~/Box Sync/Keys/ubuntu_18_04_postgresql.pem" "./persons_tbl.csv" "ubuntu@ec2-52-87-233-230.compute-1.amazonaws.com:/home/ubuntu/persons_tbl.csv"
+```
+
+If you only want to export a portion of a table (explicit columns), you can.
+
+```{sql connection=con_ex}
+COPY
+  persons(first_name, last_name, email)
+TO
+  '/tmp/persons_tbl_part.csv' DELIMITER ',' CSV HEADER;
+```
+
+```{bash}
+scp -i "~/Box Sync/Keys/ubuntu_18_04_postgresql.pem" "ubuntu@ec2-52-87-233-230.compute-1.amazonaws.com:/tmp/persons_tbl_part.csv" .
+
+cat "./persons_tbl_part.csv"
+
+scp -i "~/Box Sync/Keys/ubuntu_18_04_postgresql.pem" "./persons_tbl_part.csv" "ubuntu@ec2-52-87-233-230.compute-1.amazonaws.com:/home/ubuntu/persons_tbl_part.csv"
+```
+
+You can also use `psql`'s `\copy` command to do the same. The difference is that if you have access to the server with PostgreSQL installed but can't write to it, you can use this.
+
+```
+postgres=# \c example
+postgres=# \copy (SELECT * FROM persons) to '/tmp/persons_tbl_copy.csv' with csv
+```
+
+```{r echo=FALSE}
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
