@@ -1,0 +1,151 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 11"
+output: 
+  html_notebook:
+    theme: sandstone
+    highlight: zenburn
+    toc: true
+    toc_float: true
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+
+# Managing Tables
+
+## Data Types
+
+### Boolean
+
+Keyword(s): `BOOLEAN` or `BOOL`
+
+| Values  | Notes |
+|---------|------------------------------------------------|
+| `FALSE` | `0`, `'no'`, `'n'`, `'f'`, `'false'` all equal `FALSE` |
+| `TRUE`  | `1`, `'yes'`, `'y'`, `'t'`, `'true'` all equal `TRUE`  |
+| `NULL`  |       |
+
+
+### Character
+
+There are three types of character fields: `CHAR`, `VARCHAR`, and `TEXT`.
+
+| Data Type | Keyword(s) | Notes | 
+|-----------|--------------|----------------------------------------|
+| Character | `CHAR(n)`  | `n` is how many characters per entry; fixed-length character values with space padding to fill in `n` |
+| Varying Character | `VARCHAR(n)` | variable length; `n` is max number of characters per entry; unlike, `CHAR` the entries are not padded with spaces |
+| Text      | `TEXT`     | variable length; theoretically unlimited length |
+
+
+### Numeric
+
+PostgreSQL provides 2 types of numbers:
+
+1. Integers
+2. Floating-Point Numbers
+
+#### Integer
+
+PostgreSQL provies 4 main types of integers: `SMALLINT`, `INTEGER`, `BIGINT` and `SERIAL`.
+
+There are many different types of integers. Read the documentation (Chapter 8, Data Types) for the full list.
+
+| Data Type | Keyword(s) | Notes |
+|-----------|------------|----------------------------------------|
+| Small Integer | `SMALLINT` or `INT2` | 2-byte signed integer:<br /> -32,768 to 32,767 |
+| Integer       | `INTEGER` or `INT`   | 4-byte signed integer:<br /> -2,147,483,648 to 2,147,483,647 |
+| Big Integer   | `BIGINT` or `INT8`   | 8-byte signed integer:<br />  -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
+| Serial        | `SERIAL`             | autoincrementing 4-byte integer |
+
+#### Floating-Point Number
+
+There are 2 main types of floating-point numbers: `NUMERIC`, `REAL`/`DOUBLE PRECISION`, and `FLOAT`.
+
+| Data Type | Keyword(s) | Notes |
+|-----------|------------|-----------------------------------------|
+| Exact Arbitrary Precision Number  | `NUMERIC(p, s)` | `p` is precision, `s` is scale; precision is total count of signif. digits in the number as a whole, scale is count of digits after the decimal point; 23.5141 is a `NUMERIC(6, 4)`; recommended for storing monetary amounts and other quantities where exactness is required |
+| Inexact Variable Precision Number | `REAL` | typically, has a range of at least 1E-37 to 1E+37 with a precision of at least 6 decimal digits |
+| Inexact Variable Precision Number | `DOUBLE PRECISION` | typically has a range of around 1E-307 to 1E+308 with a precision of at least 15 digits |
+| SQL standard `FLOAT` | `FLOAT(n)` | `FLOAT(1)` to `FLOAT(24)` is just `REAL`; `FLOAT(25)` to `FLOAT(53)` is just `DOUBLE PRECISION` |
+
+### Temporal Data Types
+
+PostgreSQL has 5 main temporal data types: `DATE`, `TIME`, `TIMESTAMP`, `TIMESTAMPTZ`, and `INTERVAL`.
+
+| Data Type | Keyword(s) | Notes |
+|-----------|------------|-------------------------------------------|
+| Date | `DATE` | calendar date (year, month, day) |
+| Time | `TIME` | time of day (no time zone), HH:MM:SS from `00:00:00` to `24:00:00` |
+| Time w/ timezone | `TIMETZ` | time of day (w/ time zone), HH:MM:SS from `00:00:00` to `24:00:00` |
+| Datetime | `TIMESTAMP` | e.g., `2016-06-22 19:10:25` |
+| Datetime w/ timezone | `TIMESTAMPTZ` | e.g., `2016-06-22 19:10:25-07` |
+| Interval | `INTERVAL` | There's quite a bit to this... read documentation section 8.5.4. Interval Input for more info |
+
+
+### Arrays
+
+In PostgreSQL, you can store an array of strings, an array of integers, etc., in array columns. The array comes in handy in some situations e.g., storing days of the week, months of the year.
+
+
+### JSON
+
+PostgreSQL provides two JSON data types: `JSON` and `JSONB` for storing JSON data.
+
+The `JSON` data type stores plain JSON data that requires reparsing for each processing, while `JSONB` data type stores JSON data in a binary format which is faster to process but slower to insert. In addition, `JSONB` supports indexing, which can be an advantage.
+
+
+### UUID
+
+The `UUID` data type allows you to store Universal Unique Identifiers defined by RFC 4122 . The `UUID` values guarantee a better uniqueness than `SERIAL` and can be used to hide sensitive data exposed to the public such as values of `id` in URL.
+
+
+### Special Data Types
+
+Besides the primitive data types, PostgreSQL also provides several special data types related to geometric and network.
+
+* `box` - a rectangular box
+* `line` - a set of points
+* `point` - a geometric pair of numbers
+* `lseg` - a line segment
+* `polygon` - a closed geometric
+* `inet` - an IP4 address
+* `macaddr` -  a MAC address
+
+
+## Create Table
+
+
+
+
+```{r echo=FALSE}
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```
