@@ -637,14 +637,302 @@ div.tocify {
 </div>
 </div>
 <div id="create-table" class="section level2">
-<h2>Create Table</h2>
+<h2>CREATE TABLE</h2>
+<p>Here’s the general <code>CREATE TABLE</code> syntax.</p>
+<pre><code>CREATE TABLE table_name (
+  column_name  TYPE  column_constraint,
+  column_name  TYPE  column_constraint,
+  ...
+  table_constraint  table_constraint ...
+) INHERITS existing_table_name;</code></pre>
+<div id="column-constraints" class="section level3">
+<h3>Column constraints</h3>
+<p>Here are some commonly used column constraints.</p>
+<ul>
+<li><code>NOT NULL</code> - A record’s value in such a column cannot be <code>NULL</code>.</li>
+<li><code>UNIQUE</code> - A record’s value in such a column must be unique <em>across the whole table</em>. However, the column can have many <code>NULL</code> values because PostgreSQL considers each <code>NULL</code> value unique.</li>
+<li><code>PRIMARY KEY</code> - This is a combination of <code>NOT NULL</code> and <code>UNIQUE</code>. This can be used as a column constraint if only one column is the primary key. If multiple columns are the primary key, you’ll have to define those primary keys as table constraints.</li>
+<li><code>CHECK (condition)</code> - Enables a <code>CHECK</code> condition when you insert or update data.</li>
+<li><code>REFERENCES</code> - Constrains a record’s value in such a column to a corresponding value in another table’s column. It’s used to define the foreign key constraint.</li>
+</ul>
+</div>
+<div id="table-constraints" class="section level3">
+<h3>Table constraints</h3>
+<p>Here are some common table constraints.</p>
+<ul>
+<li><code>UNIQUE (column_name, column_name, ...)</code> - Force value stored in the columns listed to be unique.</li>
+<li><code>PRIMARY KEY (column_name, column_name, ...)</code> - Define a primary key consisting of multiple columns.</li>
+<li><code>CHECK (condition)</code> - Like column constraing <code>CHECK</code>.</li>
+<li><code>REFERENCES</code> - Like column constraint <code>REFERENCES</code>.</li>
+</ul>
+</div>
+<div id="create-tabel-example" class="section level3">
+<h3>CREATE TABEL example</h3>
+<p>We’ll create tables named “account”, “role”, and “account_roles”.</p>
+<p>Connect to the <em><strong>example</strong></em> database.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uX2V4IDwtIGRiQ29ubmVjdChvZGJjOjpvZGJjKCksIFwiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZVwiKVxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con_ex &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;PostgreSQL AWS example&quot;</span>)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5EUk9QIFRBQkxFIElGIEVYSVNUUyBhY2NvdW50X3JvbGU7XG5EUk9QIFRBQkxFIElGIEVYSVNUUyBhY2NvdW50O1xuRFJPUCBUQUJMRSBJRiBFWElTVFMgcm9sZTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> account_role;
+<span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> <span class="kw">account</span>;
+<span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">EXISTS</span> <span class="kw">role</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Create the “account” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBhY2NvdW50IChcbiAgdXNlcl9pZCAgICAgU0VSSUFMICAgICAgICBQUklNQVJZIEtFWSxcbiAgdXNlcm5hbWUgICAgVkFSQ0hBUig1MCkgICBVTklRVUUgTk9UIE5VTEwsXG4gIHBhc3N3b3JkICAgIFZBUkNIQVIoNTApICAgTk9UIE5VTEwsXG4gIGVtYWlsICAgICAgIFZBUkNIQVIoMzU1KSAgVU5JUVVFIE5PVCBOVUxMLFxuICBjcmVhdGVkX29uICBUSU1FU1RBTVAgICAgIE5PVCBOVUxMIERFRkFVTFQgQ1VSUkVOVF9USU1FU1RBTVAsXG4gIGxhc3RfbG9naW4gIFRJTUVTVEFNUFxuKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> <span class="kw">account</span> (
+  user_id     SERIAL        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  username    <span class="dt">VARCHAR</span>(<span class="dv">50</span>)   <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  <span class="kw">password</span>    <span class="dt">VARCHAR</span>(<span class="dv">50</span>)   <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  email       <span class="dt">VARCHAR</span>(<span class="dv">355</span>)  <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  created_on  <span class="dt">TIMESTAMP</span>     <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="fu">CURRENT_TIMESTAMP</span>,
+  last_login  <span class="dt">TIMESTAMP</span>
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Create the “role” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyByb2xlIChcbiAgcm9sZV9pZCAgICBTRVJJQUwgICAgICAgIFBSSU1BUlkgS0VZLFxuICByb2xlX25hbWUgIFZBUkNIQVIoMjU1KSAgVU5JUVVFIE5PVCBOVUxMXG4pXG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> <span class="kw">role</span> (
+  role_id    SERIAL        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+  role_name  <span class="dt">VARCHAR</span>(<span class="dv">255</span>)  <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>
+)</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Create the “account_role” table.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBhY2NvdW50X3JvbGUgKFxuICB1c2VyX2lkICAgICBJTlRFR0VSICAgIE5PVCBOVUxMLFxuICByb2xlX2lkICAgICBJTlRFR0VSICAgIE5PVCBOVUxMLFxuICBncmFudF9kYXRlICBUSU1FU1RBTVAgIFdJVEhPVVQgVElNRSBaT05FIERFRkFVTFQgQ1VSUkVOVF9USU1FU1RBTVAsXG4gIFBSSU1BUlkgS0VZICh1c2VyX2lkLCByb2xlX2lkKSwgICAgICAgICAgICAtLSB0YWJsZSBjb25zdHJhaW50ICMxXG4gIENPTlNUUkFJTlQgYWNjb3VudF9yb2xlX3JvbGVfaWRfZmtleSBGT1JFSUdOIEtFWSAocm9sZV9pZClcbiAgICBSRUZFUkVOQ0VTIHJvbGUgKHJvbGVfaWQpIE1BVENIIFNJTVBMRVxuICAgIE9OIFVQREFURSBOTyBBQ1RJT04gT04gREVMRVRFIE5PIEFDVElPTiwgLS0gdGFibGUgY29uc3RyYWludCAjMlxuICBDT05TVFJBSU5UIGFjY291bnRfcm9sZV91c2VyX2lkX2ZrZXkgRk9SRUlHTiBLRVkgKHVzZXJfaWQpXG4gICAgUkVGRVJFTkNFUyBhY2NvdW50ICh1c2VyX2lkKSBNQVRDSCBTSU1QTEVcbiAgICBPTiBVUERBVEUgTk8gQUNUSU9OIE9OIERFTEVURSBOTyBBQ1RJT04gIC0tIHRhYmxlIGNvbnN0cmFpbnQgIzNcbik7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> account_role (
+  user_id     <span class="dt">INTEGER</span>    <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  role_id     <span class="dt">INTEGER</span>    <span class="kw">NOT</span> <span class="kw">NULL</span>,
+  grant_date  <span class="dt">TIMESTAMP</span>  <span class="kw">WITHOUT</span> <span class="dt">TIME</span> <span class="dt">ZONE</span> <span class="kw">DEFAULT</span> <span class="fu">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY</span> <span class="kw">KEY</span> (user_id, role_id),            <span class="co">-- table constraint #1</span>
+  <span class="kw">CONSTRAINT</span> account_role_role_id_fkey <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (role_id)
+    <span class="kw">REFERENCES</span> <span class="kw">role</span> (role_id) MATCH SIMPLE
+    <span class="kw">ON</span> <span class="kw">UPDATE</span> <span class="kw">NO</span> ACTION <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">NO</span> ACTION, <span class="co">-- table constraint #2</span>
+  <span class="kw">CONSTRAINT</span> account_role_user_id_fkey <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (user_id)
+    <span class="kw">REFERENCES</span> <span class="kw">account</span> (user_id) MATCH SIMPLE
+    <span class="kw">ON</span> <span class="kw">UPDATE</span> <span class="kw">NO</span> ACTION <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">NO</span> ACTION  <span class="co">-- table constraint #3</span>
+);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The <code>PRIMARY KEY</code> table constraint makes sense.</p>
+<p>The 2nd and 3rd constraints except <code>MATCH SIMPLE</code>. I’m guessing what this means, but I’ll have to wait until there’s more info on table constraints language. Looking forward to that!</p>
+<p>Before I move on, I’d like to add some data to these tables to make sure I understand how these work. The “account_role” looks like a junction table to make a many-to-many relationship possible between accounts and roles.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UTyBcbiAgYWNjb3VudCh1c2VybmFtZSwgcGFzc3dvcmQsIGVtYWlsKVxuVkFMVUVTXG4gICgnYmlsbDEwMCcsICdzYW13aXNlJywgJ2JpbGwxMDBAZ21haWwuY29tJyksIC0tIGFkbWluLCBwb3dlcl91c2VyXG4gICgnamVubnknLCAnZ2FtZ2VlJywgJ2plbm55QGdtYWlsLmNvbScpLCAgICAgIC0tIGFkbWluLCB1c2VyXG4gICgnbHVrZTEyMzQnLCAnZnJvZG8nLCAndG9sa2llbmlzYXdlc29tZUBnbWFpbC5jb20nKSwgLS0gdXNlclxuICAoJ3NhbWFudGhhMjAwMCcsICdiYWdnaW5zJywgJ2JpbGx5LnRoZS5raWRAaG90bWFpbC5jb20nKTsgLS0gcG93ZXJfdXNlclxuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> 
+  <span class="kw">account</span>(username, <span class="kw">password</span>, email)
+<span class="kw">VALUES</span>
+  (<span class="st">'bill100'</span>, <span class="st">'samwise'</span>, <span class="st">'bill100@gmail.com'</span>), <span class="co">-- admin, power_user</span>
+  (<span class="st">'jenny'</span>, <span class="st">'gamgee'</span>, <span class="st">'jenny@gmail.com'</span>),      <span class="co">-- admin, user</span>
+  (<span class="st">'luke1234'</span>, <span class="st">'frodo'</span>, <span class="st">'tolkienisawesome@gmail.com'</span>), <span class="co">-- user</span>
+  (<span class="st">'samantha2000'</span>, <span class="st">'baggins'</span>, <span class="st">'billy.the.kid@hotmail.com'</span>); <span class="co">-- power_user</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGFjY291bnQ7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">account</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUE1VlNTMDdETUJBMVRoTm94RmVzeWhXUW9yWndnQ0lRRWlzUUg2bTd5aVJ1YXVyWUtIWVYyZzJjaFdOd0VhN0JBVkNEblhvcU5WVVhMT0x4bXplZk54UGZYL1c3WVQ5RUNHSGsrUmhoejF3YjJCeGJxSUdhMXI0aDVCMmJTMkMrUGN0V3BFMHdoTU9IbFYwa2JEOHp6anZ0dG9QK0N4Vmk2c0FPbjR4cHAzdDI3dkN1SWhrUmVrUzZiWk5RcTJPNGdpbnFZSkNTTEtXQS9HRXVFN25zU05LVUNWVXJjT1NFOU5LTU1CN0ZNblBFUVNWcHpYMmlKUjh6S3BnaUJWVXlvMnNSTFZ0eEd1a1JqY1lzNlkya1hnWWdiOSsydnZodWZWMlQwMkNUclMzWGp6bFJvQnZET0hlM0R6ZjlXTVBnRmRUMVREMlRncnBNY0hwUGo1Zkd6RUhOK3creTlUNDMyVVZOWFA1RGdGZHU3TG1xVDVDTXdtUUJGSjRvbWc5WUFxL0JRaHNIK05Vc281QTU4RDYxNjNVZ2pITktORTBHVW9ESDdFNFB1RFMvdmpZSWlBZ1Rva2swekcyTFZYbk5YQllSU0xTdkduK1lveXpMMzhVc2FQNEhQWFlEUnhvREFBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["user_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["username"],"name":[2],"type":["chr"],"align":["left"]},{"label":["password"],"name":[3],"type":["chr"],"align":["left"]},{"label":["email"],"name":[4],"type":["chr"],"align":["left"]},{"label":["created_on"],"name":[5],"type":["S3: POSIXct"],"align":["right"]},{"label":["last_login"],"name":[6],"type":["S3: POSIXct"],"align":["right"]}],"data":[{"1":"1","2":"bill100","3":"samwise","4":"bill100@gmail.com","5":"2019-02-15 16:30:17","6":"<NA>"},{"1":"2","2":"jenny","3":"gamgee","4":"jenny@gmail.com","5":"2019-02-15 16:30:17","6":"<NA>"},{"1":"3","2":"luke1234","3":"frodo","4":"tolkienisawesome@gmail.com","5":"2019-02-15 16:30:17","6":"<NA>"},{"1":"4","2":"samantha2000","3":"baggins","4":"billy.the.kid@hotmail.com","5":"2019-02-15 16:30:17","6":"<NA>"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICByb2xlKHJvbGVfbmFtZSlcblZBTFVFU1xuICAoJ3VzZXInKSxcbiAgKCdwb3dlcl91c2VyJyksXG4gICgnYWRtaW4nKTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  <span class="kw">role</span>(role_name)
+<span class="kw">VALUES</span>
+  (<span class="st">'user'</span>),
+  (<span class="st">'power_user'</span>),
+  (<span class="st">'admin'</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIHJvbGU7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="kw">role</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JpdGdZT0FGWW1hd0pJUVBZZ3VBYVloaWx0TGkxQ0lvbTZzZ3Z6eTFLQjVKaERVeEpUY3pEODE4MXJ6RTNOUmlxRGxNVUVIMm92eWMxUGpNRkNpWEU4d0ZLVVRYbkp5VFdBelREQlBrU2trc1NkUkxLOEpVRGpTblhBOW1IOGd2VEExQTR2Ly8vMytCMUQ4UUJnQk0zVGJ3RUFFQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["role_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["role_name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"user"},{"1":"2","2":"power_user"},{"1":"3","2":"admin"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5JTlNFUlQgSU5UT1xuICBhY2NvdW50X3JvbGUodXNlcl9pZCwgcm9sZV9pZClcblZBTFVFU1xuICAoMSwgMSksXG4gICgxLCAzKSxcbiAgKDIsIDIpLFxuICAoMiwgMyksXG4gICgzLCAxKSxcbiAgKDQsIDIpO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span>
+  account_role(user_id, role_id)
+<span class="kw">VALUES</span>
+  (<span class="dv">1</span>, <span class="dv">1</span>),
+  (<span class="dv">1</span>, <span class="dv">3</span>),
+  (<span class="dv">2</span>, <span class="dv">2</span>),
+  (<span class="dv">2</span>, <span class="dv">3</span>),
+  (<span class="dv">3</span>, <span class="dv">1</span>),
+  (<span class="dv">4</span>, <span class="dv">2</span>);</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV1pnQURGQW5Xdk1UYzFHSWdRd0NMSkdkUmZya2VUQUV2TnQzSk9ZbkZNTjB3UWE2VXhKSkV2YlFpb0Q0Zzd4OElBd0J2eHQwd29RQUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[],"data":[],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1QgKiBGUk9NIGFjY291bnRfcm9sZTtcbmBgYCJ9 -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> * <span class="kw">FROM</span> account_role;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JqSkFNcnhBekFhV2hHQW1LQWJyUXBOblJwS0RxbVhtQThrN1hwZmNsYjZnbzV0WUdzMUJyTWs1aWNYRlFJWUEyRkNJSUh1QWY3Qm5SSElKbE1zRzVwYWc2eXlweXM5TGhlcUVDVEtIaGpnRHFYL29hdk1TYzFOaHRqRERiQ2t0VGkyS3oweUJjWXZ5YzFJUlhLNzBvc1M4a3ZpVXhKSlVpR0ZNLzlIczRnTEtKZXFsRlFHTlJyT09zeWkvWEE5bUpTZ1VtUnFBeFAvLy8zOUIzTWJ3RHdEYUpwbEdxZ0VBQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["user_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["role_id"],"name":[2],"type":["int"],"align":["right"]},{"label":["grant_date"],"name":[3],"type":["S3: POSIXct"],"align":["right"]}],"data":[{"1":"1","2":"1","3":"2019-02-15 16:32:30"},{"1":"1","2":"3","3":"2019-02-15 16:32:30"},{"1":"2","2":"2","3":"2019-02-15 16:32:30"},{"1":"2","2":"3","3":"2019-02-15 16:32:30"},{"1":"3","2":"1","3":"2019-02-15 16:32:30"},{"1":"4","2":"2","3":"2019-02-15 16:32:30"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>What roles does the user “bill100” have?</p>
+<p>This requires a double join across the junction table “account_role”.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1RcbiAgYWNjb3VudF9yb2xlLnVzZXJfaWQsXG4gIGFjY291bnRfcm9sZS5yb2xlX2lkLFxuICAtLSByb2xlLnJvbGVfaWQsXG4gIHJvbGUucm9sZV9uYW1lXG5GUk9NXG4gIGFjY291bnRfcm9sZVxuSU5ORVIgSk9JTlxuICByb2xlXG4gIE9OIGFjY291bnRfcm9sZS5yb2xlX2lkID0gcm9sZS5yb2xlX2lkO1xuYGBgIn0= -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span>
+  account_role.user_id,
+  account_role.role_id,
+  <span class="co">-- role.role_id,</span>
+  role.role_name
+<span class="kw">FROM</span>
+  account_role
+<span class="kw">INNER</span> <span class="kw">JOIN</span>
+  <span class="kw">role</span>
+  <span class="kw">ON</span> account_role.role_id = role.role_id;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERpaXVCaVlHQmdZbUJtWldKZ1lnWXlXWmlBQkNNREN3TW5pSzVnWUdBV0JqSkFNcnhBekFhV2hHQW1LQWJyUXBOblJwS0RxUlVBeTBNTVppa3RUaTJDc2xrVFUzSXo4NkFjcm9MODh0U2llRnpTeVBxUWxhSTZtelV2TVRlMUdHb2xNMVNRSGFRd1BqTUZ4aTNLejBsRmNEbkJYSkErZExPU2N4S0xZV2JCQkxsU0Vrc1M5ZEtLTUpVRHpTblhnMWtQQ2hHbUJpRHgvLy8vWDBEcUh3Z0RBTVFTSXFWMkFRQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["user_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["role_id"],"name":[2],"type":["int"],"align":["right"]},{"label":["role_name"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"1","3":"user"},{"1":"1","2":"3","3":"admin"},{"1":"2","2":"2","3":"power_user"},{"1":"2","2":"3","3":"admin"},{"1":"3","2":"1","3":"user"},{"1":"4","2":"2","3":"power_user"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgc3FsXG5TRUxFQ1RcbiAgYWNjb3VudC51c2VyX2lkLFxuICBhY2NvdW50LnVzZXJuYW1lLFxuICBhY2NvdW50X3JvbGVfcm9sZS5yb2xlX2lkLFxuICBhY2NvdW50X3JvbGVfcm9sZS5yb2xlX25hbWVcbkZST01cbiAgYWNjb3VudFxuSU5ORVIgSk9JTlxuICAoXG4gICAgU0VMRUNUXG4gICAgICBhY2NvdW50X3JvbGUudXNlcl9pZCxcbiAgICAgIGFjY291bnRfcm9sZS5yb2xlX2lkLFxuICAgICAgLS0gcm9sZS5yb2xlX2lkLFxuICAgICAgcm9sZS5yb2xlX25hbWVcbiAgICBGUk9NXG4gICAgICBhY2NvdW50X3JvbGVcbiAgICBJTk5FUiBKT0lOXG4gICAgICByb2xlXG4gICAgT04gYWNjb3VudF9yb2xlLnJvbGVfaWQgPSByb2xlLnJvbGVfaWRcbiAgKSBBUyBhY2NvdW50X3JvbGVfcm9sZVxuICBPTiBhY2NvdW50LnVzZXJfaWQgPSBhY2NvdW50X3JvbGVfcm9sZS51c2VyX2lkXG4gIFdIRVJFIGFjY291bnQudXNlcm5hbWUgPSAnYmlsbDEwMCc7XG5gYGAifQ== -->
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span>
+  account.user_id,
+  account.username,
+  account_role_role.role_id,
+  account_role_role.role_name
+<span class="kw">FROM</span>
+  <span class="kw">account</span>
+<span class="kw">INNER</span> <span class="kw">JOIN</span>
+  (
+    <span class="kw">SELECT</span>
+      account_role.user_id,
+      account_role.role_id,
+      <span class="co">-- role.role_id,</span>
+      role.role_name
+    <span class="kw">FROM</span>
+      account_role
+    <span class="kw">INNER</span> <span class="kw">JOIN</span>
+      <span class="kw">role</span>
+    <span class="kw">ON</span> account_role.role_id = role.role_id
+  ) <span class="kw">AS</span> account_role_role
+  <span class="kw">ON</span> account.user_id = account_role_role.user_id
+  <span class="kw">WHERE</span> account.username = <span class="st">'bill100'</span>;</code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6W10sInJkZiI6Ikg0c0lBQUFBQUFBQUEyVlB5d29DSVJTOSthQkdDSUwrWTVqNmhyNmcxZXpDMGtCd1prQ0xXdmJsMmRWUklsdmN4L0U4MU9PaDM0dGVBQUFCeWdrUWlpc2oyQmJBb0luekNVQzM4UlJybllTUm5HdVQ4Q3hjbm8yMXU2NnI0YStMVmk1Mjk5cmxuVXMxbUxHNm40OXkwRDY3V0FtUHJwTlJHYTRpakxwQ3U4bnFMOTBrbVBncSsyS2xMOW5sVUNoNWsrM1YvY3N4NTlHVzU2UlB2YkNGRU40NFVuMEFtaEUzcFU4QkFBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["user_id"],"name":[1],"type":["int"],"align":["right"]},{"label":["username"],"name":[2],"type":["chr"],"align":["left"]},{"label":["role_id"],"name":[3],"type":["int"],"align":["right"]},{"label":["role_name"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"bill100","3":"1","4":"user"},{"1":"1","2":"bill100","3":"3","4":"admin"}],"options":{"columns":{"min":{},"max":[10],"total":{}},"rows":{"min":[10],"max":[10],"total":{}},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-chunk-end -->
 </div>
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDExIgpvdXRwdXQ6IAogIGh0bWxfbm90ZWJvb2s6CiAgICB0aGVtZTogc2FuZHN0b25lCiAgICBoaWdobGlnaHQ6IHplbmJ1cm4KICAgIHRvYzogdHJ1ZQogICAgdG9jX2Zsb2F0OiB0cnVlCi0tLQoKTG9hZCBsaWJyYXJpZXMuCmBgYHtyfQpsaWJyYXJ5KERCSSkKbGlicmFyeShvZGJjKQpsaWJyYXJ5KFJQb3N0Z3JlcykKYGBgCgoKIyBNYW5hZ2luZyBUYWJsZXMKCiMjIERhdGEgVHlwZXMKCiMjIyBCb29sZWFuCgpLZXl3b3JkKHMpOiBgQk9PTEVBTmAgb3IgYEJPT0xgCgp8IFZhbHVlcyAgfCBOb3RlcyB8CnwtLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8IGBGQUxTRWAgfCBgMGAsIGAnbm8nYCwgYCduJ2AsIGAnZidgLCBgJ2ZhbHNlJ2AgYWxsIGVxdWFsIGBGQUxTRWAgfAp8IGBUUlVFYCAgfCBgMWAsIGAneWVzJ2AsIGAneSdgLCBgJ3QnYCwgYCd0cnVlJ2AgYWxsIGVxdWFsIGBUUlVFYCAgfAp8IGBOVUxMYCAgfCAgICAgICB8CgoKIyMjIENoYXJhY3RlcgoKVGhlcmUgYXJlIHRocmVlIHR5cGVzIG9mIGNoYXJhY3RlciBmaWVsZHM6IGBDSEFSYCwgYFZBUkNIQVJgLCBhbmQgYFRFWFRgLgoKfCBEYXRhIFR5cGUgfCBLZXl3b3JkKHMpIHwgTm90ZXMgfCAKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18CnwgQ2hhcmFjdGVyIHwgYENIQVIobilgICB8IGBuYCBpcyBob3cgbWFueSBjaGFyYWN0ZXJzIHBlciBlbnRyeTsgZml4ZWQtbGVuZ3RoIGNoYXJhY3RlciB2YWx1ZXMgd2l0aCBzcGFjZSBwYWRkaW5nIHRvIGZpbGwgaW4gYG5gIHwKfCBWYXJ5aW5nIENoYXJhY3RlciB8IGBWQVJDSEFSKG4pYCB8IHZhcmlhYmxlIGxlbmd0aDsgYG5gIGlzIG1heCBudW1iZXIgb2YgY2hhcmFjdGVycyBwZXIgZW50cnk7IHVubGlrZSwgYENIQVJgIHRoZSBlbnRyaWVzIGFyZSBub3QgcGFkZGVkIHdpdGggc3BhY2VzIHwKfCBUZXh0ICAgICAgfCBgVEVYVGAgICAgIHwgdmFyaWFibGUgbGVuZ3RoOyB0aGVvcmV0aWNhbGx5IHVubGltaXRlZCBsZW5ndGggfAoKCiMjIyBOdW1lcmljCgpQb3N0Z3JlU1FMIHByb3ZpZGVzIDIgdHlwZXMgb2YgbnVtYmVyczoKCjEuIEludGVnZXJzCjIuIEZsb2F0aW5nLVBvaW50IE51bWJlcnMKCiMjIyMgSW50ZWdlcgoKUG9zdGdyZVNRTCBwcm92aWVzIDQgbWFpbiB0eXBlcyBvZiBpbnRlZ2VyczogYFNNQUxMSU5UYCwgYElOVEVHRVJgLCBgQklHSU5UYCBhbmQgYFNFUklBTGAuCgpUaGVyZSBhcmUgbWFueSBkaWZmZXJlbnQgdHlwZXMgb2YgaW50ZWdlcnMuIFJlYWQgdGhlIGRvY3VtZW50YXRpb24gKENoYXB0ZXIgOCwgRGF0YSBUeXBlcykgZm9yIHRoZSBmdWxsIGxpc3QuCgp8IERhdGEgVHlwZSB8IEtleXdvcmQocykgfCBOb3RlcyB8CnwtLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCBTbWFsbCBJbnRlZ2VyIHwgYFNNQUxMSU5UYCBvciBgSU5UMmAgfCAyLWJ5dGUgc2lnbmVkIGludGVnZXI6PGJyIC8+IC0zMiw3NjggdG8gMzIsNzY3IHwKfCBJbnRlZ2VyICAgICAgIHwgYElOVEVHRVJgIG9yIGBJTlRgICAgfCA0LWJ5dGUgc2lnbmVkIGludGVnZXI6PGJyIC8+IC0yLDE0Nyw0ODMsNjQ4IHRvIDIsMTQ3LDQ4Myw2NDcgfAp8IEJpZyBJbnRlZ2VyICAgfCBgQklHSU5UYCBvciBgSU5UOGAgICB8IDgtYnl0ZSBzaWduZWQgaW50ZWdlcjo8YnIgLz4gIC05LDIyMywzNzIsMDM2LDg1NCw3NzUsODA4IHRvIDksMjIzLDM3MiwwMzYsODU0LDc3NSw4MDcgfAp8IFNlcmlhbCAgICAgICAgfCBgU0VSSUFMYCAgICAgICAgICAgICB8IGF1dG9pbmNyZW1lbnRpbmcgNC1ieXRlIGludGVnZXIgfAoKIyMjIyBGbG9hdGluZy1Qb2ludCBOdW1iZXIKClRoZXJlIGFyZSAyIG1haW4gdHlwZXMgb2YgZmxvYXRpbmctcG9pbnQgbnVtYmVyczogYE5VTUVSSUNgLCBgUkVBTGAvYERPVUJMRSBQUkVDSVNJT05gLCBhbmQgYEZMT0FUYC4KCnwgRGF0YSBUeXBlIHwgS2V5d29yZChzKSB8IE5vdGVzIHwKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCBFeGFjdCBBcmJpdHJhcnkgUHJlY2lzaW9uIE51bWJlciAgfCBgTlVNRVJJQyhwLCBzKWAgfCBgcGAgaXMgcHJlY2lzaW9uLCBgc2AgaXMgc2NhbGU7IHByZWNpc2lvbiBpcyB0b3RhbCBjb3VudCBvZiBzaWduaWYuIGRpZ2l0cyBpbiB0aGUgbnVtYmVyIGFzIGEgd2hvbGUsIHNjYWxlIGlzIGNvdW50IG9mIGRpZ2l0cyBhZnRlciB0aGUgZGVjaW1hbCBwb2ludDsgMjMuNTE0MSBpcyBhIGBOVU1FUklDKDYsIDQpYDsgcmVjb21tZW5kZWQgZm9yIHN0b3JpbmcgbW9uZXRhcnkgYW1vdW50cyBhbmQgb3RoZXIgcXVhbnRpdGllcyB3aGVyZSBleGFjdG5lc3MgaXMgcmVxdWlyZWQgfAp8IEluZXhhY3QgVmFyaWFibGUgUHJlY2lzaW9uIE51bWJlciB8IGBSRUFMYCB8IHR5cGljYWxseSwgaGFzIGEgcmFuZ2Ugb2YgYXQgbGVhc3QgMUUtMzcgdG8gMUUrMzcgd2l0aCBhIHByZWNpc2lvbiBvZiBhdCBsZWFzdCA2IGRlY2ltYWwgZGlnaXRzIHwKfCBJbmV4YWN0IFZhcmlhYmxlIFByZWNpc2lvbiBOdW1iZXIgfCBgRE9VQkxFIFBSRUNJU0lPTmAgfCB0eXBpY2FsbHkgaGFzIGEgcmFuZ2Ugb2YgYXJvdW5kIDFFLTMwNyB0byAxRSszMDggd2l0aCBhIHByZWNpc2lvbiBvZiBhdCBsZWFzdCAxNSBkaWdpdHMgfAp8IFNRTCBzdGFuZGFyZCBgRkxPQVRgIHwgYEZMT0FUKG4pYCB8IGBGTE9BVCgxKWAgdG8gYEZMT0FUKDI0KWAgaXMganVzdCBgUkVBTGA7IGBGTE9BVCgyNSlgIHRvIGBGTE9BVCg1MylgIGlzIGp1c3QgYERPVUJMRSBQUkVDSVNJT05gIHwKCiMjIyBUZW1wb3JhbCBEYXRhIFR5cGVzCgpQb3N0Z3JlU1FMIGhhcyA1IG1haW4gdGVtcG9yYWwgZGF0YSB0eXBlczogYERBVEVgLCBgVElNRWAsIGBUSU1FU1RBTVBgLCBgVElNRVNUQU1QVFpgLCBhbmQgYElOVEVSVkFMYC4KCnwgRGF0YSBUeXBlIHwgS2V5d29yZChzKSB8IE5vdGVzIHwKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8IERhdGUgfCBgREFURWAgfCBjYWxlbmRhciBkYXRlICh5ZWFyLCBtb250aCwgZGF5KSB8CnwgVGltZSB8IGBUSU1FYCB8IHRpbWUgb2YgZGF5IChubyB0aW1lIHpvbmUpLCBISDpNTTpTUyBmcm9tIGAwMDowMDowMGAgdG8gYDI0OjAwOjAwYCB8CnwgVGltZSB3LyB0aW1lem9uZSB8IGBUSU1FVFpgIHwgdGltZSBvZiBkYXkgKHcvIHRpbWUgem9uZSksIEhIOk1NOlNTIGZyb20gYDAwOjAwOjAwYCB0byBgMjQ6MDA6MDBgIHwKfCBEYXRldGltZSB8IGBUSU1FU1RBTVBgIHwgZS5nLiwgYDIwMTYtMDYtMjIgMTk6MTA6MjVgIHwKfCBEYXRldGltZSB3LyB0aW1lem9uZSB8IGBUSU1FU1RBTVBUWmAgfCBlLmcuLCBgMjAxNi0wNi0yMiAxOToxMDoyNS0wN2AgfAp8IEludGVydmFsIHwgYElOVEVSVkFMYCB8IFRoZXJlJ3MgcXVpdGUgYSBiaXQgdG8gdGhpcy4uLiByZWFkIGRvY3VtZW50YXRpb24gc2VjdGlvbiA4LjUuNC4gSW50ZXJ2YWwgSW5wdXQgZm9yIG1vcmUgaW5mbyB8CgoKIyMjIEFycmF5cwoKSW4gUG9zdGdyZVNRTCwgeW91IGNhbiBzdG9yZSBhbiBhcnJheSBvZiBzdHJpbmdzLCBhbiBhcnJheSBvZiBpbnRlZ2VycywgZXRjLiwgaW4gYXJyYXkgY29sdW1ucy4gVGhlIGFycmF5IGNvbWVzIGluIGhhbmR5IGluIHNvbWUgc2l0dWF0aW9ucyBlLmcuLCBzdG9yaW5nIGRheXMgb2YgdGhlIHdlZWssIG1vbnRocyBvZiB0aGUgeWVhci4KCgojIyMgSlNPTgoKUG9zdGdyZVNRTCBwcm92aWRlcyB0d28gSlNPTiBkYXRhIHR5cGVzOiBgSlNPTmAgYW5kIGBKU09OQmAgZm9yIHN0b3JpbmcgSlNPTiBkYXRhLgoKVGhlIGBKU09OYCBkYXRhIHR5cGUgc3RvcmVzIHBsYWluIEpTT04gZGF0YSB0aGF0IHJlcXVpcmVzIHJlcGFyc2luZyBmb3IgZWFjaCBwcm9jZXNzaW5nLCB3aGlsZSBgSlNPTkJgIGRhdGEgdHlwZSBzdG9yZXMgSlNPTiBkYXRhIGluIGEgYmluYXJ5IGZvcm1hdCB3aGljaCBpcyBmYXN0ZXIgdG8gcHJvY2VzcyBidXQgc2xvd2VyIHRvIGluc2VydC4gSW4gYWRkaXRpb24sIGBKU09OQmAgc3VwcG9ydHMgaW5kZXhpbmcsIHdoaWNoIGNhbiBiZSBhbiBhZHZhbnRhZ2UuCgoKIyMjIFVVSUQKClRoZSBgVVVJRGAgZGF0YSB0eXBlIGFsbG93cyB5b3UgdG8gc3RvcmUgVW5pdmVyc2FsIFVuaXF1ZSBJZGVudGlmaWVycyBkZWZpbmVkIGJ5IFJGQyA0MTIyIC4gVGhlIGBVVUlEYCB2YWx1ZXMgZ3VhcmFudGVlIGEgYmV0dGVyIHVuaXF1ZW5lc3MgdGhhbiBgU0VSSUFMYCBhbmQgY2FuIGJlIHVzZWQgdG8gaGlkZSBzZW5zaXRpdmUgZGF0YSBleHBvc2VkIHRvIHRoZSBwdWJsaWMgc3VjaCBhcyB2YWx1ZXMgb2YgYGlkYCBpbiBVUkwuCgoKIyMjIFNwZWNpYWwgRGF0YSBUeXBlcwoKQmVzaWRlcyB0aGUgcHJpbWl0aXZlIGRhdGEgdHlwZXMsIFBvc3RncmVTUUwgYWxzbyBwcm92aWRlcyBzZXZlcmFsIHNwZWNpYWwgZGF0YSB0eXBlcyByZWxhdGVkIHRvIGdlb21ldHJpYyBhbmQgbmV0d29yay4KCiogYGJveGAgLSBhIHJlY3Rhbmd1bGFyIGJveAoqIGBsaW5lYCAtIGEgc2V0IG9mIHBvaW50cwoqIGBwb2ludGAgLSBhIGdlb21ldHJpYyBwYWlyIG9mIG51bWJlcnMKKiBgbHNlZ2AgLSBhIGxpbmUgc2VnbWVudAoqIGBwb2x5Z29uYCAtIGEgY2xvc2VkIGdlb21ldHJpYwoqIGBpbmV0YCAtIGFuIElQNCBhZGRyZXNzCiogYG1hY2FkZHJgIC0gIGEgTUFDIGFkZHJlc3MKCgojIyBDcmVhdGUgVGFibGUKCgoKCmBgYHtyIGVjaG89RkFMU0V9CiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKYGBgCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUG9zdGdyZVNRTCBUdXRvcmlhbCAtIEhvbWUgLSBTZWN0aW9uIDExIgpvdXRwdXQ6IAogIGh0bWxfbm90ZWJvb2s6CiAgICB0aGVtZTogc2FuZHN0b25lCiAgICBoaWdobGlnaHQ6IHplbmJ1cm4KICAgIHRvYzogdHJ1ZQogICAgdG9jX2Zsb2F0OiB0cnVlCi0tLQoKTG9hZCBsaWJyYXJpZXMuCmBgYHtyfQpsaWJyYXJ5KERCSSkKbGlicmFyeShvZGJjKQpsaWJyYXJ5KFJQb3N0Z3JlcykKYGBgCgoKIyBNYW5hZ2luZyBUYWJsZXMKCiMjIERhdGEgVHlwZXMKCiMjIyBCb29sZWFuCgpLZXl3b3JkKHMpOiBgQk9PTEVBTmAgb3IgYEJPT0xgCgp8IFZhbHVlcyAgfCBOb3RlcyB8CnwtLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8IGBGQUxTRWAgfCBgMGAsIGAnbm8nYCwgYCduJ2AsIGAnZidgLCBgJ2ZhbHNlJ2AgYWxsIGVxdWFsIGBGQUxTRWAgfAp8IGBUUlVFYCAgfCBgMWAsIGAneWVzJ2AsIGAneSdgLCBgJ3QnYCwgYCd0cnVlJ2AgYWxsIGVxdWFsIGBUUlVFYCAgfAp8IGBOVUxMYCAgfCAgICAgICB8CgoKIyMjIENoYXJhY3RlcgoKVGhlcmUgYXJlIHRocmVlIHR5cGVzIG9mIGNoYXJhY3RlciBmaWVsZHM6IGBDSEFSYCwgYFZBUkNIQVJgLCBhbmQgYFRFWFRgLgoKfCBEYXRhIFR5cGUgfCBLZXl3b3JkKHMpIHwgTm90ZXMgfCAKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18CnwgQ2hhcmFjdGVyIHwgYENIQVIobilgICB8IGBuYCBpcyBob3cgbWFueSBjaGFyYWN0ZXJzIHBlciBlbnRyeTsgZml4ZWQtbGVuZ3RoIGNoYXJhY3RlciB2YWx1ZXMgd2l0aCBzcGFjZSBwYWRkaW5nIHRvIGZpbGwgaW4gYG5gIHwKfCBWYXJ5aW5nIENoYXJhY3RlciB8IGBWQVJDSEFSKG4pYCB8IHZhcmlhYmxlIGxlbmd0aDsgYG5gIGlzIG1heCBudW1iZXIgb2YgY2hhcmFjdGVycyBwZXIgZW50cnk7IHVubGlrZSwgYENIQVJgIHRoZSBlbnRyaWVzIGFyZSBub3QgcGFkZGVkIHdpdGggc3BhY2VzIHwKfCBUZXh0ICAgICAgfCBgVEVYVGAgICAgIHwgdmFyaWFibGUgbGVuZ3RoOyB0aGVvcmV0aWNhbGx5IHVubGltaXRlZCBsZW5ndGggfAoKCiMjIyBOdW1lcmljCgpQb3N0Z3JlU1FMIHByb3ZpZGVzIDIgdHlwZXMgb2YgbnVtYmVyczoKCjEuIEludGVnZXJzCjIuIEZsb2F0aW5nLVBvaW50IE51bWJlcnMKCiMjIyMgSW50ZWdlcgoKUG9zdGdyZVNRTCBwcm92aWVzIDQgbWFpbiB0eXBlcyBvZiBpbnRlZ2VyczogYFNNQUxMSU5UYCwgYElOVEVHRVJgLCBgQklHSU5UYCBhbmQgYFNFUklBTGAuCgpUaGVyZSBhcmUgbWFueSBkaWZmZXJlbnQgdHlwZXMgb2YgaW50ZWdlcnMuIFJlYWQgdGhlIGRvY3VtZW50YXRpb24gKENoYXB0ZXIgOCwgRGF0YSBUeXBlcykgZm9yIHRoZSBmdWxsIGxpc3QuCgp8IERhdGEgVHlwZSB8IEtleXdvcmQocykgfCBOb3RlcyB8CnwtLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCBTbWFsbCBJbnRlZ2VyIHwgYFNNQUxMSU5UYCBvciBgSU5UMmAgfCAyLWJ5dGUgc2lnbmVkIGludGVnZXI6PGJyIC8+IC0zMiw3NjggdG8gMzIsNzY3IHwKfCBJbnRlZ2VyICAgICAgIHwgYElOVEVHRVJgIG9yIGBJTlRgICAgfCA0LWJ5dGUgc2lnbmVkIGludGVnZXI6PGJyIC8+IC0yLDE0Nyw0ODMsNjQ4IHRvIDIsMTQ3LDQ4Myw2NDcgfAp8IEJpZyBJbnRlZ2VyICAgfCBgQklHSU5UYCBvciBgSU5UOGAgICB8IDgtYnl0ZSBzaWduZWQgaW50ZWdlcjo8YnIgLz4gIC05LDIyMywzNzIsMDM2LDg1NCw3NzUsODA4IHRvIDksMjIzLDM3MiwwMzYsODU0LDc3NSw4MDcgfAp8IFNlcmlhbCAgICAgICAgfCBgU0VSSUFMYCAgICAgICAgICAgICB8IGF1dG9pbmNyZW1lbnRpbmcgNC1ieXRlIGludGVnZXIgfAoKIyMjIyBGbG9hdGluZy1Qb2ludCBOdW1iZXIKClRoZXJlIGFyZSAyIG1haW4gdHlwZXMgb2YgZmxvYXRpbmctcG9pbnQgbnVtYmVyczogYE5VTUVSSUNgLCBgUkVBTGAvYERPVUJMRSBQUkVDSVNJT05gLCBhbmQgYEZMT0FUYC4KCnwgRGF0YSBUeXBlIHwgS2V5d29yZChzKSB8IE5vdGVzIHwKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCBFeGFjdCBBcmJpdHJhcnkgUHJlY2lzaW9uIE51bWJlciAgfCBgTlVNRVJJQyhwLCBzKWAgfCBgcGAgaXMgcHJlY2lzaW9uLCBgc2AgaXMgc2NhbGU7IHByZWNpc2lvbiBpcyB0b3RhbCBjb3VudCBvZiBzaWduaWYuIGRpZ2l0cyBpbiB0aGUgbnVtYmVyIGFzIGEgd2hvbGUsIHNjYWxlIGlzIGNvdW50IG9mIGRpZ2l0cyBhZnRlciB0aGUgZGVjaW1hbCBwb2ludDsgMjMuNTE0MSBpcyBhIGBOVU1FUklDKDYsIDQpYDsgcmVjb21tZW5kZWQgZm9yIHN0b3JpbmcgbW9uZXRhcnkgYW1vdW50cyBhbmQgb3RoZXIgcXVhbnRpdGllcyB3aGVyZSBleGFjdG5lc3MgaXMgcmVxdWlyZWQgfAp8IEluZXhhY3QgVmFyaWFibGUgUHJlY2lzaW9uIE51bWJlciB8IGBSRUFMYCB8IHR5cGljYWxseSwgaGFzIGEgcmFuZ2Ugb2YgYXQgbGVhc3QgMUUtMzcgdG8gMUUrMzcgd2l0aCBhIHByZWNpc2lvbiBvZiBhdCBsZWFzdCA2IGRlY2ltYWwgZGlnaXRzIHwKfCBJbmV4YWN0IFZhcmlhYmxlIFByZWNpc2lvbiBOdW1iZXIgfCBgRE9VQkxFIFBSRUNJU0lPTmAgfCB0eXBpY2FsbHkgaGFzIGEgcmFuZ2Ugb2YgYXJvdW5kIDFFLTMwNyB0byAxRSszMDggd2l0aCBhIHByZWNpc2lvbiBvZiBhdCBsZWFzdCAxNSBkaWdpdHMgfAp8IFNRTCBzdGFuZGFyZCBgRkxPQVRgIHwgYEZMT0FUKG4pYCB8IGBGTE9BVCgxKWAgdG8gYEZMT0FUKDI0KWAgaXMganVzdCBgUkVBTGA7IGBGTE9BVCgyNSlgIHRvIGBGTE9BVCg1MylgIGlzIGp1c3QgYERPVUJMRSBQUkVDSVNJT05gIHwKCiMjIyBUZW1wb3JhbCBEYXRhIFR5cGVzCgpQb3N0Z3JlU1FMIGhhcyA1IG1haW4gdGVtcG9yYWwgZGF0YSB0eXBlczogYERBVEVgLCBgVElNRWAsIGBUSU1FU1RBTVBgLCBgVElNRVNUQU1QVFpgLCBhbmQgYElOVEVSVkFMYC4KCnwgRGF0YSBUeXBlIHwgS2V5d29yZChzKSB8IE5vdGVzIHwKfC0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8IERhdGUgfCBgREFURWAgfCBjYWxlbmRhciBkYXRlICh5ZWFyLCBtb250aCwgZGF5KSB8CnwgVGltZSB8IGBUSU1FYCB8IHRpbWUgb2YgZGF5IChubyB0aW1lIHpvbmUpLCBISDpNTTpTUyBmcm9tIGAwMDowMDowMGAgdG8gYDI0OjAwOjAwYCB8CnwgVGltZSB3LyB0aW1lem9uZSB8IGBUSU1FVFpgIHwgdGltZSBvZiBkYXkgKHcvIHRpbWUgem9uZSksIEhIOk1NOlNTIGZyb20gYDAwOjAwOjAwYCB0byBgMjQ6MDA6MDBgIHwKfCBEYXRldGltZSB8IGBUSU1FU1RBTVBgIHwgZS5nLiwgYDIwMTYtMDYtMjIgMTk6MTA6MjVgIHwKfCBEYXRldGltZSB3LyB0aW1lem9uZSB8IGBUSU1FU1RBTVBUWmAgfCBlLmcuLCBgMjAxNi0wNi0yMiAxOToxMDoyNS0wN2AgfAp8IEludGVydmFsIHwgYElOVEVSVkFMYCB8IFRoZXJlJ3MgcXVpdGUgYSBiaXQgdG8gdGhpcy4uLiByZWFkIGRvY3VtZW50YXRpb24gc2VjdGlvbiA4LjUuNC4gSW50ZXJ2YWwgSW5wdXQgZm9yIG1vcmUgaW5mbyB8CgoKIyMjIEFycmF5cwoKSW4gUG9zdGdyZVNRTCwgeW91IGNhbiBzdG9yZSBhbiBhcnJheSBvZiBzdHJpbmdzLCBhbiBhcnJheSBvZiBpbnRlZ2VycywgZXRjLiwgaW4gYXJyYXkgY29sdW1ucy4gVGhlIGFycmF5IGNvbWVzIGluIGhhbmR5IGluIHNvbWUgc2l0dWF0aW9ucyBlLmcuLCBzdG9yaW5nIGRheXMgb2YgdGhlIHdlZWssIG1vbnRocyBvZiB0aGUgeWVhci4KCgojIyMgSlNPTgoKUG9zdGdyZVNRTCBwcm92aWRlcyB0d28gSlNPTiBkYXRhIHR5cGVzOiBgSlNPTmAgYW5kIGBKU09OQmAgZm9yIHN0b3JpbmcgSlNPTiBkYXRhLgoKVGhlIGBKU09OYCBkYXRhIHR5cGUgc3RvcmVzIHBsYWluIEpTT04gZGF0YSB0aGF0IHJlcXVpcmVzIHJlcGFyc2luZyBmb3IgZWFjaCBwcm9jZXNzaW5nLCB3aGlsZSBgSlNPTkJgIGRhdGEgdHlwZSBzdG9yZXMgSlNPTiBkYXRhIGluIGEgYmluYXJ5IGZvcm1hdCB3aGljaCBpcyBmYXN0ZXIgdG8gcHJvY2VzcyBidXQgc2xvd2VyIHRvIGluc2VydC4gSW4gYWRkaXRpb24sIGBKU09OQmAgc3VwcG9ydHMgaW5kZXhpbmcsIHdoaWNoIGNhbiBiZSBhbiBhZHZhbnRhZ2UuCgoKIyMjIFVVSUQKClRoZSBgVVVJRGAgZGF0YSB0eXBlIGFsbG93cyB5b3UgdG8gc3RvcmUgVW5pdmVyc2FsIFVuaXF1ZSBJZGVudGlmaWVycyBkZWZpbmVkIGJ5IFJGQyA0MTIyIC4gVGhlIGBVVUlEYCB2YWx1ZXMgZ3VhcmFudGVlIGEgYmV0dGVyIHVuaXF1ZW5lc3MgdGhhbiBgU0VSSUFMYCBhbmQgY2FuIGJlIHVzZWQgdG8gaGlkZSBzZW5zaXRpdmUgZGF0YSBleHBvc2VkIHRvIHRoZSBwdWJsaWMgc3VjaCBhcyB2YWx1ZXMgb2YgYGlkYCBpbiBVUkwuCgoKIyMjIFNwZWNpYWwgRGF0YSBUeXBlcwoKQmVzaWRlcyB0aGUgcHJpbWl0aXZlIGRhdGEgdHlwZXMsIFBvc3RncmVTUUwgYWxzbyBwcm92aWRlcyBzZXZlcmFsIHNwZWNpYWwgZGF0YSB0eXBlcyByZWxhdGVkIHRvIGdlb21ldHJpYyBhbmQgbmV0d29yay4KCiogYGJveGAgLSBhIHJlY3Rhbmd1bGFyIGJveAoqIGBsaW5lYCAtIGEgc2V0IG9mIHBvaW50cwoqIGBwb2ludGAgLSBhIGdlb21ldHJpYyBwYWlyIG9mIG51bWJlcnMKKiBgbHNlZ2AgLSBhIGxpbmUgc2VnbWVudAoqIGBwb2x5Z29uYCAtIGEgY2xvc2VkIGdlb21ldHJpYwoqIGBpbmV0YCAtIGFuIElQNCBhZGRyZXNzCiogYG1hY2FkZHJgIC0gIGEgTUFDIGFkZHJlc3MKCgojIyBDUkVBVEUgVEFCTEUKCkhlcmUncyB0aGUgZ2VuZXJhbCBgQ1JFQVRFIFRBQkxFYCBzeW50YXguCgpgYGAKQ1JFQVRFIFRBQkxFIHRhYmxlX25hbWUgKAogIGNvbHVtbl9uYW1lICBUWVBFICBjb2x1bW5fY29uc3RyYWludCwKICBjb2x1bW5fbmFtZSAgVFlQRSAgY29sdW1uX2NvbnN0cmFpbnQsCiAgLi4uCiAgdGFibGVfY29uc3RyYWludCAgdGFibGVfY29uc3RyYWludCAuLi4KKSBJTkhFUklUUyBleGlzdGluZ190YWJsZV9uYW1lOwpgYGAKCiMjIyBDb2x1bW4gY29uc3RyYWludHMKCkhlcmUgYXJlIHNvbWUgY29tbW9ubHkgdXNlZCBjb2x1bW4gY29uc3RyYWludHMuCgoqIGBOT1QgTlVMTGAgLSBBIHJlY29yZCdzIHZhbHVlIGluIHN1Y2ggYSBjb2x1bW4gY2Fubm90IGJlIGBOVUxMYC4KKiBgVU5JUVVFYCAtIEEgcmVjb3JkJ3MgdmFsdWUgaW4gc3VjaCBhIGNvbHVtbiBtdXN0IGJlIHVuaXF1ZSBfYWNyb3NzIHRoZSB3aG9sZSB0YWJsZV8uIEhvd2V2ZXIsIHRoZSBjb2x1bW4gY2FuIGhhdmUgbWFueSBgTlVMTGAgdmFsdWVzIGJlY2F1c2UgUG9zdGdyZVNRTCBjb25zaWRlcnMgZWFjaCBgTlVMTGAgdmFsdWUgdW5pcXVlLgoqIGBQUklNQVJZIEtFWWAgLSBUaGlzIGlzIGEgY29tYmluYXRpb24gb2YgYE5PVCBOVUxMYCBhbmQgYFVOSVFVRWAuIFRoaXMgY2FuIGJlIHVzZWQgYXMgYSBjb2x1bW4gY29uc3RyYWludCBpZiBvbmx5IG9uZSBjb2x1bW4gaXMgdGhlIHByaW1hcnkga2V5LiBJZiBtdWx0aXBsZSBjb2x1bW5zIGFyZSB0aGUgcHJpbWFyeSBrZXksIHlvdSdsbCBoYXZlIHRvIGRlZmluZSB0aG9zZSBwcmltYXJ5IGtleXMgYXMgdGFibGUgY29uc3RyYWludHMuCiogYENIRUNLIChjb25kaXRpb24pYCAtIEVuYWJsZXMgYSBgQ0hFQ0tgIGNvbmRpdGlvbiB3aGVuIHlvdSBpbnNlcnQgb3IgdXBkYXRlIGRhdGEuCiogYFJFRkVSRU5DRVNgIC0gQ29uc3RyYWlucyBhIHJlY29yZCdzIHZhbHVlIGluIHN1Y2ggYSBjb2x1bW4gdG8gYSBjb3JyZXNwb25kaW5nIHZhbHVlIGluIGFub3RoZXIgdGFibGUncyBjb2x1bW4uIEl0J3MgdXNlZCB0byBkZWZpbmUgdGhlIGZvcmVpZ24ga2V5IGNvbnN0cmFpbnQuCgojIyMgVGFibGUgY29uc3RyYWludHMKCkhlcmUgYXJlIHNvbWUgY29tbW9uIHRhYmxlIGNvbnN0cmFpbnRzLgoKKiBgVU5JUVVFIChjb2x1bW5fbmFtZSwgY29sdW1uX25hbWUsIC4uLilgIC0gRm9yY2UgdmFsdWUgc3RvcmVkIGluIHRoZSBjb2x1bW5zIGxpc3RlZCB0byBiZSB1bmlxdWUuCiogYFBSSU1BUlkgS0VZIChjb2x1bW5fbmFtZSwgY29sdW1uX25hbWUsIC4uLilgIC0gRGVmaW5lIGEgcHJpbWFyeSBrZXkgY29uc2lzdGluZyBvZiBtdWx0aXBsZSBjb2x1bW5zLgoqIGBDSEVDSyAoY29uZGl0aW9uKWAgLSBMaWtlIGNvbHVtbiBjb25zdHJhaW5nIGBDSEVDS2AuCiogYFJFRkVSRU5DRVNgIC0gTGlrZSBjb2x1bW4gY29uc3RyYWludCBgUkVGRVJFTkNFU2AuCgojIyMgQ1JFQVRFIFRBQkVMIGV4YW1wbGUKCldlJ2xsIGNyZWF0ZSB0YWJsZXMgbmFtZWQgImFjY291bnQiLCAicm9sZSIsIGFuZCAiYWNjb3VudF9yb2xlcyIuCgpDb25uZWN0IHRvIHRoZSBfKipleGFtcGxlKipfIGRhdGFiYXNlLgoKYGBge3J9CmNvbl9leCA8LSBkYkNvbm5lY3Qob2RiYzo6b2RiYygpLCAiUG9zdGdyZVNRTCBBV1MgZXhhbXBsZSIpCmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KRFJPUCBUQUJMRSBJRiBFWElTVFMgYWNjb3VudF9yb2xlOwpEUk9QIFRBQkxFIElGIEVYSVNUUyBhY2NvdW50OwpEUk9QIFRBQkxFIElGIEVYSVNUUyByb2xlOwpgYGAKCkNyZWF0ZSB0aGUgImFjY291bnQiIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgYWNjb3VudCAoCiAgdXNlcl9pZCAgICAgU0VSSUFMICAgICAgICBQUklNQVJZIEtFWSwKICB1c2VybmFtZSAgICBWQVJDSEFSKDUwKSAgIFVOSVFVRSBOT1QgTlVMTCwKICBwYXNzd29yZCAgICBWQVJDSEFSKDUwKSAgIE5PVCBOVUxMLAogIGVtYWlsICAgICAgIFZBUkNIQVIoMzU1KSAgVU5JUVVFIE5PVCBOVUxMLAogIGNyZWF0ZWRfb24gIFRJTUVTVEFNUCAgICAgTk9UIE5VTEwgREVGQVVMVCBDVVJSRU5UX1RJTUVTVEFNUCwKICBsYXN0X2xvZ2luICBUSU1FU1RBTVAKKTsKYGBgCgpDcmVhdGUgdGhlICJyb2xlIiB0YWJsZS4KCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CkNSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIHJvbGUgKAogIHJvbGVfaWQgICAgU0VSSUFMICAgICAgICBQUklNQVJZIEtFWSwKICByb2xlX25hbWUgIFZBUkNIQVIoMjU1KSAgVU5JUVVFIE5PVCBOVUxMCikKYGBgCgpDcmVhdGUgdGhlICJhY2NvdW50X3JvbGUiIHRhYmxlLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgYWNjb3VudF9yb2xlICgKICB1c2VyX2lkICAgICBJTlRFR0VSICAgIE5PVCBOVUxMLAogIHJvbGVfaWQgICAgIElOVEVHRVIgICAgTk9UIE5VTEwsCiAgZ3JhbnRfZGF0ZSAgVElNRVNUQU1QICBXSVRIT1VUIFRJTUUgWk9ORSBERUZBVUxUIENVUlJFTlRfVElNRVNUQU1QLAogIFBSSU1BUlkgS0VZICh1c2VyX2lkLCByb2xlX2lkKSwgICAgICAgICAgICAtLSB0YWJsZSBjb25zdHJhaW50ICMxCiAgQ09OU1RSQUlOVCBhY2NvdW50X3JvbGVfcm9sZV9pZF9ma2V5IEZPUkVJR04gS0VZIChyb2xlX2lkKQogICAgUkVGRVJFTkNFUyByb2xlIChyb2xlX2lkKSBNQVRDSCBTSU1QTEUKICAgIE9OIFVQREFURSBOTyBBQ1RJT04gT04gREVMRVRFIE5PIEFDVElPTiwgLS0gdGFibGUgY29uc3RyYWludCAjMgogIENPTlNUUkFJTlQgYWNjb3VudF9yb2xlX3VzZXJfaWRfZmtleSBGT1JFSUdOIEtFWSAodXNlcl9pZCkKICAgIFJFRkVSRU5DRVMgYWNjb3VudCAodXNlcl9pZCkgTUFUQ0ggU0lNUExFCiAgICBPTiBVUERBVEUgTk8gQUNUSU9OIE9OIERFTEVURSBOTyBBQ1RJT04gIC0tIHRhYmxlIGNvbnN0cmFpbnQgIzMKKTsKYGBgCgpUaGUgYFBSSU1BUlkgS0VZYCB0YWJsZSBjb25zdHJhaW50IG1ha2VzIHNlbnNlLgoKVGhlIDJuZCBhbmQgM3JkIGNvbnN0cmFpbnRzIGV4Y2VwdCBgTUFUQ0ggU0lNUExFYC4gSSdtIGd1ZXNzaW5nIHdoYXQgdGhpcyBtZWFucywgYnV0IEknbGwgaGF2ZSB0byB3YWl0IHVudGlsIHRoZXJlJ3MgbW9yZSBpbmZvIG9uIHRhYmxlIGNvbnN0cmFpbnRzIGxhbmd1YWdlLiBMb29raW5nIGZvcndhcmQgdG8gdGhhdCEKCkJlZm9yZSBJIG1vdmUgb24sIEknZCBsaWtlIHRvIGFkZCBzb21lIGRhdGEgdG8gdGhlc2UgdGFibGVzIHRvIG1ha2Ugc3VyZSBJIHVuZGVyc3RhbmQgaG93IHRoZXNlIHdvcmsuIFRoZSAiYWNjb3VudF9yb2xlIiBsb29rcyBsaWtlIGEganVuY3Rpb24gdGFibGUgdG8gbWFrZSBhIG1hbnktdG8tbWFueSByZWxhdGlvbnNoaXAgcG9zc2libGUgYmV0d2VlbiBhY2NvdW50cyBhbmQgcm9sZXMuCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpJTlNFUlQgSU5UTyAKICBhY2NvdW50KHVzZXJuYW1lLCBwYXNzd29yZCwgZW1haWwpClZBTFVFUwogICgnYmlsbDEwMCcsICdzYW13aXNlJywgJ2JpbGwxMDBAZ21haWwuY29tJyksIC0tIGFkbWluLCBwb3dlcl91c2VyCiAgKCdqZW5ueScsICdnYW1nZWUnLCAnamVubnlAZ21haWwuY29tJyksICAgICAgLS0gYWRtaW4sIHVzZXIKICAoJ2x1a2UxMjM0JywgJ2Zyb2RvJywgJ3RvbGtpZW5pc2F3ZXNvbWVAZ21haWwuY29tJyksIC0tIHVzZXIKICAoJ3NhbWFudGhhMjAwMCcsICdiYWdnaW5zJywgJ2JpbGx5LnRoZS5raWRAaG90bWFpbC5jb20nKTsgLS0gcG93ZXJfdXNlcgpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gYWNjb3VudDsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpJTlNFUlQgSU5UTwogIHJvbGUocm9sZV9uYW1lKQpWQUxVRVMKICAoJ3VzZXInKSwKICAoJ3Bvd2VyX3VzZXInKSwKICAoJ2FkbWluJyk7CmBgYAoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUICogRlJPTSByb2xlOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9CklOU0VSVCBJTlRPCiAgYWNjb3VudF9yb2xlKHVzZXJfaWQsIHJvbGVfaWQpClZBTFVFUwogICgxLCAxKSwKICAoMSwgMyksCiAgKDIsIDIpLAogICgyLCAzKSwKICAoMywgMSksCiAgKDQsIDIpOwpgYGAKCmBgYHtzcWwgY29ubmVjdGlvbj1jb25fZXh9ClNFTEVDVCAqIEZST00gYWNjb3VudF9yb2xlOwpgYGAKCldoYXQgcm9sZXMgZG9lcyB0aGUgdXNlciAiYmlsbDEwMCIgaGF2ZT8KClRoaXMgcmVxdWlyZXMgYSBkb3VibGUgam9pbiBhY3Jvc3MgdGhlIGp1bmN0aW9uIHRhYmxlICJhY2NvdW50X3JvbGUiLgoKYGBge3NxbCBjb25uZWN0aW9uPWNvbl9leH0KU0VMRUNUCiAgYWNjb3VudF9yb2xlLnVzZXJfaWQsCiAgYWNjb3VudF9yb2xlLnJvbGVfaWQsCiAgLS0gcm9sZS5yb2xlX2lkLAogIHJvbGUucm9sZV9uYW1lCkZST00KICBhY2NvdW50X3JvbGUKSU5ORVIgSk9JTgogIHJvbGUKICBPTiBhY2NvdW50X3JvbGUucm9sZV9pZCA9IHJvbGUucm9sZV9pZDsKYGBgCgpgYGB7c3FsIGNvbm5lY3Rpb249Y29uX2V4fQpTRUxFQ1QKICBhY2NvdW50LnVzZXJfaWQsCiAgYWNjb3VudC51c2VybmFtZSwKICBhY2NvdW50X3JvbGVfcm9sZS5yb2xlX2lkLAogIGFjY291bnRfcm9sZV9yb2xlLnJvbGVfbmFtZQpGUk9NCiAgYWNjb3VudApJTk5FUiBKT0lOCiAgKAogICAgU0VMRUNUCiAgICAgIGFjY291bnRfcm9sZS51c2VyX2lkLAogICAgICBhY2NvdW50X3JvbGUucm9sZV9pZCwKICAgICAgcm9sZS5yb2xlX25hbWUKICAgIEZST00KICAgICAgYWNjb3VudF9yb2xlCiAgICBJTk5FUiBKT0lOCiAgICAgIHJvbGUKICAgIE9OIGFjY291bnRfcm9sZS5yb2xlX2lkID0gcm9sZS5yb2xlX2lkCiAgKSBBUyBhY2NvdW50X3JvbGVfcm9sZQogIE9OIGFjY291bnQudXNlcl9pZCA9IGFjY291bnRfcm9sZV9yb2xlLnVzZXJfaWQKICBXSEVSRSBhY2NvdW50LnVzZXJuYW1lID0gJ2JpbGwxMDAnOwpgYGAKCgoKCmBgYHtyIGVjaG89RkFMU0V9CiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKIz09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09IwojLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0jCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jIwojQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AjCiMgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgRVhUUkEgIDogIFNQQUNFICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICMKI0AjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAICAgICM9PS0tIC0tPT0jICAgIEAjIz09LS0tPT0jI0AgICBAIyM9PS0tLT09IyNAIwojIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjQCAgICAjPT0tPT0jICAgIEAjIz09LS0tPT0jI0AgICAjICAgQCMjPT0tLS09PSMjCiM9LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPT0jI0AgICAgIz0jICAgIEAjIz09LS0tPSMKIy0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tLT09IyNAICAgIyAgIEAjIz09LS0tPT0jI0AgICAgIz09LT09IyAgICBAIyM9PS0tIwojPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0tLS09PSMjQCAgIEAjIz09LS0tPT0jI0AgICAgIz09LS0gLS09PSMgICAgQCMjPT0jCiMjI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIz09LS0tPT0jI0AjIz09LS0tPT0jI0AgICAgIz09LS0gIDogIC0tPT0jICAgIEAjIyMKYGBgCg==</div>
 
 
 </div>

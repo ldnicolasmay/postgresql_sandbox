@@ -117,7 +117,182 @@ Besides the primitive data types, PostgreSQL also provides several special data 
 * `macaddr` -  a MAC address
 
 
-## Create Table
+## CREATE TABLE
+
+Here's the general `CREATE TABLE` syntax.
+
+```
+CREATE TABLE table_name (
+  column_name  TYPE  column_constraint,
+  column_name  TYPE  column_constraint,
+  ...
+  table_constraint  table_constraint ...
+) INHERITS existing_table_name;
+```
+
+### Column constraints
+
+Here are some commonly used column constraints.
+
+* `NOT NULL` - A record's value in such a column cannot be `NULL`.
+* `UNIQUE` - A record's value in such a column must be unique _across the whole table_. However, the column can have many `NULL` values because PostgreSQL considers each `NULL` value unique.
+* `PRIMARY KEY` - This is a combination of `NOT NULL` and `UNIQUE`. This can be used as a column constraint if only one column is the primary key. If multiple columns are the primary key, you'll have to define those primary keys as table constraints.
+* `CHECK (condition)` - Enables a `CHECK` condition when you insert or update data.
+* `REFERENCES` - Constrains a record's value in such a column to a corresponding value in another table's column. It's used to define the foreign key constraint.
+
+### Table constraints
+
+Here are some common table constraints.
+
+* `UNIQUE (column_name, column_name, ...)` - Force value stored in the columns listed to be unique.
+* `PRIMARY KEY (column_name, column_name, ...)` - Define a primary key consisting of multiple columns.
+* `CHECK (condition)` - Like column constraing `CHECK`.
+* `REFERENCES` - Like column constraint `REFERENCES`.
+
+### CREATE TABEL example
+
+We'll create tables named "account", "role", and "account_roles".
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS account_role;
+DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS role;
+```
+
+Create the "account" table.
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS account (
+  user_id     SERIAL        PRIMARY KEY,
+  username    VARCHAR(50)   UNIQUE NOT NULL,
+  password    VARCHAR(50)   NOT NULL,
+  email       VARCHAR(355)  UNIQUE NOT NULL,
+  created_on  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_login  TIMESTAMP
+);
+```
+
+Create the "role" table.
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS role (
+  role_id    SERIAL        PRIMARY KEY,
+  role_name  VARCHAR(255)  UNIQUE NOT NULL
+)
+```
+
+Create the "account_role" table.
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS account_role (
+  user_id     INTEGER    NOT NULL,
+  role_id     INTEGER    NOT NULL,
+  grant_date  TIMESTAMP  WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, role_id),            -- table constraint #1
+  CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+    REFERENCES role (role_id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION, -- table constraint #2
+  CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES account (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION  -- table constraint #3
+);
+```
+
+The `PRIMARY KEY` table constraint makes sense.
+
+The 2nd and 3rd constraints except `MATCH SIMPLE`. I'm guessing what this means, but I'll have to wait until there's more info on table constraints language. Looking forward to that!
+
+Before I move on, I'd like to add some data to these tables to make sure I understand how these work. The "account_role" looks like a junction table to make a many-to-many relationship possible between accounts and roles.
+
+```{sql connection=con_ex}
+INSERT INTO 
+  account(username, password, email)
+VALUES
+  ('bill100', 'samwise', 'bill100@gmail.com'), -- admin, power_user
+  ('jenny', 'gamgee', 'jenny@gmail.com'),      -- admin, user
+  ('luke1234', 'frodo', 'tolkienisawesome@gmail.com'), -- user
+  ('samantha2000', 'baggins', 'billy.the.kid@hotmail.com'); -- power_user
+```
+
+```{sql connection=con_ex}
+SELECT * FROM account;
+```
+
+```{sql connection=con_ex}
+INSERT INTO
+  role(role_name)
+VALUES
+  ('user'),
+  ('power_user'),
+  ('admin');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM role;
+```
+
+```{sql connection=con_ex}
+INSERT INTO
+  account_role(user_id, role_id)
+VALUES
+  (1, 1),
+  (1, 3),
+  (2, 2),
+  (2, 3),
+  (3, 1),
+  (4, 2);
+```
+
+```{sql connection=con_ex}
+SELECT * FROM account_role;
+```
+
+What roles does the user "bill100" have?
+
+This requires a double join across the junction table "account_role".
+
+```{sql connection=con_ex}
+SELECT
+  account_role.user_id,
+  account_role.role_id,
+  -- role.role_id,
+  role.role_name
+FROM
+  account_role
+INNER JOIN
+  role
+  ON account_role.role_id = role.role_id;
+```
+
+```{sql connection=con_ex}
+SELECT
+  account.user_id,
+  account.username,
+  account_role_role.role_id,
+  account_role_role.role_name
+FROM
+  account
+INNER JOIN
+  (
+    SELECT
+      account_role.user_id,
+      account_role.role_id,
+      role.role_name
+    FROM
+      account_role
+    INNER JOIN
+      role
+    ON account_role.role_id = role.role_id
+  ) AS account_role_role
+  ON account.user_id = account_role_role.user_id
+  WHERE account.username = 'bill100';
+```
 
 
 
