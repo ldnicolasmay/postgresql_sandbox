@@ -13,6 +13,7 @@ Load libraries.
 library(DBI)
 library(odbc)
 library(RPostgres)
+library(dplyr)
 ```
 
 
@@ -294,7 +295,168 @@ INNER JOIN
   WHERE account.username = 'bill100';
 ```
 
+```{r}
+dbGetQuery(con_ex,
+"
+SELECT
+  -- account.user_id,
+  -- account.username,
+  -- account_role_role.role_id,
+  account_role_role.role_name
+FROM
+  account
+INNER JOIN
+  (
+    SELECT
+      account_role.user_id,
+      account_role.role_id,
+      role.role_name
+    FROM
+      account_role
+    INNER JOIN
+      role
+    ON account_role.role_id = role.role_id
+  ) AS account_role_role
+  ON account.user_id = account_role_role.user_id
+  WHERE account.username = 'bill100';
+") %>% 
+  dplyr::pull()
+```
 
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
+
+
+## SELECT INTO
+
+`SELECT INTO` allows you to create a new table and insert the data from a query. `SELECT INTO` doesn't return data to the client.
+
+Here's the syntax.
+
+```
+SELECT
+  col_1, col_2, ...
+INTO [TEMPORARY] [TABLE]
+  new_table
+FROM
+  existing_table
+WHERE
+  [condition];
+```
+
+You can also do joins.
+
+```
+SELECT
+  existing_table_1.col_1, 
+  existing_table_1.col_2,
+  ...,
+  existing_table_2.col_1,
+  existing_table_2.col_2,
+  ...
+INTO [TEMPORARY] [TABLE]
+  new_table
+FROM
+  existing_table_1
+INNER JOIN
+  existing_table_2
+  ON existing_table_1.col_1 = existing_table_2.col_1;
+```
+
+Note that you cannot use the `SELECT INTO` statement in PL/pgSQL or ECPG because they interpret the `INTO`clause differently. Use the `CREATE TABLE AS` statement instead... it provides more functionality.
+
+We'll use the "film" table in the _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+Let's create a temporary table of all the films whose ratings are 'R' and the rental period is 5 days.
+
+```{sql connection=con_dvd}
+DROP TABLE IF EXISTS film_r;
+```
+
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  rating
+INTO TEMPORARY TABLE
+  film_r
+FROM
+  film
+WHERE
+  rating = 'R' AND rental_duration = 5
+ORDER BY
+  title;
+```
+
+The temporary table created above doesn't show up in the list of tables returned by `DBI::dbListTables`.
+
+```{r}
+dbListTables(con_dvd)
+```
+
+But it is there now.
+
+```{sql connection=con_dvd}
+SELECT * FROM film_r;
+```
+
+>
+> What happens when I disconnect and reconnect?
+> 
+```{r}
+# dbDisconnect(con_dvd)
+# con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+```{sql connection=con_dvd}
+-- SELECT * FROM film_r;
+```
+> 
+> It disappears!
+> 
+
+How about a temporary table of short films (i.e., `length` < 60 minutes)?
+
+```{sql connection=con_dvd}
+DROP TABLE IF EXISTS short_film;
+```
+
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  length
+INTO TEMPORARY TABLE
+  short_film
+FROM
+  film
+WHERE
+  length < 60
+ORDER BY
+  length DESC,
+  title;
+```
+
+```{sql connection=con_dvd}
+SELECT * FROM short_film;
+```
+
+Cool.
+
+Disconnect from the _**dvdrental**_ database.
+
+```{r}
+dbDisconnect(con_dvd)
+```
 
 
 ```{r echo=FALSE}
