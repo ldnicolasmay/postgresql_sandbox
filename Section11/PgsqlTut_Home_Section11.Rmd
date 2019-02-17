@@ -458,6 +458,148 @@ Disconnect from the _**dvdrental**_ database.
 dbDisconnect(con_dvd)
 ```
 
+## CREATE TABLE AS
+
+The `CREATE TABLE ... AS` statement is like `SELECT INTO` in that you create a new table from what's returned by a query. `CREATE TABLE AS` is preferred though because it can be used in PL/pgSQL and provides more functionality.
+
+Here's the syntax.
+
+```
+CREATE [TEMPORARY] TABLE 
+  table_name
+AS
+  {query};
+```
+
+If you want to rename the columns returned by the query, you can list them after the table name.
+
+```
+CREATE TABLE
+  table_name(col_1, col_2, ...)
+AS
+  {query};
+```
+
+You can also use the `IF NOT EXISTS` keywords to avoid errors if the table already exists.
+
+```
+CREATE TABLE IF NOT EXISTS
+  table_name
+AS
+  {query};
+```
+
+We'll use the "film" and "film_category" tables from the _**dvdrental**_ database.
+
+```{r}
+con_dvd <- dbConnect(odbc::odbc(), "PostgreSQL AWS dvdrental")
+```
+
+Heres the query that we'll use to generate a new table.
+
+```{sql connection=con_dvd}
+SELECT
+  film_id,
+  title,
+  release_year,
+  length,
+  rating
+FROM
+  film
+INNER JOIN
+  film_category USING (film_id)
+WHERE
+  category_id = 1; -- 1 is the category ID for action films
+```
+
+Now let's just use the query above to create a new temporary table.
+
+```{sql connection=con_dvd}
+DROP TABLE IF EXISTS action_film;
+```
+
+
+```{sql connection=con_dvd}
+CREATE TABLE IF NOT EXISTS
+  action_film
+AS
+  SELECT
+    film_id,
+    title,
+    release_year,
+    length,
+    rating
+  FROM
+    film
+  INNER JOIN
+    film_category USING (film_id)
+  WHERE
+    category_id = 1;
+```
+
+```{sql connection=con_dvd}
+SELECT * FROM action_film ORDER BY length DESC;
+```
+
+To check the structure of the action_film, you can use the following command in the psql tool:
+
+```	
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-3-83-161-243.compute-1.amazonaws.com
+psql -U postgres
+\c dvdrental
+\d action_film
+\q
+exit
+```
+
+If the `SELECT` clause contains expressions, it's best to override the column names by listing them explicitly.
+
+```{sql connection=con_dvd}
+SELECT
+  rating,
+  COUNT(film_id)
+FROM
+  film
+GROUP BY
+  rating;
+```
+
+```{sql connection=con_dvd}
+DROP TABLE IF EXISTS film_rating;
+```
+
+```{sql connection=con_dvd}
+CREATE TABLE IF NOT EXISTS
+  film_rating (rating, film_count)
+AS
+  SELECT
+    rating,
+    COUNT(film_id)
+  FROM
+    film
+  GROUP BY
+    rating;
+```
+
+```{sql connection=con_dvd}
+SELECT * FROM film_rating ORDER BY film_count DESC;
+```
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-3-83-161-243.compute-1.amazonaws.com
+psql -U postgres
+\c dvdrental
+\d film_rating
+\q
+exit
+```
+
+Disconnect from the _**dvdrental**_ database.
+
+```{r}
+dbDisconnect(con_dvd)
+```
+
 
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
