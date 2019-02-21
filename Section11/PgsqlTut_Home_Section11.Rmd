@@ -727,6 +727,348 @@ dbDisconnect(con_ex)
 ```
 
 
+## ALTER TABLE
+
+To change existing table structure, use the `ALTER TABLE` statement.
+
+Here's the syntax.
+
+```
+ALTER TABLE 
+  table_name 
+  {action};
+```
+
+`ALTER TABLE` helps you:
+
+* Add a column
+
+`ALTER TABLE table_name ADD COLUMN new_column_name {TYPE};`
+
+* Drop a column
+
+`ALTER TABLE table_name DROP COLUMN column_to_drop;`
+
+* Rename a column
+
+`ALTER TABE table_name RENAME COLUMN column_name TO new_column_name;`
+
+* Change a column's data type
+
+`ALTER TABLE table_name ALTER COLUMN column_name SET DATA TYPE {TYPE};`
+
+* Set a default value for a column, or drop the default value
+
+`ALTER TABLE table_name ALTER COLUMN column_name SET DEFAULT {value};`
+
+`ALTER TABLE table_name ALTER COLUMN column_name DROP DEFAULT;`
+
+* Add or drop(?) a `CHECK` constraint to a column
+
+`ALTER TABLE table_name ADD CHECK {expression};`
+
+`ALTER TABLE table_name DROP CHECK;` (???)
+
+* Add or drop a `NOT NULL` constraint
+
+`ALTER TABLE table_name ALTER COLUMN column_name SET NOT NULL;`
+
+`ALTER TABLE table_name ALTER COLUMN column_name DROP NOT NULL;`
+
+* Add a constraint
+
+`ALTER TABLE table_name ADD CONSTRAINT constraint_name constraint_definition;`
+
+* Rename a table
+
+`ALTER TABLE table_name RENAME TO new_table_name;`
+
+We'll create a new table "link" in the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS link_at;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE link_at(
+  link_id  SERIAL        PRIMARY KEY,
+  title    VARCHAR(512)  NOT NULL,
+  url      VARCHAR(1024) NOT NULL UNIQUE
+)
+```
+
+Add a new column `active`.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link_at 
+ADD COLUMN 
+  active BOOLEAN;
+```
+
+Drop the new `active` column.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link_at 
+DROP COLUMN 
+  active;
+```
+
+Rename `title` column to `link_title`.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link_at 
+RENAME 
+  title TO link_title;
+```
+
+Add a new column `target`.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link_at 
+ADD COLUMN 
+  target VARCHAR(10);
+```
+
+Set `_blank` as the default value for the `target` column.
+
+```{sql connection=con_ex}
+ALTER TABLE 
+  link_at 
+ALTER COLUMN 
+  target SET DEFAULT '_blank';
+```
+
+```{sql connection=con_ex}
+INSERT INTO
+  link_at(link_title, url)
+VALUES
+  ('PostgreSQL Tutorial', 'http://www.postgresqltutorial.com/');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_at;
+```
+
+We'll add a `CHECK` condition to the `target` column so it only accepts the following values: `_self`, `_blank`, `_parent`, `_top`.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  link_at
+ADD CHECK
+  (target in ('_self', '_blank', '_parent', '_top'));
+```
+
+Let's try to violate this `CHECK` constraint.
+
+```{sql connection=con_ex}
+INSERT INTO
+  link_at(link_title, url, target)
+VALUES
+  ('PostgreSQL', 'http://www.postgresql.org/', 'whatever');
+```
+
+PostgreSQL returns a check constraint error. ^^^
+
+Finally, we'll rename the `link_at` table to `url`.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  link_at
+RENAME TO
+  url;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM link_at;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM url;
+```
+
+I'm sure there's lots more, but these are nice common `ALTER TABLE` statements that'll come in handy when I start building the unified MADC database.
+
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
+
+
+## RENAME TABLE
+
+To rename an existing table, you use the `ALTER TABLE` statement.
+
+```
+ALTER TABLE
+  table_name
+RENAME TO
+  new_table_name;
+```
+
+If you want to check the existence of a table before renaming it, use `IF TABLE EXISTS`.
+
+```
+ALTER TABLE IF EXISTS
+  table_name
+RENAME TO
+  new_table_name;
+```
+
+We'll create new tables to demonstrate this more.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS vendors CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+DROP TABLE IF EXISTS suppliers CASCADE;
+DROP TABLE IF EXISTS supplier_groups CASCADE;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS vendors(
+  id    SERIAL   PRIMARY KEY,
+  name  VARCHAR  NOT NULL
+);
+```
+
+We'll rename the "vendors" table to "suppliers".
+
+```{sql connection=con_ex}
+ALTER TABLE
+  vendors
+RENAME TO
+  suppliers;
+```
+
+Suppose each vendor or supplier belongs to a group. To manage this relationship, we need to add a "supplier_groups" table.
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS supplier_groups(
+  id   SERIAL   PRIMARY KEY,
+  name VARCHAR  NOT NULL
+);
+```
+
+To link these tables up, we need to add a `group_id` column to the "suppliers" table.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  suppliers
+ADD COLUMN
+  group_id  INT  NOT NULL;
+```
+
+This will be a foreign key that links the `id` column of the "supplier_groups" table.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  suppliers
+ADD FOREIGN KEY
+  (group_id) REFERENCES supplier_groups(id);
+```
+
+To save time querying complete supplier data, we create a view against the "suppliers" and "supplier_groups" tables. 
+
+```{sql connection=con_ex}
+DROP VIEW IF EXISTS supplier_data;
+```
+
+```{sql connection=con_ex}
+CREATE VIEW
+  supplier_data
+AS
+  SELECT
+    s.id,
+    s.name,
+    g.name AS group
+  FROM
+    suppliers AS s
+  INNER JOIN
+    supplier_groups AS g
+    ON s.group_id = g.id;
+```
+
+When you rename a table to the new one, PostgreSQL will automatically update its dependent objects such as foreign key constraints, views, and indexes.
+
+Let's check the "suppliers" table.
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-54-86-62-98.compute-1.amazonaws.com
+psql -U postgres
+postgres=# \c example
+example=# \d suppliers
+```
+
+The output shows that the "suppliers" table has a foreign key constraint which references to the "supplier_groups" table:
+
+```
+Foreign-key constraints:
+    "suppliers_group_id_fkey" FOREIGN KEY (group_id) REFERENCES supplier_groups(id)
+```
+
+We now rename the "supplier_groups" table to "groups".
+
+```{sql connection=con_ex}
+ALTER TABLE
+  supplier_groups
+RENAME TO
+  groups;
+```
+
+And then verify that PostgreSQL updated the table's dependent objects (foreign key constraints, views, indexes).
+
+```
+example=# \d suppliers
+```
+
+It did:
+
+```
+Foreign-key constraints:
+    "suppliers_group_id_fkey" FOREIGN KEY (group_id) REFERENCES groups(id)
+```
+
+We can also use `psql` to look at the "supplier_data" view.
+
+```
+\d+ supplier_data
+```
+
+The `SELECT` statement in the `\d+ supplier_data` output appears as:
+
+```
+View definition:
+ SELECT s.id,
+    s.name,
+    g.name AS "group"
+   FROM suppliers s
+     JOIN groups g ON s.group_id = g.id;
+```
+
+We can see that the "groups" table was updated here too.
+
+Cool-cool-cool.
+
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
+
 
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
