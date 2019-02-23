@@ -1070,6 +1070,121 @@ dbDisconnect(con_ex)
 ```
 
 
+## Rename Database
+
+To rename a PostgreSQL database, you use the following steps:
+
+1. Disconnect from the database you want to rename and connect to a different database.
+2. Check and terminate all active connections to the database being renamed.
+3. Use the `ALTER DATABASE` statement to rename the database.
+
+We'll create a database called _**db**_.
+
+```{r}
+con_pg <- dbConnect(odbc::odbc(), "PostgreSQL AWS postgres")
+```
+
+```{r}
+dbDisconnect(con_newdb)
+dbDisconnect(con_db)
+```
+
+```{sql connection=con_pg}
+DROP DATABASE IF EXISTS db;
+```
+
+```{sql connection=con_pg}
+DROP DATABASE IF EXISTS newdb;
+```
+
+```{sql connection=con_pg}
+CREATE DATABASE db;
+```
+
+```{r}
+dbDisconnect(con_pg)
+```
+
+First, connect to a different database. 
+
+```{r}
+con_pg <- dbConnect(odbc::odbc(), "PostgreSQL AWS postgres")
+```
+
+```{r}
+con_db <- dbConnect(odbc::odbc(), "PostgreSQL AWS db")
+```
+
+Second, check all the active connections to the _**db**_.
+
+```{sql connection=con_pg}
+SELECT
+  *
+FROM
+  pg_stat_activity
+WHERE
+  datname = 'db';
+```
+
+There's an active connection.
+
+```{r}
+# dbDisconnect(con_db)
+```
+
+```{sql connection=con_pg}
+-- SELECT
+--   *
+-- FROM
+--   pg_stat_activity
+-- WHERE
+--   datname = 'db';
+```
+
+Third, terminal all connections to the database we're looking to rename.
+
+```{sql connection=con_pg}
+SELECT
+  pg_terminate_backend(9124)
+FROM
+  pg_stat_activity
+WHERE
+  datname = 'db';
+```
+
+```{sql connection=con_pg}
+SELECT
+  *
+FROM
+  pg_stat_activity
+WHERE
+  datname = 'db';
+```
+
+Finally, rename the _**db**_ database to _**newdb**_.
+
+```{sql connection=con_pg}
+ALTER DATABASE db RENAME TO newdb;
+```
+
+Let's test that it worked.
+
+```{r}
+con_newdb <- dbConnect(odbc::odbc(), "PostgreSQL AWS newdb")
+```
+
+It worked!
+
+Let's shut it all down.
+
+```{r}
+dbDisconnect(con_newdb)
+dbDisconnect(con_db)
+dbDisconnect(con_pg)
+```
+
+
+
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
 #==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
