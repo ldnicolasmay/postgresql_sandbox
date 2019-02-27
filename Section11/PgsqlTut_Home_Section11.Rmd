@@ -1085,8 +1085,8 @@ con_pg <- dbConnect(odbc::odbc(), "PostgreSQL AWS postgres")
 ```
 
 ```{r}
-dbDisconnect(con_newdb)
-dbDisconnect(con_db)
+if (exists("con_newdb")) { dbDisconnect(con_newdb); rm(con_newdb) }
+if (exists("con_db")) { dbDisconnect(con_db); rm(con_db) }
 ```
 
 ```{sql connection=con_pg}
@@ -1181,6 +1181,196 @@ Let's shut it all down.
 dbDisconnect(con_newdb)
 dbDisconnect(con_db)
 dbDisconnect(con_pg)
+```
+
+
+## ADD COLUMN
+
+To add a new column to an existing table, you use the `ALTER TABLE` `ADD COLUMN` statement.
+
+Here's the syntax for adding a single column.
+
+```
+ALTER TABLE
+  table_name
+ADD COLUMN
+  col_1 {DATATYPE} {CONSTRAINT};
+```
+
+Here's for adding multiple columns.
+
+```
+ALTER TABLE
+  table_name
+ADD COLUMN
+  col_1 {DATATYPE} {CONSTRAINT},
+ADD COLUMN
+  col_2 {DATATYPE} {CONSTRAINT},
+  ...
+ADD COLUMN
+  col_n {DATATYPE} {CONSTRAINT};
+```
+
+Let's practice.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+Create a "customers_ac" table.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS customers_ac;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS customers_ac(
+  id             SERIAL   PRIMARY KEY,
+  customer_name  VARCHAR  NOT NULL
+);
+```
+
+Let's add a `phone` column.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ADD COLUMN
+  phone VARCHAR;
+```
+
+Let's add `fax` and `email` columns.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ADD COLUMN
+  fax    VARCHAR,
+ADD COLUMN
+  email  VARCHAR;
+```
+
+Let's get a description of the "customers_ac" table via psql.
+
+```
+psql -U postgres
+\c example
+\d customers_ac
+```
+
+Now we'll try to add a column with a `NOT NULL` constraint to a table that already has records/data.
+
+```{sql connection=con_ex}
+INSERT INTO
+  customers_ac(customer_name)
+VALUES
+  ('Apple'),
+  ('Samsung'),
+  ('Sony');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers_ac;
+```
+
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ADD COLUMN
+  contact_name  VARCHAR  NOT NULL;
+```
+
+The above statement throws an error... that `contact_name` contains null values. 
+
+So, here's a workaround.
+
+1. Add the column WITHOUT the `NOT NULL` constraint.
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ADD COLUMN
+  contact_name VARCHAR;
+```
+2. Update the values of the new column.
+```{sql connection=con_ex}
+UPDATE customers_ac
+SET contact_name = 'John Doe'
+WHERE id = 1;
+
+UPDATE customers_ac
+SET contact_name = 'Mary Doe'
+WHERE id = 2;
+
+UPDATE customers_ac
+SET contact_name = 'Lily Bush'
+WHERE id = 3;
+```
+3. Set the new column to `NOT NULL` using `ALTER TABLE`.
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ALTER COLUMN
+  contact_name SET NOT NULL;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers_ac;
+```
+
+Another way to solve this problem is to...
+
+1. Set a default value in the new column.
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ADD COLUMN
+  backup_contact  VARCHAR  NOT NULL DEFAULT 'foo';
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers_ac;
+```
+
+2. Update the values in the new column.
+```{sql connection=con_ex}
+UPDATE customers_ac
+SET backup_contact = 'Suzy Queue'
+WHERE id = 1;
+
+UPDATE customers_ac
+SET backup_contact = 'James Dean'
+WHERE id = 2;
+
+UPDATE customers_ac
+SET backup_contact = 'Marilyn Manson'
+WHERE id = 3;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM customers_ac;
+```
+
+3. Drop the the default value.
+```{sql connection=con_ex}
+ALTER TABLE
+  customers_ac
+ALTER COLUMN
+  backup_contact DROP DEFAULT;
+```
+
+```{sql connection=con_ex}
+--ALTER TABLE
+--  customers_ac
+--ALTER COLUMN
+--  backup_contact SET DEFAULT 'foo';
+```
+
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
 ```
 
 
