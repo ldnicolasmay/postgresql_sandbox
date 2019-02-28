@@ -1558,6 +1558,140 @@ if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
 ```
 
 
+## Change Column Type
+
+To change the data type of a column, you use the `ALTER TABLE` statement.
+
+Here's the syntax.
+
+```
+ALTER TABLE
+  table_name
+ALTER COLUMN
+  col_1 [SET DATA] TYPE {new_data_type};
+```
+
+Here's the syntax for re-typing multiple columns.
+
+```
+ALTER TABLE table_name
+ALTER COLUMN col_1 [SET DATA] TYPE {new_data_type},
+ALTER COLUMN col_2 [SET DATA] TYPE {new_data_type},
+...
+ALTER COLUMN col_n [SET DATA] TYPE {new_data_type};
+```
+
+PostgreSQL allows you to re-type a column _**and**_ update the values with `USING`.
+
+```
+ALTER TABLE
+  table_name
+ALTER COLUMN
+  col_1 TYPE {new_data_type} USING {expression};
+```
+
+We'll create a new table called "assets".
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS assets;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS assets(
+  id             SERIAL   PRIMARY KEY,
+  name           TEXT     NOT NULL,
+  asset_no       VARCHAR  NOT NULL,
+  description    TEXT,
+  location       TEXT,
+  acquired_date  DATE     NOT NULL
+);
+```
+
+```{sql connection=con_ex}
+INSERT INTO 
+  assets(name, asset_no, location, acquired_date)
+VALUES
+  ('Server', '10001', 'Server room', '2017-01-01'),
+  ('UPS', '10002', 'Server room', '2017-02-01');
+```
+
+```{sql connection=con_ex}
+SELECT * FROM assets;
+```
+
+Let's change the `name` field to `VARCHAR`.
+
+```{sql connection=con_ex}
+ALTER TABLE assets
+ALTER COLUMN name SET DATA TYPE VARCHAR;
+```
+
+Let's also change `description` and `location` to `VARCHAR`.
+
+```{sql connection=con_ex}
+ALTER TABLE assets
+ALTER COLUMN description SET DATA TYPE VARCHAR,
+ALTER COLUMN location    SET DATA TYPE VARCHAR;
+```
+
+Let's check it out with `psql`.
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-52-203-155-108.compute-1.amazonaws.com
+psql -U postgres
+\c example
+\d assets
+```
+
+Looks good!
+
+Let's change the `asset_no` field to integer.
+
+```{sql connection=con_ex}
+ALTER TABLE assets
+ALTER COLUMN asset_no SET DATA TYPE INT;
+```
+
+pgAdmin gives the following (much more helpful) error:
+
+```
+ERROR: column "asset_no" cannot be cast automatically to type integer 
+HINT: You might need to specify "USING asset_no::integer". 
+SQL state: 42804
+```
+
+Let's do what PostgreSQL recommends.
+
+```{sql connection=con_ex}
+ALTER TABLE assets
+ALTER COLUMN asset_no SET DATA TYPE INT using asset_no::integer;
+```
+
+```{sql connection=con_ex}
+SELECT * FROM assets;
+```
+
+We can see here that `asset_no` is now integer type, but I'll check in `psql` again.
+
+```
+\d assets
+```
+
+Yep, it worked!
+
+Disconnect from the _**example**_ database.
+
+```{r}
+dbDisconnect(con_ex)
+```
+
+
 
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
