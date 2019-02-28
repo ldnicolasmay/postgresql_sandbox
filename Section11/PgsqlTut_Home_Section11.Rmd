@@ -883,7 +883,7 @@ Finally, we'll rename the `link_at` table to `url`.
 ALTER TABLE
   link_at
 RENAME TO
-  url;
+  url_at;
 ```
 
 ```{sql connection=con_ex}
@@ -891,7 +891,7 @@ SELECT * FROM link_at;
 ```
 
 ```{sql connection=con_ex}
-SELECT * FROM url;
+SELECT * FROM url_at;
 ```
 
 I'm sure there's lots more, but these are nice common `ALTER TABLE` statements that'll come in handy when I start building the unified MADC database.
@@ -1129,7 +1129,7 @@ WHERE
 There's an active connection.
 
 ```{r}
-# dbDisconnect(con_db)
+dbDisconnect(con_db)
 ```
 
 ```{sql connection=con_pg}
@@ -1371,6 +1371,190 @@ Disconnect from the _**example**_ database.
 
 ```{r}
 dbDisconnect(con_ex)
+```
+
+
+## DROP COLUMN
+
+To drop a column of a table, use a `DROP COLUMN` clause in an `ALTER TABLE` statement.
+
+Here's the syntax.
+
+```
+ALTER TABLE
+  table_name
+DROP COLUMN
+  column_name;
+```
+
+When you remove a column from a table, PostgreSQL will automatically remove all of its indexes and constraints involving the column. 
+
+If other db objects (like views, triggers, stored procedures, other tables) depend on the column you're trying to drop, PostgreSQL will throw an error. If you want to force the deletion, use `CASCADE` in the `DROP COLUMN` clause.
+
+```
+ALTER TABLE
+  table_name
+DROP COLUMN
+  column_name CASCADE;
+```
+
+If you try to remove a non-existent column, PostgreSQL will throw an error. To avoid this, use `IF EXISTS`.
+
+```
+ALTER TABLE
+  table_name
+DROP COLUMN IF EXISTS
+  column_name;
+```
+
+Here's the syntax to drop multiple columns.
+
+```
+ALTER TABLE
+  table_name
+DROP COLUMN col_1,
+DROP COLUMN col_2,
+...
+DROP COLUMN col_n;
+```
+
+We'll create three tables for `DROP COLUMN` examples.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS books_dc;
+
+DROP TABLE IF EXISTS categories_dc;
+
+DROP TABLE IF EXISTS publishers_dc;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS publishers_dc(
+  publisher_id  SERIAL   PRIMARY KEY,
+  name          VARCHAR  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS categories_dc(
+  category_id  SERIAL   PRIMARY KEY,
+  name         VARCHAR  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS books_dc(
+  book_id         SERIAL   PRIMARY KEY,
+  title           VARCHAR  NOT NULL,
+  isbn            VARCHAR  NOT NULL,
+  published_date  DATE     NOT NULL,
+  description     VARCHAR,
+  category_id     INT      NOT NULL,
+  publisher_id    INT      NOT NULL,
+  FOREIGN KEY (category_id)  REFERENCES categories_dc(category_id),
+  FOREIGN KEY (publisher_id) REFERENCES publishers_dc(publisher_id)
+);
+```
+
+We'll create a view from the "books_dc" and "publishers_dc" tables.
+
+```{sql connection=con_ex}
+DROP VIEW IF EXISTS book_info;
+```
+
+```{sql connection=con_ex}
+CREATE VIEW
+  book_info
+AS 
+SELECT
+  b.book_id,
+  b.title,
+  b.isbn,
+  b.published_date,
+  p.name
+FROM
+  books_dc AS b
+INNER JOIN
+  publishers_dc AS p
+  ON b.publisher_id = p.publisher_id;
+```
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-52-203-155-108.compute-1.amazonaws.com
+psql -U postgres
+\c example
+\d+ book_info
+```
+
+Suppose you want to remove the `category_id` column of the "books_dc" table.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  books_dc
+DROP COLUMN
+  category_id;
+```
+
+Look at the "books_dc" table.
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-52-203-155-108.compute-1.amazonaws.com
+psql -U postgres
+\c example
+\d books_dc
+```
+
+The column `category_id` and the related foreign key constraint (i.e., `FOREIGN KEY (category_id) REFERENCES categories_dc(category_id)` from above) were removed from "books_dc".
+
+Let's try to remove the `publisher_id` column from "books_dc".
+
+```{sql connection=con_ex}
+ALTER TABLE
+  books_dc
+DROP COLUMN
+  publisher_id;
+```
+
+Running the above in pgAmin 4 gives a more detailed error:
+
+```
+ERROR: cannot drop table books_dc column publisher_id because other objects depend on it DETAIL: view book_info depends on table books_dc column publisher_id HINT: Use DROP ... CASCADE to drop the dependent objects too. SQL state: 2BP01
+```
+
+With the more detailed error message, we see that the view "book_info" depends on the `publisher_id` field in the "books_dc" table. To force the column drop, use `CASCADE` (as the error message informs).
+
+```{sql connection=con_ex}
+-- We'll execute this in pgAdmin 4 for more detailed return message
+ALTER TABLE
+  books_dc
+DROP COLUMN
+  publisher_id CASCADE;
+```
+
+pgAdmin 4 returned this message upon executing the above (commented out) code:
+
+```
+NOTICE: drop cascades to view book_info 
+ALTER TABLE 
+Query returned successfully in 107 msec.
+```
+
+With the column drop cascading to the view "book_info", "book_info" is destroyed. Executing `\d book_info` returns `Did not find any relation named "book_info".`. So long, short-lived view.
+
+Now we'll remove multiple columns from "books_dc", `isbn` and `description`.
+
+```{sql connection=con_ex}
+ALTER TABLE books_dc
+DROP COLUMN isbn,
+DROP COLUMN description;
+```
+
+That's all! Let's disconnect from the _**example**_ database.
+
+```{r}
+if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
 ```
 
 
