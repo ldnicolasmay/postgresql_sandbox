@@ -14,6 +14,16 @@ library(DBI)
 library(odbc)
 library(RPostgres)
 library(dplyr)
+# library(rlang)
+```
+
+Helper function for simplifying database disconnection/removal.
+
+```{r}
+my_dbDisconnect <- function(x) {
+  x_expr <- enexpr(x)
+  if (exists(rlang::as_string(x_expr))) { dbDisconnect(x); rm(x); }
+}
 ```
 
 
@@ -326,7 +336,7 @@ INNER JOIN
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -455,7 +465,7 @@ Cool.
 Disconnect from the _**dvdrental**_ database.
 
 ```{r}
-dbDisconnect(con_dvd)
+my_dbDisconnect(con_dvd)
 ```
 
 ## CREATE TABLE AS
@@ -597,7 +607,7 @@ exit
 Disconnect from the _**dvdrental**_ database.
 
 ```{r}
-dbDisconnect(con_dvd)
+my_dbDisconnect(con_dvd)
 ```
 
 
@@ -723,7 +733,7 @@ SELECT * FROM fruits;
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -899,7 +909,7 @@ I'm sure there's lots more, but these are nice common `ALTER TABLE` statements t
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -1066,7 +1076,7 @@ Cool-cool-cool.
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -1085,8 +1095,10 @@ con_pg <- dbConnect(odbc::odbc(), "PostgreSQL AWS postgres")
 ```
 
 ```{r}
-if (exists("con_newdb")) { dbDisconnect(con_newdb); rm(con_newdb) }
-if (exists("con_db")) { dbDisconnect(con_db); rm(con_db) }
+# if (exists("con_newdb")) { dbDisconnect(con_newdb); rm(con_newdb) }
+# if (exists("con_db")) { dbDisconnect(con_db); rm(con_db) }
+my_dbDisconnect(con_newdb)
+my_dbDisconnect(con_db)
 ```
 
 ```{sql connection=con_pg}
@@ -1102,7 +1114,7 @@ CREATE DATABASE db;
 ```
 
 ```{r}
-dbDisconnect(con_pg)
+my_dbDisconnect(con_pg)
 ```
 
 First, connect to a different database. 
@@ -1129,7 +1141,7 @@ WHERE
 There's an active connection.
 
 ```{r}
-dbDisconnect(con_db)
+my_dbDisconnect(con_db)
 ```
 
 ```{sql connection=con_pg}
@@ -1178,9 +1190,9 @@ It worked!
 Let's shut it all down.
 
 ```{r}
-dbDisconnect(con_newdb)
-dbDisconnect(con_db)
-dbDisconnect(con_pg)
+my_dbDisconnect(con_newdb)
+my_dbDisconnect(con_db)
+my_dbDisconnect(con_pg)
 ```
 
 
@@ -1370,7 +1382,7 @@ ALTER COLUMN
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -1554,7 +1566,8 @@ DROP COLUMN description;
 That's all! Let's disconnect from the _**example**_ database.
 
 ```{r}
-if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
+# if (exists("con_ex")) { dbDisconnect(con_ex); rm(con_ex) }
+my_dbDisconnect(con_ex)
 ```
 
 
@@ -1688,9 +1701,144 @@ Yep, it worked!
 Disconnect from the _**example**_ database.
 
 ```{r}
-dbDisconnect(con_ex)
+my_dbDisconnect(con_ex)
 ```
 
+
+## RENAME COLUMN
+
+To rename a column of a table, you use the `ALTER TABLE` statement with `RENAME COLUMN` clause.
+
+Here's the syntax.
+
+```
+ALTER TABLE
+  table_name
+RENAME COLUMN
+  column_name TO new_column_name;
+```
+
+You can omit the keyword `COLUMN`.
+
+```
+ALTER TABLE
+  table_name
+RENAME
+  column_name TO new_column_name;
+```
+
+If you try to rename a column that doesn't exist, PostgreSQL will throw an error. To avoid this error, you can use `IF EXISTS`.
+
+```
+ALTER TABLE
+  table_name
+RENAME COLUMN IF EXISTS
+  column_name TO new_column_name;
+```
+
+Renaming multiple columns in one statment isn't possible with PostgreSQL.
+
+If you rename a column that has dependent objects such as views, foreign key constraints, triggers, or stored procedures, PostgreSQL will update all the dependent objects.
+
+We'll create two new tables, "customers_rc" and "customer_groups_rc", to work through examples.
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS customers_rc;
+DROP TABLE IF EXISTS customer_groups_rc;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS customer_groups_rc(
+  id    SERIAL   PRIMARY KEY,
+  name  VARCHAR  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS customers_rc(
+  id        SERIAL   PRIMARY KEY,
+  name      VARCHAR  NOT NULL,
+  phone     VARCHAR  NOT NULL,
+  email     VARCHAR,
+  group_id  INT,
+  FOREIGN KEY (group_id) REFERENCES customer_groups_rc(id)
+);
+```
+
+Let's also create a new view "customer_data" based on the tables above.
+
+```{sql connection=con_ex}
+DROP VIEW IF EXISTS customer_data;
+```
+
+```{sql connection=con_ex}
+CREATE VIEW customer_data AS
+SELECT
+  c.id,
+  c.name,
+  g.name AS customer_group
+FROM
+  customers_rc AS c
+INNER JOIN
+  customer_groups_rc AS g
+  ON c.group_id = g.id;
+```
+
+Let's rename `email` in the "customers_rc" table to `contact_email`.
+
+```{sql connection=con_ex}
+ALTER TABLE customers_rc
+RENAME COLUMN email TO contact_email;
+```
+
+Check out the results in `psql`.
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-52-203-155-108.compute-1.amazonaws.com
+psql -U postgres
+\c example
+\d customers_rc
+```
+
+Now let's try to rename a column that has dependent objects. The `name` column in "customer_groups_rc" has a view ("customer_data") that depends on it.
+
+```{sql connection=con_ex}
+ALTER TABLE customer_groups_rc
+RENAME COLUMN name TO group_name;
+```
+
+We'll use `psql` to make sure the column name chnage cascaded to the dependent view.
+
+```
+\d+ customer_data
+```
+
+In the definition (`SELECT c.id ...`), we can see that `c.name` has been changed to `c.group_name`.
+
+Now for renaming two more columns in "customers_rc.
+
+```{sql connection=con_ex}
+ALTER TABLE customers_rc
+RENAME COLUMN name TO customer_name;
+
+ALTER TABLE customers_rc
+RENAME COLUMN phone TO contact_phone;
+```
+
+Disconnect from the _**example**_ database.
+
+```{r}
+my_dbDisconnect(con_ex)
+```
+
+
+## DROP TABLE
+
+To remove existing table from the database, you use the `DROP TABLE` statement.
 
 
 ```{r echo=FALSE}
