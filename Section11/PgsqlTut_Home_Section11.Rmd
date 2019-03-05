@@ -1840,6 +1840,92 @@ my_dbDisconnect(con_ex)
 
 To remove existing table from the database, you use the `DROP TABLE` statement.
 
+Here's the syntax.
+
+```
+DROP TABLE [IF EXISTS] table_name [CASCADE | RESTRICT];
+```
+
+`CASCADE` also deletes/drops any database objects (such as views, foreign key constraints, triggers, or stored procedures) that depend on the table be dropped.
+
+`RESTRICT`, used by default, refuses to drop the table if any objects depend on it.
+
+Only a superuser, schema owner, and table owner have sufficient privilege to remove the table.
+
+If you try to drop a table that doesn't exist, PostgreSQL throws an error. To avoid this, you can use `IF EXISTS`.
+
+```
+DROP TABLE IF EXISTS table_name;
+```
+
+We'll create a couple new tables to demonstrate `DROP TABLE`, "author_dt" and "page_dt".
+
+Connect to the _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS page_dt;
+DROP TABLE IF EXISTS author_dt;
+```
+
+```{sql connection=con_ex}
+CREATE TABLE IF NOT EXISTS author_dt(
+  author_id  INT          NOT NULL PRIMARY KEY,
+  firstname  VARCHAR(50),
+  lastname   VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS page_dt(
+  page_id    SERIAL        PRIMARY KEY,
+  title      VARCHAR(255)  NOT NULL,
+  CONTENT    TEXT,
+  author_id  INT           NOT NULL,
+  FOREIGN KEY (author_id) REFERENCES author_dt(author_id)
+);
+```
+
+Look at the details of these tables in `psql`.
+
+```
+ssh -i ~/Box\ Sync/Keys/ubuntu_18_04_postgresql.pem ubuntu@ec2-52-203-155-108.compute-1.amazonaws.com
+psql -U postgres
+\c example
+\d author_dt
+\d page_dt
+```
+
+Try to drop the "author_dt" table.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS author_dt;
+```
+
+We can't drop the "author_dt" table because there's a foreign key constraint in the "page_dt" table (i.e., the `author_dt` column) that depends on it.
+
+So, use the `CASCADE` keyword to drop the "author_dt" table and its dependents.
+
+```{sql connection=con_ex}
+DROP TABLE IF EXISTS author_dt CASCADE;
+```
+
+Now checkout the "page_dt" table using `psql`.
+
+```
+\d page_dt
+```
+
+The foreign key constraint is gone.
+
+Disconnect from the _**example**_ database.
+
+```{r}
+my_dbDisconnect(con_ex)
+```
+
+
 
 ```{r echo=FALSE}
 ###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
