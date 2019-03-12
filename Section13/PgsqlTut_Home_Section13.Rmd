@@ -1,0 +1,148 @@
+---
+title: "PostgreSQL Tutorial - Home - Section 13"
+output: 
+  html_notebook:
+    theme: sandstone
+    highlight: zenburn
+    toc: true
+    toc_float: true
+---
+
+Load libraries.
+```{r}
+library(DBI)
+library(odbc)
+library(RPostgres)
+```
+
+Helper function for simplifying database disconnection/removal.
+
+```{r}
+my_dbDisconnect <- function(x) {
+  x_expr <- rlang::enexpr(x)
+  if (exists(rlang::as_string(x_expr))) { dbDisconnect(x); rm(x); }
+}
+```
+
+# Understanding PostgreSQL constraints
+
+## PRIMARY KEY
+
+There are a few different ways to define primary keys when creating a table.
+
+Single column primary key.
+
+```
+CREATE TABLE table_name(
+  col_1  INT  PRIMARY KEY,
+  col_2  VARCHAR,
+  col_3  VARCHAR,
+  ...
+);
+```
+
+Single column primary key (another way).
+
+```
+CREATE TABLE table_name(
+  col_1 INT,
+  col_2 VARCHAR,
+  col_3 VARCHAR,
+  ...
+  PRIMARY KEY(col_1)
+);
+```
+
+Multiple column primary key.
+
+```
+CREATE TABLE table_name(
+  col_1 INT,
+  col_2 VARCHAR,
+  col_3 VARCHAR,
+  ...
+  PRIMARY KEY(col_1, col_2)
+);
+```
+
+Connect to _**example**_ database.
+
+```{r}
+con_ex <- dbConnect(odbc::odbc(), "PostgreSQL AWS example")
+```
+
+We'll create some new tables related to purchase orders to demonstrate, "po_headers" and "po_items".
+
+```{sql connection=con_ex}
+CREATE TABLE po_headers(
+  po_no             INTEGER  PRIMARY KEY,
+  vendor_no         INTEGER,
+  description       TEXT,
+  shipping_address  TEXT
+);
+```
+
+```{sql connection=con_ex}
+CREATE TABLE po_items(
+  po_no       INTEGER,
+  item_no     INTEGER,
+  product_no  INTEGER,
+  qty         INTEGER,
+  net_price   NUMERIC,
+  PRIMARY KEY(po_no, item_no)
+);
+```
+
+If you don’t specify explicitly the name for primary key constraint, PostgreSQL will assign a default name to the primary key constraint. By default, PostgreSQL uses `table_name_pkey` as the default name for the primary key constraint. In this example, PostgreSQL creates the primary key constraint with the name `po_items_pkey` for the "po_items" table.
+
+To drop a primary key constraint, use `ALTER TABLE` with `DROP CONSTRAINT`.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  po_items
+DROP CONSTRAINT
+  po_items_pkey;
+```
+
+To add a primary key constraint to an already existing table, use `ALTER TABLE` with `ADD PRIMARY KEY`.
+
+```{sql connection=con_ex}
+ALTER TABLE
+  po_items
+ADD 
+  PRIMARY KEY(po_no, item_no);
+```
+
+```{r}
+my_dbDisconnect(con_ex)
+```
+
+
+
+```{r echo=FALSE}
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+#  @##==---==##@##==---==##@    EXTRA  :  SPACE    @##==---==##@##==---==##@  #
+#@##==---==##@   @##==---==##@    #==-- --==#    @##==---==##@   @##==---==##@#
+##==---==##@   #   @##==---==##@    #==-==#    @##==---==##@   #   @##==---==##
+#=---==##@    #=#    @##==---==##@    #=#    @##==---==##@    #=#    @##==---=#
+#--==##@    #==-==#    @##==---==##@   #   @##==---==##@    #==-==#    @##==--#
+#==##@    #==-- --==#    @##==---==##@   @##==---==##@    #==-- --==#    @##==#
+###@    #==--  :  --==#    @##==---==##@##==---==##@    #==--  :  --==#    @###
+```

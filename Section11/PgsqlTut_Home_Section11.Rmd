@@ -21,7 +21,7 @@ Helper function for simplifying database disconnection/removal.
 
 ```{r}
 my_dbDisconnect <- function(x) {
-  x_expr <- enexpr(x)
+  x_expr <- rlang::enexpr(x)
   if (exists(rlang::as_string(x_expr))) { dbDisconnect(x); rm(x); }
 }
 ```
@@ -1924,6 +1924,11 @@ Disconnect from the _**example**_ database.
 ```{r}
 my_dbDisconnect(con_ex)
 ```
+
+
+## TEMPORARY TABLE
+
+## TRUNCATE TABLE
 
 
 
